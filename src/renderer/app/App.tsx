@@ -6,9 +6,9 @@ import { Sidebar } from './sidebar/Sidebar';
 export class App extends React.Component {
 	public render() {
 		return (
-			<div id="scratchboard">
+			<div id="scratchboard" className="flex">
 				<Sidebar />
-				<div id="main">
+				<div id="main" className="flex-auto">
 					<Details />
 					<Actions />
 				</div>
