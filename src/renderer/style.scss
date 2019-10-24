@@ -1,6 +1,5 @@
 @import "~@blueprintjs/core/lib/scss/variables";
 
-@import "~normalize.css";
 @import "~@blueprintjs/core/lib/css/blueprint.css";
 @import "~@blueprintjs/icons/lib/css/blueprint-icons.css";
 
@@ -41,6 +40,6 @@ html, body, #app {
 	top: 10%;
 }
 
-.sb-counter div {
+.sb-margin {
 	margin: 0.3rem;
 }
