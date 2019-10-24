@@ -45,7 +45,6 @@ export class App extends React.Component<{}, AppState> {
 	}
 
 	private handleMergeSharedData(_: IpcRendererEvent, data: Partial<SharedData>) {
-		console.log(data);
 		this.setState({
 			...this.state,
 			sharedData: {

@@ -819,6 +819,13 @@
   resolved "https://registry.yarnpkg.com/@types/webpack-env/-/webpack-env-1.14.1.tgz#0d8a53f308f017c53a5ddc3d07f4d6fa76b790d7"
   integrity sha512-0Ki9jAAhKDSuLDXOIMADg54Hu60SuBTEsWaJGGy5cV+SSUQ63J2a+RrYYGrErzz39fXzTibhKrAQJAb8M7PNcA==
 
+"@types/xterm@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@types/xterm/-/xterm-3.0.0.tgz#5b177010903ee1dc26fdc25d6e4e1f2490d44ce6"
+  integrity sha512-+VaAJQmE7E1d1ebkIh/Zdc2mbXBVwxZGGSgqwzDPpk/HKo0mNT+iX5ZrnswztHSV+CDV+bURl7Yg7PWF7IZfXQ==
+  dependencies:
+    xterm "*"
+
 "@webassemblyjs/ast@1.8.5":
   version "1.8.5"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.8.5.tgz#51b1c5fe6576a34953bf4b253df9f0d490d9e359"
@@ -8266,7 +8273,7 @@ xtend@~2.1.1:
   dependencies:
     object-keys "~0.4.0"
 
-xterm@^4.1.0:
+xterm@*, xterm@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/xterm/-/xterm-4.1.0.tgz#f6b6e127d1a1e31cef709b45fca845bf818602ce"
   integrity sha512-RolKCONgwaEqt7FBMUeoxn4W/2JoopNi3nxfZDmQ6xwelCNCAAYNw4W97QenXefQyvholn5xMAsS0nnIwjwhHw==
