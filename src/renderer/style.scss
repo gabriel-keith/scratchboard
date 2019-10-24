@@ -6,15 +6,34 @@
 
 html, body, #app {
 	height: 100%;
-}
 
-.sb-app {
-	height: 100%;
-	background-color: $pt-app-background-color;
-}
+	.sb-app {
+		height: 100%;
+		background-color: $pt-app-background-color;
+	}
 
-.bp3-dark.sb-app {
-	background-color: $pt-dark-app-background-color;
+	.bp3-dark.sb-app {
+		background-color: $pt-dark-app-background-color;
+	}
+
+	#scratchboard {
+		display: flex;
+		align-items: flex-start;
+		height: 100%;
+
+		#sidebar {
+			width: 33%;
+			height: 100%;
+		}
+
+		#main {
+			width: 100%;
+			> * {
+				width: 100%;
+				margin: 0 0 1rem 1rem;
+			}
+		}
+	}
 }
 
 //for the example component
