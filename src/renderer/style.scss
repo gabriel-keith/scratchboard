@@ -1,0 +1,29 @@
+@import "~@blueprintjs/core/lib/scss/variables";
+
+@import "~normalize.css";
+@import "~@blueprintjs/core/lib/css/blueprint.css";
+@import "~@blueprintjs/icons/lib/css/blueprint-icons.css";
+
+html, body, #app {
+	height: 100%;
+}
+
+.sb-app {
+	height: 100%;
+	background-color: $pt-app-background-color;
+}
+
+.bp3-dark.sb-app {
+	background-color: $pt-dark-app-background-color;
+}
+
+//for the example component
+.sb-counter {
+	position: absolute;
+	left: calc(50% - 60px); // this isn't a good way to center
+	top: 10%;
+}
+
+.sb-counter div {
+	margin: 0.3rem;
+}
