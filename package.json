@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "dev": "electron-webpack dev",
-    "compile": "electron-webpack",
+	"tailwind:css":"tailwind build src/renderer/tailwind.src.scss -c  tailwind.js -o src/renderer/tailwind.scss",
+    "dev": "npm run tailwind:css && electron-webpack dev",
+    "compile": "npm run tailwind:css && electron-webpack",
     "dist": "yarn compile && electron-builder",
     "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null"
   },
