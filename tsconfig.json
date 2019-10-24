@@ -4,7 +4,9 @@
 		"jsx": "react",
 		"baseUrl": "src",
 		"paths": {
-			"@common/*": ["common/*"]
+			"@common/*": ["common/*"],
+			"@main/*": ["main/*"],
+			"@renderer/*": ["renderer/*"]
 		}
 	}
 }

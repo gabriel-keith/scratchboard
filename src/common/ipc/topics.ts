@@ -1,3 +1,4 @@
 export const Topics = {
-
+	INITIALIZED: 'INITIALIZED',
+	MERGE_SHARED_DATA: 'MERGE_SHARED_DATA'
 }
