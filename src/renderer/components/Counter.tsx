@@ -4,7 +4,8 @@ import { Button } from '@blueprintjs/core'
 //Just an example component to mess around with
 
 export interface CounterProps {
-	increment: number
+	increment: number,
+	handleClick: () => void
 }
 
 export interface CounterState {
@@ -27,6 +28,8 @@ export class Counter extends React.Component<CounterProps, CounterState> {
 			...this.state,
 			count: this.state.count + this.props.increment
 		})
+
+		this.props.handleClick();
 	}
 
 	render() {

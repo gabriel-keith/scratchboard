@@ -5,9 +5,13 @@ import { Counter } from './components/Counter'
 
 import './style.scss'
 
+function sayHi() {
+	console.log('Hi')
+}
+
 ReactDom.render(
 	<div className='sb-app bp3-dark'>
-		<Counter increment={3} />
+		<Counter increment={3} handleClick={sayHi} />
 	</div>,
 	document.getElementById('app')
 )
