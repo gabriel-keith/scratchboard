@@ -1,11 +1,13 @@
 import { app, BrowserWindow } from "electron";
 import * as path from "path";
 import { format as formatUrl } from "url";
+import { Services } from './services'
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow: BrowserWindow | null = null;
+let services: Services | null = null;
 
 function createMainWindow() {
 	const window = new BrowserWindow({
@@ -60,4 +62,7 @@ app.on("activate", () => {
 // create main BrowserWindow when electron is ready
 app.on("ready", () => {
 	mainWindow = createMainWindow();
+	services = new Services();
+
+	services.register();
 });
