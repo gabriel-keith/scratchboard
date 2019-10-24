@@ -1,5 +1,5 @@
 import { OrgList } from 'common/data/orgs'
-import { executePromiseJson } from 'main/services/util'
+import { executePromiseJson } from '../util'
 
 export class SfdxService {
 	listOrgs(): Promise<OrgList> {

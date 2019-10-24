@@ -1,20 +1,36 @@
 @import "~@blueprintjs/core/lib/scss/variables";
 
-@import "~normalize.css";
 @import "~@blueprintjs/core/lib/css/blueprint.css";
 @import "~@blueprintjs/icons/lib/css/blueprint-icons.css";
 
 html, body, #app {
 	height: 100%;
-}
 
-.sb-app {
-	height: 100%;
-	background-color: $pt-app-background-color;
-}
+	.sb-app {
+		height: 100%;
+		background-color: $pt-app-background-color;
+	}
 
-.bp3-dark.sb-app {
-	background-color: $pt-dark-app-background-color;
+	.bp3-dark.sb-app {
+		background-color: $pt-dark-app-background-color;
+	}
+
+	#scratchboard {
+		align-items: flex-start;
+		height: 100%;
+
+		#sidebar {
+			width: 33%;
+			height: 100%;
+		}
+
+		#main {
+			width: 100%;
+			> * {
+				width: auto;
+			}
+		}
+	}
 }
 
 //for the example component

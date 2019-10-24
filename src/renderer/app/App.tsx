@@ -1,15 +1,17 @@
 import React from 'react';
-import { Sidebar } from './sidebar/Sidebar';
 import { Actions } from './actions/Actions';
 import { Details } from './details/Details';
+import { Sidebar } from './sidebar/Sidebar';
 
 export class App extends React.Component {
 	public render() {
 		return (
-			<div>
+			<div id="scratchboard" className="flex">
 				<Sidebar />
-				<Details />
-				<Actions />
+				<div id="main" className="flex-auto">
+					<Details />
+					<Actions />
+				</div>
 			</div>
 		);
 	}

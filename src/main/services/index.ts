@@ -1,8 +1,8 @@
-import { ipcMain, webContents, WebContents } from "electron"
+import { ipcMain, WebContents } from "electron"
 import { Topics } from "common/ipc/topics"
 import { SfdxService } from "./sfdx";
 
-import { defaultSharedData } from "@common/data/SharedData";
+import { defaultSharedData } from "common/data/SharedData";
 
 
 export class Services {
