@@ -1,17 +1,15 @@
 import React from 'react';
-import { Button, Card, Elevation, ProgressBar } from "@blueprintjs/core";
- 
+import { Card, Elevation, ProgressBar } from "@blueprintjs/core";
 
 export class Details extends React.Component {
-
-    render() {
+    public render() {
         return (
-			<Card interactive={false} elevation={Elevation.ONE} className="py-2 px-5">
+			<Card id="sidebar" interactive={false} elevation={Elevation.ONE} className="m-4 p-2">
 				<h3 className="py-2 mb-4 ml-3 text-lg">Details</h3>
 				<div className="flex flex-wrap justify-between ml-3 w-3/4 mb-4">
 					<div className="p-1">
 						<p>Deployment Status</p>
-						<ProgressBar animate={false} stripes={false} value={.5} 
+						<ProgressBar animate={false} stripes={false} value={.5}
 						className="bp3-intent-primary my-2"></ProgressBar>
 					</div>
 					<div className="p-1">
