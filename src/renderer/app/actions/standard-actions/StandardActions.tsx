@@ -3,6 +3,7 @@ import React from 'react';
 
 import { Alert, Button, ButtonGroup, Popover, Classes, Position, Menu, MenuItem, Intent } from '@blueprintjs/core';
 import { CHEVRON_DOWN, WARNING_SIGN } from '@blueprintjs/icons/lib/esm/generated/iconNames';
+import { User } from '../../common/interfaces/User';
 
 export interface StandardActionsState {
 	showDeleteOrgModal: boolean;
@@ -60,10 +61,10 @@ export class StandardActions extends React.Component<{}, StandardActionsState> {
 	}
 
 	private buildUserList(action: (user?: string) => void) {
-		const users: string[] = [ 'Test User 1', 'Test User 2', 'Test User 3' ];
+		const users: User[] = [ { alias: 'Test User 1' }, { alias: 'Test User 2' }, { alias: 'Test User 3' } ] as User[];
 		const userList = [];
 		for (const user of users) {
-			userList.push(<MenuItem key={user} onClick={() => { action(user); }} text={user} />);
+			userList.push(<MenuItem key={user.alias} onClick={() => { action(user.alias); }} text={user.alias} />);
 		}
 		return userList;
 	}
