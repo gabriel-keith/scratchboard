@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, HTMLTable, Checkbox, Alignment, Button } from '@blueprintjs/core';
 
-export class DependenciesTab extends React.Component { 
+export class Dependencies extends React.Component {
 	public render() {
 		return (
 			<Card id='dependencies' interactive={false} className='m-2'>

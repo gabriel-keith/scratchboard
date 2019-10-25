@@ -12,10 +12,14 @@ export class Sidebar extends React.Component {
 	}
 
 	public render() {
+		var orgTypes = ['LLC_BI', 'nRETAIL', 'nFORCE'];
+        var orgTypesList = orgTypes.map(function(o){
+                        return <OrgType name={o}/>;
+                      });
 		return (
 		<Card id='sidebar' className='flex-auto'>
 			<div className='bp3-tree'>
-				<OrgType/>
+				{ orgTypesList }
 			</div>
 		</Card>
 		);

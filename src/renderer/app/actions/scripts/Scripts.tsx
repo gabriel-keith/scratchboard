@@ -1,6 +1,6 @@
 import React from 'react';
 
-export class ScriptsTab extends React.Component {
+export class Scripts extends React.Component {
 	public render() {
 		return (
 		<div className='bg-red-500'>

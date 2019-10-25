@@ -1,6 +1,6 @@
 import React from 'react';
 
-export class TerminalTab extends React.Component {
+export class Terminal extends React.Component {
 	public render() {
 		return (
 		<div className='bg-blue-500'>
