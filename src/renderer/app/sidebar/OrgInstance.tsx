@@ -4,8 +4,7 @@ export class OrgInstance extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			name: 'LLC_BI_INSTANCE1',
-			status: 'Operational'
+			...props
 		};
 	}
 
