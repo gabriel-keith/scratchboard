@@ -13,7 +13,7 @@ export class Actions extends React.Component<{}, ActionsState> {
 	constructor(props: {}) {
 		super(props);
 		this.state = {
-			selectedTabId: 'sp'
+			selectedTabId: 'stdp'
 		};
 	}
 
