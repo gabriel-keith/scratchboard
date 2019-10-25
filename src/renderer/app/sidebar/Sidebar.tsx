@@ -17,7 +17,7 @@ export class Sidebar extends React.Component {
                         return <OrgType key={o} name={o}/>;
                       });
 		return (
-		<Card id='sidebar' className='flex-auto'>
+		<Card id='sidebar' className='flex-auto ml-2'>
 			<div className='bp3-tree'>
 				{ orgTypesList }
 			</div>
