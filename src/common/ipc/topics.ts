@@ -1,4 +1,0 @@
-export const IpcTopics = {
-	APP_MOUNT: 'IPC_APP_MOUNT',
-	MERGE_SHARED_DATA: 'IPC_MERGE_SHARED_DATA'
-};
