@@ -17,7 +17,7 @@ export class Sidebar extends React.Component<{}, SidebarTreeState> {
 
 	public render() {
 		return (
-			<Card id='sidebar' className='flex-auto'>
+			<Card id='sidebar' className='flex-auto ml-4 mb-0'>
 				<Tree
 					contents={this.state.nodes}
 					onNodeClick={this.handleNodeClick}
