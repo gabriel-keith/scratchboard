@@ -22,7 +22,8 @@ export class Dependencies extends React.Component {
 				current: '1.114',
 				remote: '2.212',
 				isChecked: false
-			}]
+			}],
+			isButtonDisabled: true
 		};
 	}
 
@@ -72,6 +73,8 @@ export class Dependencies extends React.Component {
 					<Button
 						type='submit'
 						text='Upgrade Selected'
+						intent='primary'
+						disabled={this.state.isButtonDisabled}
 						onClick={() => this.upgrade()}/>
 				</div>
 			</Card>);
@@ -83,11 +86,17 @@ export class Dependencies extends React.Component {
 	}
 
 	private handleCheck(id) {
-		for(let i in this.state.dependencies) {
+		let disableState = true;
+		// tslint:disable-next-line:forin
+		for (let i in this.state.dependencies) {
 			if (this.state.dependencies[i].id === id) {
 				this.state.dependencies[i].isChecked = !this.state.dependencies[i].isChecked;
 				this.forceUpdate();
 			}
+			if (this.state.dependencies[i].isChecked) {
+				disableState = false;
+			}
+			this.state.isButtonDisabled = disableState;
 		}
 	}
 }
