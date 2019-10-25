@@ -10,6 +10,18 @@ export class Dependencies extends React.Component {
 				current: '2.345',
 				remote: '2.543',
 				isChecked: false
+			},
+			{
+				id: 'LLC_BI',
+				current: '7.543',
+				remote: '7.987',
+				isChecked: false
+			},
+			{
+				id: 'nDESIGN',
+				current: '1.114',
+				remote: '2.212',
+				isChecked: false
 			}]
 		};
 	}
