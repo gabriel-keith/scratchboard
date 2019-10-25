@@ -40,6 +40,9 @@ export class StandardActions extends React.Component<{}, StandardActionsState> {
 						</Menu>
 					</Popover>
 				</ButtonGroup>
+				<Button className='mr-2 mb-2' intent={Intent.PRIMARY}>
+					New User
+				</Button>
 				<Button className='mr-2' intent={Intent.WARNING} onClick={() => { this.setAsDefault(); }}>
 					Set as Default
 				</Button>
