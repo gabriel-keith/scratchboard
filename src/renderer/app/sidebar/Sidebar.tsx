@@ -12,12 +12,10 @@ export class Sidebar extends React.Component<{}, SidebarTreeState> {
 	public nodes: ITreeNode[] = this.loadNodes();
 	public state: SidebarTreeState = { nodes: this.nodes };
 	private idCount = 0;
-	
-	
 
 	public render() {
 		return (
-			<Card id='sidebar' className='flex-auto'>
+			<Card id='sidebar' className='flex-auto ml-4 mb-0'>
 				<Tree
 					contents={this.state.nodes}
 					onNodeClick={this.handleNodeClick}
@@ -33,7 +31,7 @@ export class Sidebar extends React.Component<{}, SidebarTreeState> {
 		return (
 			orgTypes.map(function(org) {
 				let parentNode: ITreeNode = {
-					id: 0,
+					id: org,
 					hasCaret: true,
 					icon: 'folder-close',
 					label: org
@@ -46,12 +44,6 @@ export class Sidebar extends React.Component<{}, SidebarTreeState> {
 
 	private loadChildrenNodes(pNode) {
 		let childrenList: ITreeNode[] = [];
-		let thisone: ITreeNode = {
-			id: 0,
-			hasCaret: false,
-			icon: (<span className='flip-h bp3-tree-node-icon bp3-icon-standard bp3-icon-key-enter'></span>),
-			label: (<div>test</div>)
-		};
 		let testdate = new Date();
 		let att: ScratchOrgAttributes = {
 			type: 'LLC_BI',
@@ -156,7 +148,7 @@ export class Sidebar extends React.Component<{}, SidebarTreeState> {
 		orgList.map(org => {
 				if(pNode.label === org.createdOrgInstance){
 					let childrenNode: ITreeNode = {
-						id: 0,
+						id: org.orgName,
 						hasCaret: false,
 						icon: (<span className='flip-h bp3-tree-node-icon bp3-icon-standard bp3-icon-key-enter'></span>),
 						label: org.orgName
@@ -184,6 +176,7 @@ export class Sidebar extends React.Component<{}, SidebarTreeState> {
 			this.forEachNode(this.state.nodes, n => (n.isSelected = false));
 		}
 		nodeData.isSelected = originallySelected == null ? true : !originallySelected;
+		nodeData.isExpanded = !nodeData.isExpanded;
 		this.setState(this.state);
 	}
 

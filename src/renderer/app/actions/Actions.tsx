@@ -30,7 +30,6 @@ export class Actions extends React.Component<{}, ActionsState> {
 					<Tab id='dependencies' key={'dependencies'} title='Dependencies' panel={<Dependencies />} />
 					<Tab id='terminal' key={'terminal'} title='Terminal' panel={<Terminal />} />
 					<Tab id='scripts' key={'scripts'} title='Scripts' panel={<Scripts />} />
-					<Tab id='newUsers' key={'newUsers'} title='New User' panel={<NewUser />} />
 				</Tabs>
 			</Card>
 		);
