@@ -5,7 +5,7 @@ export function executePromiseJson(command: string): Promise<any> {
 		exec(command, (error, stdout) => {
 			if (!error) {
 				try {
-					resolve(JSON.parse(stdout).result);
+					resolve(JSON.parse(stdout).results);
 				} catch(exception) {
 					reject(exception);
 				}
