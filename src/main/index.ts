@@ -11,12 +11,11 @@ let services: Services | null = null;
 
 function createMainWindow() {
 	const window = new BrowserWindow({
-		webPreferences: { nodeIntegration: true }
+		webPreferences: { nodeIntegration: true },
+		titleBarStyle: 'hiddenInset',
+		width: 800,
+		height: 800
 	});
-
-	if (isDevelopment) {
-		window.webContents.openDevTools();
-	}
 
 	if (isDevelopment) {
 		window.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`);

@@ -3,6 +3,7 @@ import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { IpcTopics } from 'common/ipc/topics';
 import { SharedData, defaultSharedData } from 'common/data/SharedData';
 
+import { TitleBar } from './Titlebar';
 import { Actions } from './actions/Actions';
 import { Details } from './details/Details';
 import { Sidebar } from './sidebar/Sidebar';
@@ -34,11 +35,14 @@ export class App extends React.Component<{}, AppState> {
 
 	public render() {
 		return (
-			<div id="scratchboard" className="flex">
-				<Sidebar />
-				<div id="main" className="flex-auto">
-					<Details />
-					<Actions />
+			<div className='sb-app bp3-dark'>
+				<TitleBar />
+				<div id="scratchboard" className="flex">
+					<Sidebar />
+					<div id="main" className="flex-auto">
+						<Details />
+						<Actions />
+					</div>
 				</div>
 			</div>
 		);

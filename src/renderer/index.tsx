@@ -7,8 +7,6 @@ import './style.scss';
 import './tailwind.scss';
 
 ReactDom.render(
-	<div className='sb-app bp3-dark'>
-		<App />
-	</div>,
+	<App />,
 	document.getElementById('app')
 );
