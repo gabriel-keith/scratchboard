@@ -1,10 +1,21 @@
 
 import React from 'react';
 
-import { Button, ButtonGroup, Popover, Classes, Position, Menu, MenuItem, Intent } from '@blueprintjs/core';
-import { CHEVRON_DOWN } from '@blueprintjs/icons/lib/esm/generated/iconNames';
+import { Alert, Button, ButtonGroup, Popover, Classes, Position, Menu, MenuItem, Intent } from '@blueprintjs/core';
+import { CHEVRON_DOWN, WARNING_SIGN } from '@blueprintjs/icons/lib/esm/generated/iconNames';
 
-export class StandardActions extends React.Component {
+export interface StandardActionsState {
+	showDeleteOrgModal: boolean;
+}
+
+export class StandardActions extends React.Component<{}, StandardActionsState> {
+	public constructor(props: {}) {
+		super(props);
+		this.state = {
+			showDeleteOrgModal: false
+		};
+	}
+
 	public render() {
 		return (
 			<div id='actions' className='m-4'>
@@ -28,8 +39,22 @@ export class StandardActions extends React.Component {
 						</Menu>
 					</Popover>
 				</ButtonGroup>
-				<Button className='mr-2' onClick={() => { this.setAsDefault(); }}>Set as Default</Button>
-				<Button className='mr-2' intent={Intent.DANGER} onClick={() => { this.deleteOrg(); }}>Delete</Button>
+				<Button className='mr-2' intent={Intent.WARNING} onClick={() => { this.setAsDefault(); }}>Set as Default</Button>
+				<Button className='mr-2' intent={Intent.DANGER} onClick={() => { this.setState({showDeleteOrgModal: true}); }}>
+					Delete
+				</Button>
+
+				<Alert
+					cancelButtonText='Cancel'
+					confirmButtonText='Delete Org'
+					icon={WARNING_SIGN}
+					intent={Intent.DANGER}
+					isOpen={this.state.showDeleteOrgModal}
+					onCancel={() => { this.setState({showDeleteOrgModal: false}); }}
+					onConfirm={() => { this.setState({showDeleteOrgModal: false}); this.deleteOrg(); }}
+				>
+					<p>Are you sure you want to delete this org? This action cannot be undone.</p>
+				</Alert>
 			</div>
 		);
 	}
@@ -38,7 +63,7 @@ export class StandardActions extends React.Component {
 		const users: string[] = [ 'Test User 1', 'Test User 2', 'Test User 3' ];
 		const userList = [];
 		for (const user of users) {
-			userList.push(<MenuItem onClick={() => { action(user); }} text={user} />);
+			userList.push(<MenuItem key={user} onClick={() => { action(user); }} text={user} />);
 		}
 		return userList;
 	}
