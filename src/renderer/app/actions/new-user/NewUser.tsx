@@ -33,7 +33,8 @@ export class NewUser extends React.Component {
 						text='Submit'
 						intent='primary'
 						disabled={this.state.isButtonDisabled}
-						onClick={() => this.upgrade()}/>
+						onClick={() => this.upgrade()}>
+				</Button>
 			</div>
         );
     }
