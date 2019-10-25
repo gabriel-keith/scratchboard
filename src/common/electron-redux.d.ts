@@ -1,9 +1,10 @@
 declare module 'electron-redux' {
-	import { Middleware } from 'redux'
-	export const forwardToMain: Middleware<any, any, any>
-	export const forwardToRenderer: Middleware<any, any, any>
-	export const triggerAlias: Middleware<any, any, any>
+	import { Middleware, Store, AnyAction, Dispatch } from 'redux'
+	export const forwardToMain: Middleware<{}, any, Dispatch<AnyAction>>
+	export const forwardToRenderer: Middleware<{}, any, Dispatch<AnyAction>>
+	export const triggerAlias: Middleware<{}, any, Dispatch<AnyAction>>
+	export function createAliasedAction(name: string, action: (...args: any[]) => AnyAction): (...args: any[]) => AnyAction
 	export function getInitialStateRenderer(): any
-	export function replayActionRenderer(store: any): void
-	export function replayActionMain(store: any): void
+	export function replayActionRenderer(store: Store): void
+	export function replayActionMain(store: Store): void
 }
