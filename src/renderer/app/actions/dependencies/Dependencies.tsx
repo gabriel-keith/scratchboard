@@ -2,6 +2,44 @@ import React from 'react';
 import { Card, HTMLTable, Checkbox, Alignment, Button } from '@blueprintjs/core';
 
 export class Dependencies extends React.Component {
+	constructor(props: {}) {
+		super(props);
+		this.state = {
+			dependencies: [{
+				id: 'nFORCE',
+				current: '2.345',
+				remote: '2.543',
+				isChecked: false
+			}]
+		};
+	}
+
+	public renderDependency(dependency) {
+		return (
+			<tr>
+				<td>{dependency.id}</td>
+				<td>{dependency.current}</td>
+				<td>{dependency.remote}</td>
+				<td>
+					<div className='flex justify-center'>
+						<Checkbox
+							id={dependency.id}
+							checked={dependency.isChecked}
+							onChange={(event) => this.handleCheck(event.target.id)}/>
+					</div>
+				</td>
+			</tr>
+		);
+	}
+
+	public renderDependencies() {
+		let rendered = [];
+		for (const dependency of this.state.dependencies) {
+			rendered.push(this.renderDependency(dependency));
+		}
+		return rendered;
+	}
+
 	public render() {
 		return (
 			<Card id='dependencies' interactive={false} className='m-2'>
@@ -15,43 +53,29 @@ export class Dependencies extends React.Component {
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td>LLC_BI</td>
-							<td>2.9354</td>
-							<td>2.9765</td>
-							<td>
-								<div className='flex justify-center'>
-									<Checkbox id='LLC_BI' checked={false} onChange={() => console.log(':)')}/>
-								</div>
-							</td>
-						</tr>
-						<tr>
-							<td>nFORCE</td>
-							<td>1.8234</td>
-							<td>1.9456</td>
-							<td>
-								<div className='flex justify-center'>
-									<Checkbox id='nFORCE' checked={false} onChange={() => console.log(':)')} />
-								</div>
-							</td>
-						</tr>
-						<tr>
-							<td>nDESIGN</td>
-							<td>7.532</td>
-							<td>7.975</td>
-							<td>
-								<div className='flex justify-center'>
-									<Checkbox id='nDESIGN' checked={false} onChange={() => console.log(':)')} />
-								</div>
-							</td>
-						</tr>
+						{this.renderDependencies()}
 					</tbody>
 				</ HTMLTable>
 				<div className='flex justify-end'>
 					<Button
 						type='submit'
-						text='Upgrade Selected'/>
+						text='Upgrade Selected'
+						onClick={() => this.upgrade()}/>
 				</div>
 			</Card>);
+	}
+
+	private upgrade() {
+		// Use services to upgrade here
+		return 0;
+	}
+
+	private handleCheck(id) {
+		for(let i in this.state.dependencies) {
+			if (this.state.dependencies[i].id === id) {
+				this.state.dependencies[i].isChecked = !this.state.dependencies[i].isChecked;
+				this.forceUpdate();
+			}
+		}
 	}
 }
