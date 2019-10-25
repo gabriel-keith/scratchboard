@@ -29,7 +29,7 @@ export class Dependencies extends React.Component {
 
 	public renderDependency(dependency) {
 		return (
-			<tr>
+			<tr key={dependency.id}>
 				<td>{dependency.id}</td>
 				<td>{dependency.current}</td>
 				<td>{dependency.remote}</td>
