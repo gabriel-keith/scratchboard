@@ -4,7 +4,7 @@ import { Card, Elevation, ProgressBar } from "@blueprintjs/core";
 export class Details extends React.Component {
     public render() {
         return (
-			<Card id="sidebar" interactive={false} elevation={Elevation.ONE} className="m-4 p-2">
+			<Card id="details" interactive={false} elevation={Elevation.ONE} className="m-4 p-2">
 				<h3 className="py-2 mb-4 ml-3 text-lg">Details</h3>
 				<div className="flex flex-wrap justify-between ml-3 w-3/4 mb-4">
 					<div className="p-1">
