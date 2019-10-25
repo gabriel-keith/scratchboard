@@ -11,15 +11,15 @@ export class OrgType extends React.Component {
 
 	public render() {
 		var numberOfOrgs = Math.floor(Math.random() * Math.floor(4));
-		
+
 		var OrgInstances = [];
 		for (var i = 0; i < numberOfOrgs; i++) {
 			if(this.state.name){
-				var orgInstanceName = this.state.name + ' ' + i;
-				OrgInstances.push(<OrgInstance name={this.state.name + ' ' + (i+1)}/>);
+				var orgInstanceName = this.state.name + ' ' + (i+1);
+				OrgInstances.push(<OrgInstance key={orgInstanceName} name={orgInstanceName}/>);
 			}
 		}
-		
+
 		return (
 			<ul className='bp3-tree-node-list bp3-tree-root'>
 				<li className='bp3-tree-node bp3-tree-node-expanded'>

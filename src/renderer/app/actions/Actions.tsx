@@ -13,7 +13,7 @@ export class Actions extends React.Component<{}, ActionsState> {
 	constructor(props: {}) {
 		super(props);
 		this.state = {
-			selectedTabId: 'stdp'
+			selectedTabId: 'standardActions'
 		};
 	}
 
@@ -25,10 +25,10 @@ export class Actions extends React.Component<{}, ActionsState> {
 					onChange={(selectedTabId) => this.setSelectedTab(selectedTabId)}
 					selectedTabId={this.state.selectedTabId}
 				>
-					<Tab id='stdp' title='Standard Actions' panel={<StandardActions />} />
-					<Tab id='dpcp' title='Dependencies' panel={<Dependencies />} />
-					<Tab id='trmp' title='Terminal' panel={<Terminal />} />
-					<Tab id='scrp' title='Scripts' panel={<Scripts />} />
+					<Tab id='standardActions' key={'standardActions'} title='Standard Actions' panel={<StandardActions />} />
+					<Tab id='dependencies' key={'dependencies'} title='Dependencies' panel={<Dependencies />} />
+					<Tab id='terminal' key={'terminal'} title='Terminal' panel={<Terminal />} />
+					<Tab id='scripts' key={'scripts'} title='Scripts' panel={<Scripts />} />
 				</Tabs>
 			</Card>
 		);

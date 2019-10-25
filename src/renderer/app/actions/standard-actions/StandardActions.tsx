@@ -28,7 +28,7 @@ export class StandardActions extends React.Component {
 						</Menu>
 					</Popover>
 				</ButtonGroup>
-				<Button className='mr-2' onClick={() => { this.setAsDefault(); }}>Set as Default</Button>
+				<Button className='mr-2' intent={Intent.WARNING} onClick={() => { this.setAsDefault(); }}>Set as Default</Button>
 				<Button className='mr-2' intent={Intent.DANGER} onClick={() => { this.deleteOrg(); }}>Delete</Button>
 			</div>
 		);
@@ -38,7 +38,7 @@ export class StandardActions extends React.Component {
 		const users: string[] = [ 'Test User 1', 'Test User 2', 'Test User 3' ];
 		const userList = [];
 		for (const user of users) {
-			userList.push(<MenuItem onClick={() => { action(user); }} text={user} />);
+			userList.push(<MenuItem key={user} onClick={() => { action(user); }} text={user} />);
 		}
 		return userList;
 	}
