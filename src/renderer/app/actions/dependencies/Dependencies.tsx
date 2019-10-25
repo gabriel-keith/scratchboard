@@ -20,7 +20,7 @@ export class Dependencies extends React.Component {
 			{
 				id: 'nDESIGN',
 				current: '1.114',
-				remote: '2.212',
+				remote: '1.114',
 				isChecked: false
 			}],
 			isButtonDisabled: true
@@ -38,7 +38,8 @@ export class Dependencies extends React.Component {
 						<Checkbox
 							id={dependency.id}
 							checked={dependency.isChecked}
-							onChange={(event) => this.handleCheck(event.target.id)}/>
+							onChange={(event) => this.handleCheck(event.target.id)}
+							disabled={dependency.current === dependency.remote}/>
 					</div>
 				</td>
 			</tr>
