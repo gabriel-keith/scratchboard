@@ -1,62 +1,40 @@
-import React from 'react';
+import { Card, Tab, Tabs } from '@blueprintjs/core';
+import React, { ReactText } from 'react';
+import { Dependencies } from './dependencies/Dependencies';
+import { Scripts } from './scripts/Scripts';
+import { StandardActions } from './standard-actions/StandardActions';
+import { Terminal } from './Terminal/Terminal';
 
-import { Button, ButtonGroup, Popover, Classes, Position, Menu, MenuItem, Intent } from '@blueprintjs/core';
-import { CHEVRON_DOWN, CLIPBOARD } from '@blueprintjs/icons/lib/esm/generated/iconNames';
+export interface ActionsState {
+	selectedTabId: ReactText;
+}
 
-export class Actions extends React.Component {
+export class Actions extends React.Component<{}, ActionsState> {
+	constructor(props: {}) {
+		super(props);
+		this.state = {
+			selectedTabId: 'sp'
+		};
+	}
+
 	public render() {
 		return (
-			<div id='actions' className='m-4'>
-				<ButtonGroup className='mr-2'>
-					<Button onClick={() => { this.openOrg(); }}>Open</Button>
-					<Popover minimal={true} position={Position.BOTTOM_RIGHT}>
-						<Button rightIcon={CHEVRON_DOWN}></Button>
-						<Menu className={Classes.POPOVER_DISMISS}>
-							<h5 className='p-2'>Open as...</h5>
-							{this.buildUserList(this.openOrg)}
-						</Menu>
-					</Popover>
-				</ButtonGroup>
-				<ButtonGroup className='mr-2'>
-					<Button onClick={() => { this.copyOrgUrl(); }}>Copy Frontdoor</Button>
-					<Popover minimal={true} position={Position.BOTTOM_RIGHT}>
-						<Button rightIcon={CHEVRON_DOWN}></Button>
-						<Menu className={Classes.POPOVER_DISMISS}>
-							<h5 className='p-2'>Copy as...</h5>
-							{this.buildUserList(this.copyOrgUrl)}
-						</Menu>
-					</Popover>
-				</ButtonGroup>
-				<Button className='mr-2' onClick={() => { this.setAsDefault(); }}>Set as Default</Button>
-				<Button className='mr-2' intent={Intent.DANGER} onClick={() => { this.deleteOrg(); }}>Delete</Button>
-			</div>
+			<Card id='sidebar' className='m-4'>
+				<Tabs
+					id='tabs'
+					onChange={(selectedTabId) => this.setSelectedTab(selectedTabId)}
+					selectedTabId={this.state.selectedTabId}
+				>
+					<Tab id='stdp' title='Standard Actions' panel={<StandardActions />} />
+					<Tab id='dpcp' title='Dependencies' panel={<Dependencies />} />
+					<Tab id='trmp' title='Terminal' panel={<Terminal />} />
+					<Tab id='scrp' title='Scripts' panel={<Scripts />} />
+				</Tabs>
+			</Card>
 		);
 	}
 
-	private buildUserList(action: (user?: string) => void) {
-		const users: string[] = [ 'Test User 1', 'Test User 2', 'Test User 3' ];
-		const userList = [];
-		for (const user of users) {
-			userList.push(<MenuItem onClick={() => { action(user); }} text={user} />);
-		}
-		return userList;
-	}
-
-	private openOrg(user?: string): void {
-		console.log(user);
-		console.log('Opening...');
-	}
-
-	private copyOrgUrl(user?: string): void {
-		console.log(user);
-		console.log('Copying...');
-	}
-
-	private setAsDefault(): void {
-		console.log('Setting as default...');
-	}
-
-	private deleteOrg(): void {
-		console.log('Deleting...');
+	private setSelectedTab(selectedTabId: ReactText) {
+		this.setState({ selectedTabId });
 	}
 }

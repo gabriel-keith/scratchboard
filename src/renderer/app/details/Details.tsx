@@ -17,18 +17,14 @@ export class Details extends React.Component {
 						<p className="ml-3">User</p>
 					</div>
 					<div className="p-1">
-						<p>Dependencies</p>
-						<p className="ml-3"> View List</p>
+						<p>Password</p>
+						<p className="ml-3">*********</p>
 					</div>
 				</div>
 				<div className="flex flex-wrap justify-between ml-3 w-3/4 mb-4">
 					<div className="p-1">
 						<p>Packages Installed</p>
 						<p className="ml-3">Value</p>
-					</div>
-					<div className="p-1">
-						<p>Password</p>
-						<p className="ml-3">*********</p>
 					</div>
 					<div className="p-1">
 						<p>Users</p>

@@ -5,7 +5,7 @@ export function executePromiseJson(command: string): Promise<any> {
 		exec(command, (error, stdout) => {
 			if (!error) {
 				try {
-					resolve(JSON.parse(stdout));
+					resolve(JSON.parse(stdout).result);
 				} catch(exception) {
 					reject(exception);
 				}
@@ -20,7 +20,7 @@ export function executePromise(command: string): Promise<string> {
 	return new Promise((resolve, reject) => {
 		exec(command, (error, stdout) => {
 			if (!error) {
-				resolve(JSON.parse(stdout));
+				resolve(stdout);
 			} else {
 				reject(error.message);
 			}
