@@ -1,6 +1,10 @@
 import React from 'react';
 import { Card, Tab, Tabs, HTMLTable, Checkbox, Alignment } from '@blueprintjs/core';
 import { DependenciesTab } from './DependenciesTab';
+import { StandardActionTab } from './StandardActionTab';
+import { TerminalTab } from './TerminalTab';
+import { ScriptsTab } from './ScriptsTab';
+
 
 export class Actions extends React.Component {
 	constructor(props) {
@@ -25,32 +29,5 @@ export class Actions extends React.Component {
 				</Tabs>
 			</Card>
 		);
-	}
-}
-
-export class StandardActionTab extends React.Component { 
-	public render() {
-		return (
-		<div className="bg-green-500">
-			<p>Panel Works!</p>
-		</div>);
-	}
-}
-
-export class TerminalTab extends React.Component { 
-	public render() {
-		return (
-		<div className="bg-blue-500">
-			<p>Terminal Works!</p>
-		</div>);
-	}
-}
-
-export class ScriptsTab extends React.Component { 
-	public render() {
-		return (
-		<div className="bg-red-500">
-			<p>Scripts Works!</p>
-		</div>);
 	}
 }
