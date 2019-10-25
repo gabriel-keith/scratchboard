@@ -32,7 +32,6 @@ html, body, #app {
 }
 
 .sb-app {
-	height: 100%;
 	background-color: $pt-app-background-color;
 }
 
@@ -49,3 +48,7 @@ html, body, #app {
 
 //for flipping icon?
 .flip-h{ transform: scale(-1, 1); }
+
+.vh-90 {
+	height: 90vh;
+}

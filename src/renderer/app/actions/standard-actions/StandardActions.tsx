@@ -3,6 +3,7 @@ import React from 'react';
 
 import { Alert, Button, ButtonGroup, Popover, Classes, Position, Menu, MenuItem, Intent } from '@blueprintjs/core';
 import { CHEVRON_DOWN, WARNING_SIGN } from '@blueprintjs/icons/lib/esm/generated/iconNames';
+import { User } from '../../common/interfaces/User';
 
 export interface StandardActionsState {
 	showDeleteOrgModal: boolean;
@@ -18,8 +19,8 @@ export class StandardActions extends React.Component<{}, StandardActionsState> {
 
 	public render() {
 		return (
-			<div id='actions' className='m-4'>
-				<ButtonGroup className='mr-2'>
+			<div id='actions'>
+				<ButtonGroup className='mr-2 mb-2'>
 					<Button onClick={() => { this.openOrg(); }}>Open</Button>
 					<Popover minimal={true} position={Position.BOTTOM_RIGHT}>
 						<Button rightIcon={CHEVRON_DOWN}></Button>
@@ -29,7 +30,7 @@ export class StandardActions extends React.Component<{}, StandardActionsState> {
 						</Menu>
 					</Popover>
 				</ButtonGroup>
-				<ButtonGroup className='mr-2'>
+				<ButtonGroup className='mr-2 mb-2'>
 					<Button onClick={() => { this.copyOrgUrl(); }}>Copy Frontdoor</Button>
 					<Popover minimal={true} position={Position.BOTTOM_RIGHT}>
 						<Button rightIcon={CHEVRON_DOWN}></Button>
@@ -39,8 +40,13 @@ export class StandardActions extends React.Component<{}, StandardActionsState> {
 						</Menu>
 					</Popover>
 				</ButtonGroup>
-				<Button className='mr-2' intent={Intent.WARNING} onClick={() => { this.setAsDefault(); }}>Set as Default</Button>
-				<Button className='mr-2' intent={Intent.DANGER} onClick={() => { this.setState({showDeleteOrgModal: true}); }}>
+				<Button className='mr-2 mb-2' intent={Intent.PRIMARY}>
+					New User
+				</Button>
+				<Button className='mr-2 mb-2' intent={Intent.WARNING} onClick={() => { this.setAsDefault(); }}>
+					Set as Default
+				</Button>
+				<Button className='mr-2 mb-2' intent={Intent.DANGER} onClick={() => { this.setState({showDeleteOrgModal: true}); }}>
 					Delete
 				</Button>
 
@@ -60,10 +66,14 @@ export class StandardActions extends React.Component<{}, StandardActionsState> {
 	}
 
 	private buildUserList(action: (user?: string) => void) {
-		const users: string[] = [ 'Test User 1', 'Test User 2', 'Test User 3' ];
+		const users: User[] = [
+			{ alias: 'Test User 1' } as User,
+			{ alias: 'Test User 2' } as User,
+			{ alias: 'Test User 3' } as User
+		];
 		const userList = [];
 		for (const user of users) {
-			userList.push(<MenuItem key={user} onClick={() => { action(user); }} text={user} />);
+			userList.push(<MenuItem key={user.alias} onClick={() => { action(user.alias); }} text={user.alias} />);
 		}
 		return userList;
 	}

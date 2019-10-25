@@ -4,6 +4,7 @@ import { Dependencies } from './dependencies/Dependencies';
 import { Scripts } from './scripts/Scripts';
 import { StandardActions } from './standard-actions/StandardActions';
 import { Terminal } from './Terminal/Terminal';
+import { NewUser } from './new-user/NewUser';
 
 export interface ActionsState {
 	selectedTabId: ReactText;

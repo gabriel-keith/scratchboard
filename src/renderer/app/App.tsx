@@ -9,13 +9,15 @@ export class App extends React.Component {
 
 	public render() {
 		return (
-			<div className='sb-app bp3-dark'>
-				<TitleBar />
-				<div id="scratchboard" className="flex">
-					<Sidebar />
-					<div id="main" className="flex-auto">
-						<Details />
-						<Actions />
+			<div className='sb-app bp3-dark h-full'>
+				<div className='vh-90'>
+					<TitleBar />
+					<div id="scratchboard" className="flex">
+						<Sidebar />
+						<div id="main" className="flex-auto">
+							<Details />
+							<Actions />
+						</div>
 					</div>
 				</div>
 			</div>
