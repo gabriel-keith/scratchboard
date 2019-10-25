@@ -1,9 +1,10 @@
 import React from 'react';
 
 export class TitleBar extends React.Component {
-	render() {
+	public render() {
 		return (
-			<div className='sb-title-bar'></div>
+			<div className='sb-title-bar'>
+			</div>
 		);
 	}
 }

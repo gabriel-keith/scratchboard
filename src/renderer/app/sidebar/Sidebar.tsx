@@ -15,14 +15,14 @@ export class Sidebar extends React.Component<{}, SidebarTreeState> {
 
 	public render() {
 		return (
-			<Card id='sidebar' className='flex-auto ml-4 mb-0'>
+			<Card id='sidebar' className='flex-auto ml-4 mb-0 h-full'>
 				<Tree
 					contents={this.state.nodes}
 					onNodeClick={this.handleNodeClick}
 					onNodeCollapse={this.handleNodeCollapse}
 					onNodeExpand={this.handleNodeExpand}
 				/>
-			</Card>
+			</Card>			
 		);
 	}
 
