@@ -10,11 +10,11 @@ import Sidebar from './sidebar/Sidebar';
 import { StoreState } from 'common/store/state';
 
 interface StateProps {
-	scrachOrgs: { [username: string]: ScratchOrg };
+	scratchOrgs: { [username: string]: ScratchOrg };
 	users: { [username: string]: OrgUser };
 }
 
-type Props = StateProps
+type Props = StateProps;
 
 interface State {
 	selectedUsername?: string;
@@ -22,7 +22,7 @@ interface State {
 
 function mapStateToProps(state: StoreState): StateProps {
 	return {
-		scrachOrgs: state.org.scratchOrgs,
+		scratchOrgs: state.org.scratchOrgs,
 		users: state.org.users
 	};
 }
@@ -49,7 +49,7 @@ class App extends React.Component<Props, State> {
 		let contents: any;
 
 		if (username) {
-			const selectedOrg = this.props.scrachOrgs[username];
+			const selectedOrg = this.props.scratchOrgs[username];
 			contents = <>
 				<Details scratchOrg={selectedOrg} />
 				<Actions orgUsername={username} />
@@ -60,9 +60,9 @@ class App extends React.Component<Props, State> {
 			<div className='sb-app bp3-dark h-full'>
 				<div className='vh-90'>
 					<TitleBar />
-					<div id="scratchboard" className="flex">
+					<div id='scratchboard' className='flex'>
 						<Sidebar orgUsername={username} onOrgSelect={this.handleOrgSelection} />
-						<div id="main" className="flex-auto">
+						<div id='main' className='flex-auto'>
 							{contents}
 						</div>
 					</div>
