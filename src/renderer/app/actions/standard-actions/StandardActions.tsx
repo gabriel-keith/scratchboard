@@ -120,7 +120,7 @@ export class StandardActions extends React.Component<StandardActionsProps, Stand
 	}
 
 	private setAsDefault(): void {
-		setOrgAsDefault(this.props.orgUsername, '');
+		setOrgAsDefault(this.props.orgUsername, './');
 	}
 
 	private deleteOrg(): void {
