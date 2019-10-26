@@ -33,7 +33,6 @@ class App extends React.Component<Props, State> {
 		super(props);
 
 		this.handleOrgSelection = this.handleOrgSelection.bind(this);
-
 		this.state = {};
 	}
 
@@ -46,10 +45,15 @@ class App extends React.Component<Props, State> {
 
 	public render() {
 		const username = this.state.selectedUsername;
-		let selectedOrg: ScratchOrg | undefined;
+
+		let contents: any;
 
 		if (username) {
-			selectedOrg = this.props.scrachOrgs[username];
+			const selectedOrg = this.props.scrachOrgs[username];
+			contents = <>
+				<Details scratchOrg={selectedOrg} />
+				<Actions orgUsername={username} />
+			</>;
 		}
 
 		return (
@@ -57,10 +61,9 @@ class App extends React.Component<Props, State> {
 				<div className='vh-90'>
 					<TitleBar />
 					<div id="scratchboard" className="flex">
-						<Sidebar selectedUsername={username} onOrgSelect={this.handleOrgSelection} />
+						<Sidebar orgUsername={username} onOrgSelect={this.handleOrgSelection} />
 						<div id="main" className="flex-auto">
-							<Details scratchOrg={selectedOrg} />
-							<Actions />
+							{contents}
 						</div>
 					</div>
 				</div>

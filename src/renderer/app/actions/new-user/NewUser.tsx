@@ -30,9 +30,9 @@ export class NewUser extends React.Component {
 				</FormGroup>
 				<Button
 						type='submit'
-						text='Submit'
+						text='Create User'
 						intent='primary'
-						disabled={this.state.isButtonDisabled}
+						disabled={!this.state.canSubmit}
 						onClick={() => this.upgrade()}>
 				</Button>
 			</div>

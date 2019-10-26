@@ -3,17 +3,13 @@ import { Card, Elevation, ProgressBar } from '@blueprintjs/core';
 import { ScratchOrg } from 'common/data/orgs';
 
 interface OwnProps {
-	scratchOrg?: ScratchOrg;
+	scratchOrg: ScratchOrg;
 }
 
 type Props = OwnProps;
 
 export class Details extends React.Component<Props> {
 	public render() {
-		const contents = this.props.scratchOrg
-			? this.renderContents(this.props.scratchOrg)
-			: this.emptyState();
-
 		return (
 			<Card
 				id='details'
@@ -21,14 +17,6 @@ export class Details extends React.Component<Props> {
 				elevation={Elevation.ONE}
 				className='mb-4 mx-4 p-2'
 			>
-				{contents}
-			</Card>
-		);
-	}
-
-	private renderContents(org: ScratchOrg) {
-		return (
-			<>
 				<h3 className='py-2 mb-4 ml-3 text-lg'>Details</h3>
 				<div className='flex flex-wrap justify-between ml-3 w-3/4 mb-4'>
 					<div className='p-1 w-1/2'>
@@ -44,7 +32,7 @@ export class Details extends React.Component<Props> {
 				<div className='flex flex-wrap justify-between ml-3 w-3/4 mb-4'>
 					<div className='p-1'>
 						<p>Username</p>
-						<p className='ml-3'>{org.username}</p>
+						<p className='ml-3'>{this.props.scratchOrg.username}</p>
 					</div>
 					<div className='p-1'>
 						<p>Password</p>
@@ -69,11 +57,7 @@ export class Details extends React.Component<Props> {
 						<p className='ml-3'>View List</p>
 					</div>
 				</div>
-			</>
+			</Card>
 		);
-	}
-
-	private emptyState() {
-		return <div>No Org Selected</div>;
 	}
 }

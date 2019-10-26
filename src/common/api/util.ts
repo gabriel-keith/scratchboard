@@ -1,6 +1,6 @@
 import { exec } from 'child_process';
 
-export function executePromiseJson(command: string): Promise<any> {
+export function executePromiseJson(command: string, path?: string): Promise<any> {
 	return new Promise((resolve, reject) => {
 		exec(command, (error, stdout) => {
 			if (!error) {

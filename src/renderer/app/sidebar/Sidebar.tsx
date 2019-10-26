@@ -12,7 +12,7 @@ interface StateProps {
 }
 
 interface OwnProps {
-	selectedUsername?: string;
+	orgUsername?: string;
 	onOrgSelect: (selectedUsername: string) => void;
 }
 
@@ -35,8 +35,8 @@ class Sidebar extends React.Component<Props, State> {
 		super(props);
 
 		this.handleNodeClick = this.handleNodeClick.bind(this);
-		// this.handleNodeCollapse = this.handleNodeCollapse.bind(this);
-		// this.handleNodeExpand = this.handleNodeExpand.bind(this);
+		this.handleNodeCollapse = this.handleNodeCollapse.bind(this);
+		this.handleNodeExpand = this.handleNodeExpand.bind(this);
 
 		this.state = {
 			expandedGroups: {}
@@ -49,8 +49,8 @@ class Sidebar extends React.Component<Props, State> {
 				<Tree
 					contents={this.buildOrgTree()}
 					onNodeClick={this.handleNodeClick}
-					// onNodeCollapse={this.handleNodeCollapse}
-					// onNodeExpand={this.handleNodeExpand}
+					onNodeCollapse={this.handleNodeCollapse}
+					onNodeExpand={this.handleNodeExpand}
 				/>
 			</Card>
 		);
@@ -93,7 +93,7 @@ class Sidebar extends React.Component<Props, State> {
 			id,
 			label,
 			hasCaret: false,
-			isSelected: this.props.selectedUsername === id,
+			isSelected: this.props.orgUsername === id,
 			icon: (
 				<span className='flip-h bp3-tree-node-icon bp3-icon-standard bp3-icon-key-enter'></span>
 			)
@@ -106,15 +106,29 @@ class Sidebar extends React.Component<Props, State> {
 		e: React.MouseEvent<HTMLElement>
 	) => {
 		const nodeId = nodeData.id as string;
-		this.props.onOrgSelect(nodeId);
 
+		if (!nodeData.hasCaret) { // we will need a better solution
+			this.props.onOrgSelect(nodeId);
+		} else {
+			this.setExpansion(nodeId, !this.state.expandedGroups[nodeId]);
+		}
+	}
+
+	private handleNodeCollapse = (nodeData: ITreeNode) => {
+		this.setExpansion(nodeData.id as string, false);
+	}
+
+	private handleNodeExpand = (nodeData: ITreeNode) => {
+		this.setExpansion(nodeData.id as string, true);
+	}
+
+	private setExpansion(nodeId: string, expanded: boolean) {
 		const newExpandedGroups = { ...this.state.expandedGroups }; // shallow clone
 
-		// toggle selection
-		if (newExpandedGroups[nodeId]) {
-			delete newExpandedGroups[nodeId];
-		} else {
+		if (expanded) {
 			newExpandedGroups[nodeId] = true;
+		} else {
+			delete newExpandedGroups[nodeId];
 		}
 
 		this.setState({
@@ -122,17 +136,6 @@ class Sidebar extends React.Component<Props, State> {
 			expandedGroups: newExpandedGroups
 		});
 	}
-
-	// private handleNodeCollapse = (nodeData: ITreeNode) => {
-	// 	this.setState({
-
-	// 	});
-	// }
-
-	// private handleNodeExpand = (nodeData: ITreeNode) => {
-	// 	nodeData.isExpanded = true;
-	// 	this.setState(this.state);
-	// }
 }
 
 export default connect(mapStateToProps)(Sidebar);
