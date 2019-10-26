@@ -3,7 +3,7 @@ import ReactDom from 'react-dom';
 import { store } from './store';
 import { Provider } from 'react-redux';
 
-import { App } from './app/App';
+import App from './app/App';
 
 import './style.scss';
 import './tailwind.scss';

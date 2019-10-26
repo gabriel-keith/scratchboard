@@ -1,46 +1,79 @@
 import React from 'react';
-import { Card, Elevation, ProgressBar } from "@blueprintjs/core";
+import { Card, Elevation, ProgressBar } from '@blueprintjs/core';
+import { ScratchOrg } from 'common/data/orgs';
 
-export class Details extends React.Component {
-    public render() {
-        return (
-			<Card id="details" interactive={false} elevation={Elevation.ONE} className="mb-4 mx-4 p-2">
-				<h3 className="py-2 mb-4 ml-3 text-lg">Details</h3>
-				<div className="flex flex-wrap justify-between ml-3 w-3/4 mb-4">
-					<div className="p-1 w-1/2">
+interface OwnProps {
+	scratchOrg?: ScratchOrg;
+}
+
+type Props = OwnProps;
+
+export class Details extends React.Component<Props> {
+	public render() {
+		const contents = this.props.scratchOrg
+			? this.renderContents(this.props.scratchOrg)
+			: this.emptyState();
+
+		return (
+			<Card
+				id='details'
+				interactive={false}
+				elevation={Elevation.ONE}
+				className='mb-4 mx-4 p-2'
+			>
+				{contents}
+			</Card>
+		);
+	}
+
+	private renderContents(org: ScratchOrg) {
+		return (
+			<>
+				<h3 className='py-2 mb-4 ml-3 text-lg'>Details</h3>
+				<div className='flex flex-wrap justify-between ml-3 w-3/4 mb-4'>
+					<div className='p-1 w-1/2'>
 						<p>Deployment Status</p>
-						<ProgressBar animate={false} stripes={false} value={.5}
-						className="bp3-intent-primary my-2"></ProgressBar>
+						<ProgressBar
+							animate={false}
+							stripes={false}
+							value={0.5}
+							className='bp3-intent-primary my-2'
+						></ProgressBar>
 					</div>
 				</div>
-				<div className="flex flex-wrap justify-between ml-3 w-3/4 mb-4">
-					<div className="p-1">
+				<div className='flex flex-wrap justify-between ml-3 w-3/4 mb-4'>
+					<div className='p-1'>
 						<p>Username</p>
-						<p className="ml-3">User</p>
+						<p className='ml-3'>{org.username}</p>
 					</div>
-					<div className="p-1">
+					<div className='p-1'>
 						<p>Password</p>
-						<p className="ml-3">*********</p>
+						<p className='ml-3'>*********</p>
 					</div>
-					<div className="p-1">
+					<div className='p-1'>
 						<p>Packages Installed</p>
-						<p className="ml-3">Value</p>
+						<p className='ml-3'>Value</p>
 					</div>
 				</div>
-				<div className="flex flex-wrap justify-between ml-3 w-3/4 mb-4">
-					<div className="p-1">
+				<div className='flex flex-wrap justify-between ml-3 w-3/4 mb-4'>
+					<div className='p-1'>
 						<p>Frontdoor URL</p>
-						<p className="ml-3">https://www.scratchboard.com/is/awesome.html</p>
+						<p className='ml-3'>https://www.scratchboard.com/is/awesome.html</p>
 					</div>
-					<div className="p-1">
+					<div className='p-1'>
 						<p>Versions</p>
-						<p className="ml-3">2.3456</p>
+						<p className='ml-3'>2.3456</p>
 					</div>
-					<div className="p-1">
+					<div className='p-1'>
 						<p>Users</p>
-						<p className="ml-3">View List</p>
+						<p className='ml-3'>View List</p>
 					</div>
 				</div>
-			</Card>);
-    }
+			</>
+		);
+	}
+
+	private emptyState() {
+		return <div>No Org Selected</div>;
+	}
 }

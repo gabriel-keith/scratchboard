@@ -8,3 +8,7 @@ export function listOrgs(): Promise<OrgList> {
 export function listUsers(username: string): Promise<OrgUser[]> {
 	return executePromiseJson(`sfdx force:user:list -u ${username} --json`);
 }
+
+export function openOrg(username: string, urlOnly: boolean = false): Promise<string> {
+	return executePromiseJson(`sfdx force:org:open -u ${username} ${urlOnly ? '-r' : ''} --json`)
+}

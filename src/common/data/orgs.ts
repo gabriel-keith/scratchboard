@@ -50,3 +50,5 @@ export interface OrgUser {
 	loginUrl: string;
 	userId: string;
 }
+
+export type Users = { [username: string]: OrgUser };

@@ -1,12 +1,13 @@
-import { OrgList } from "common/data/orgs";
+import { OrgUser, ScratchOrg } from "common/data/orgs";
 
-export interface OrgState extends OrgList {
-
+export interface OrgState {
+	scratchOrgs: {[username: string]: ScratchOrg};
+	users: {[username: string]: OrgUser};
 }
 
 export function createDefaultOrgsState(): OrgState {
 	return {
-		scratchOrgs: [],
-		nonScratchOrgs: []
+		scratchOrgs: {},
+		users: {}
 	};
 }
