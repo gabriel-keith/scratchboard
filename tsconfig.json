@@ -1,5 +1,6 @@
 {
 	"extends": "./node_modules/electron-webpack/tsconfig-base.json",
+	"strict": false,
 	"compilerOptions": {
 		"jsx": "react",
 		"baseUrl": ".",

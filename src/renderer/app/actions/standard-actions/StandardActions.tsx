@@ -47,10 +47,10 @@ export class StandardActions extends React.Component<{}, StandardActionsState> {
 				<Button className='mr-2 mb-2' intent={Intent.PRIMARY} onClick={() => this.handleNewUserClick()}>
 					New User
 				</Button>
-				<Button className='mr-2 mb-2' intent={Intent.WARNING} onClick={() => { this.setAsDefault(); }}>
+				<Button className='mr-2' intent={Intent.WARNING} onClick={() => { this.setAsDefault(); }}>
 					Set as Default
 				</Button>
-				<Button className='mr-2 mb-2' intent={Intent.DANGER} onClick={() => { this.setState({showDeleteOrgModal: true}); }}>
+				<Button className='mr-2' intent={Intent.DANGER} onClick={() => { this.setState({showDeleteOrgModal: true}); }}>
 					Delete
 				</Button>
 
