@@ -5,12 +5,14 @@ import { CHEVRON_DOWN, WARNING_SIGN } from '@blueprintjs/icons/lib/esm/generated
 import { listUsers, openOrg, fetchOrgUrl, setOrgAsDefault, deleteOrg } from 'common/api/sfdx';
 import { clipboard } from 'electron';
 import { OrgUser } from 'common/data/orgs';
+import { NewUser } from '../new-user/NewUser';
 
 export interface StandardActionsProps {
 	orgUsername: string;
 }
 
 export interface StandardActionsState {
+	currentForm: JSX.Element | null;
 	showDeleteOrgModal: boolean;
 	userList: OrgUser[];
 }
@@ -19,6 +21,7 @@ export class StandardActions extends React.Component<StandardActionsProps, Stand
 	public constructor(props: StandardActionsProps) {
 		super(props);
 		this.state = {
+			currentForm: null,
 			showDeleteOrgModal: false,
 			userList: []
 		};
@@ -53,7 +56,9 @@ export class StandardActions extends React.Component<StandardActionsProps, Stand
 						</Menu>
 					</Popover>
 				</ButtonGroup>
-				<Button className='mr-2' intent={Intent.PRIMARY}>New User</Button>
+				<Button className='mr-2' intent={Intent.PRIMARY} onClick={() => this.handleNewUserClick()}>
+					New User
+				</Button>
 				<Button className='mr-2' intent={Intent.WARNING} onClick={() => { this.setAsDefault(); }}>
 					Set as Default
 				</Button>
@@ -77,8 +82,20 @@ export class StandardActions extends React.Component<StandardActionsProps, Stand
 						undone.
 					</p>
 				</Alert>
+				<div>
+					{this.state.currentForm}
+				</div>
 			</div>
 		);
+	}
+
+	private handleNewUserClick(): any {
+		if (this.state.currentForm == null) {
+			this.setState({currentForm: < NewUser />});
+		} else {
+			this.setState({currentForm: null});
+		}
+		this.forceUpdate();
 	}
 
 	private buildUserList(action: (user?: string) => void) {
