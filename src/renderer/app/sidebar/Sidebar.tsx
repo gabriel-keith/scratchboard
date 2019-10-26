@@ -2,13 +2,17 @@ import React from 'react';
 import { Classes, Icon, Intent, ITreeNode, Position, Tooltip, Tree, Card } from '@blueprintjs/core';
 import { ScratchOrg, ScratchOrgAttributes } from 'common/data/orgs';
 
+export interface SidebarProps {
+	onOrgChange?: (orgDetails: ScratchOrg) => void;
+}
+
 export interface SidebarTreeState {
 	nodes: ITreeNode[];
 }
 
 // use Component so it re-renders everytime: `nodes` are not a primitive type
 // and therefore aren't included in shallow prop comparison
-export class Sidebar extends React.Component<{}, SidebarTreeState> {
+export class Sidebar extends React.Component<SidebarProps, SidebarTreeState> {
 	public nodes: ITreeNode[] = this.loadNodes();
 	public state: SidebarTreeState = { nodes: this.nodes };
 	private idCount = 0;
@@ -22,7 +26,7 @@ export class Sidebar extends React.Component<{}, SidebarTreeState> {
 					onNodeCollapse={this.handleNodeCollapse}
 					onNodeExpand={this.handleNodeExpand}
 				/>
-			</Card>			
+			</Card>
 		);
 	}
 
@@ -156,7 +160,7 @@ export class Sidebar extends React.Component<{}, SidebarTreeState> {
 					childrenList.push(childrenNode);
 				}
 			});
-		
+
 		return childrenList;
 	}
 
