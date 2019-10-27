@@ -3,11 +3,12 @@ import { remote } from 'electron';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { ITreeNode, Tree, Card, Button } from '@blueprintjs/core';
+import { ITreeNode, Tree, Card, Button, Callout } from '@blueprintjs/core';
 import { ScratchOrg } from 'common/data/orgs';
 import { StoreState } from 'common/store/state';
 import { addProject } from 'common/store/actions/project';
 import { ProjectConfig } from 'common/data/projects';
+import { ExpirationNotice } from './ExpirationNotice';
 
 // A good example
 // https://medium.com/knerd/typescript-tips-series-proper-typing-of-react-redux-connected-components-eda058b6727d
@@ -53,7 +54,7 @@ class Sidebar extends React.Component<Props, State> {
 
 	public render() {
 		return (
-			<Card id='sidebar' className='flex-auto ml-4 mb-0 h-full'>
+			<Card id='sidebar' className='flex-auto ml-4 mb-0 p-0 h-full'>
 				<Tree
 					contents={this.buildOrgTree()}
 					onNodeClick={this.handleNodeClick}
@@ -77,7 +78,7 @@ class Sidebar extends React.Component<Props, State> {
 			this.createParentNode(
 				orgName,
 				orgName,
-				orgList.map((org) => this.createChildNode(org.username, org.alias))
+				orgList.map((org) => this.createChildNode(org.username, org.alias, org.expirationDate))
 			)
 		);
 	}
@@ -97,10 +98,13 @@ class Sidebar extends React.Component<Props, State> {
 		};
 	}
 
-	private createChildNode(id: string, label: string): ITreeNode {
+	private createChildNode(id: string, label: string, expirationDate: Date): ITreeNode {
 		return {
 			id,
 			label,
+			secondaryLabel: this.willExpire(expirationDate) ?
+				<ExpirationNotice expirationDate={new Date(expirationDate)}></ExpirationNotice> :
+				undefined,
 			hasCaret: false,
 			isSelected: this.props.orgUsername === id,
 			icon: (
@@ -154,6 +158,11 @@ class Sidebar extends React.Component<Props, State> {
 			...this.state,
 			expandedGroups: newExpandedGroups
 		});
+	}
+
+	private willExpire(expirationDate: Date) {
+		const tolerance = 7;
+		return (new Date(expirationDate).valueOf() - new Date().valueOf()) / 1000 / 60 / 60 / 24 <= tolerance;
 	}
 }
 
