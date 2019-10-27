@@ -8,10 +8,12 @@ import { Actions } from './actions/Actions';
 import { Details } from './details/Details';
 import Sidebar from './sidebar/Sidebar';
 import { StoreState } from 'common/store/state';
+import { ProjectConfig } from 'common/data/projects';
 
 interface StateProps {
 	scratchOrgs: { [username: string]: ScratchOrg };
 	users: { [username: string]: OrgUser };
+	projects: { [orgName: string]: ProjectConfig };
 }
 
 type Props = StateProps;
@@ -23,7 +25,8 @@ interface State {
 function mapStateToProps(state: StoreState): StateProps {
 	return {
 		scratchOrgs: state.org.scratchOrgs,
-		users: state.org.users
+		users: state.org.users,
+		projects: state.project.projectMap
 	};
 }
 
@@ -50,9 +53,11 @@ class App extends React.Component<Props, State> {
 
 		if (username) {
 			const selectedOrg = this.props.scratchOrgs[username];
+			const orgProject = this.props.projects[selectedOrg.orgName];
+
 			contents = <>
 				<Details scratchOrg={selectedOrg} />
-				<Actions orgUsername={username} />
+				<Actions orgUsername={username} orgProject={orgProject} />
 			</>;
 		}
 

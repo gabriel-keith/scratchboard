@@ -3,7 +3,7 @@ import { ProjectConfig } from '../../data/projects';
 import { ProjectState, createDefaultProjectState } from '../state/project';
 import { ProjectAction, ADD_PROJECT, REMOVE_PROJECT } from '../actions/project';
 
-export function projectReducer(state: ProjectState = createDefaultProjectState(), action: ProjectAction) {
+export function projectReducer(state: ProjectState = createDefaultProjectState(), action: ProjectAction): ProjectState {
 	let projects: {[orgName: string]: ProjectConfig};
 
 	switch (action.type) {
@@ -15,7 +15,7 @@ export function projectReducer(state: ProjectState = createDefaultProjectState()
 
 			return {
 				...state,
-				projects
+				projectMap: projects
 			};
 		case REMOVE_PROJECT:
 			projects = { ...state.projectMap };
@@ -23,7 +23,7 @@ export function projectReducer(state: ProjectState = createDefaultProjectState()
 
 			return {
 				...state,
-				projects
+				projectMap: projects
 			};
 		default:
 			return state;

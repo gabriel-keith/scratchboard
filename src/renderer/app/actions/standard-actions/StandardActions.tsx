@@ -6,9 +6,11 @@ import { listUsers, openOrg, setOrgAsDefault, deleteOrg } from 'common/api/sfdx'
 import { clipboard } from 'electron';
 import { OrgUser } from 'common/data/orgs';
 import { NewUser } from '../new-user/NewUser';
+import { ProjectConfig } from 'common/data/projects';
 
 export interface StandardActionsProps {
 	orgUsername: string;
+	orgProject?: ProjectConfig;
 }
 
 export interface StandardActionsState {
@@ -20,6 +22,7 @@ export interface StandardActionsState {
 export class StandardActions extends React.Component<StandardActionsProps, StandardActionsState> {
 	public constructor(props: StandardActionsProps) {
 		super(props);
+
 		this.state = {
 			currentForm: null,
 			showDeleteOrgModal: false,
@@ -120,7 +123,10 @@ export class StandardActions extends React.Component<StandardActionsProps, Stand
 	}
 
 	private setAsDefault(): void {
-		setOrgAsDefault(this.props.orgUsername, './');
+		const orgProject = this.props.orgProject;
+		if (orgProject) {
+			setOrgAsDefault(this.props.orgUsername, orgProject.projectDir);
+		}
 	}
 
 	private deleteOrg(): void {
