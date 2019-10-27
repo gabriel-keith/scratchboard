@@ -24,12 +24,13 @@
     "redux": "^4.0.0",
     "redux-promise": "^0.6.0",
     "source-map-support": "^0.5.12",
-    "xterm": "^4.1.0"
+    "xterm": "^4.2.0"
   },
   "devDependencies": {
     "@blueprintjs/tslint-config": "^1.9.0",
     "electron": "^6.0.12",
     "electron-builder": "^21.2.0",
+    "electron-rebuild": "^1.8.6",
     "electron-webpack": "^2.7.4",
     "electron-webpack-ts": "^3.2.0",
     "node-sass": "^4.12.0",
