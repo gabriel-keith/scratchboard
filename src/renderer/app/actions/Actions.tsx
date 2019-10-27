@@ -3,7 +3,7 @@ import React, { ReactText } from 'react';
 import { Dependencies } from './dependencies/Dependencies';
 import { Scripts } from './scripts/Scripts';
 import { StandardActions } from './standard-actions/StandardActions';
-import { Terminal } from './Terminal/Terminal';
+import { Term } from './Terminal/Terminal';
 
 export interface ActionsProps {
 	orgUsername: string;
@@ -31,7 +31,7 @@ export class Actions extends React.Component<ActionsProps, ActionsState> {
 				>
 					<Tab id='standardActions' key='standardActions' title='Standard Actions' panel={<StandardActions orgUsername={this.props.orgUsername} />} />
 					<Tab id='dependencies' key='dependencies' title='Dependencies' panel={<Dependencies />} />
-					<Tab id='terminal' key='terminal' title='Terminal' panel={<Terminal />} />
+					<Tab id='terminal' key='terminal' title='Terminal' panel={<Term />} />
 					<Tab id='scripts' key='scripts' title='Scripts' panel={<Scripts />} />
 				</Tabs>
 			</Card>
