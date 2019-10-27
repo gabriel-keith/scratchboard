@@ -3,7 +3,6 @@ import * as path from "path";
 import { format as formatUrl } from "url";
 import { store } from './store';
 import { fetchOrgList } from "common/store/actions/org";
-import { listOrgs } from 'common/api/sfdx'
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 

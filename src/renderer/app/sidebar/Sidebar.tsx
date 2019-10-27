@@ -1,14 +1,19 @@
+import { remote } from 'electron';
+
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { ITreeNode, Tree, Card } from '@blueprintjs/core';
+import { ITreeNode, Tree, Card, Button } from '@blueprintjs/core';
 import { ScratchOrg } from 'common/data/orgs';
 import { StoreState } from 'common/store/state';
+import { addProject } from 'common/store/actions/project';
+import { ProjectConfig } from 'common/data/projects';
 
 // A good example
 // https://medium.com/knerd/typescript-tips-series-proper-typing-of-react-redux-connected-components-eda058b6727d
 interface StateProps {
 	orgList: ScratchOrg[];
+	projectMap: { [orgName: string]: ProjectConfig };
 }
 
 interface OwnProps {
@@ -16,27 +21,30 @@ interface OwnProps {
 	onOrgSelect: (selectedUsername: string) => void;
 }
 
-type Props = StateProps & OwnProps;
+interface DispatchProps {
+	addProject(projectDir: string): void;
+}
 
 interface State {
 	expandedGroups: {[orgName: string]: boolean};
 }
 
-function mapStateToProps(state: StoreState): StateProps {
-	return {
-		orgList: Object.values(state.org.scratchOrgs)
-	};
-}
+type Props = StateProps & DispatchProps & OwnProps;
+
+const mapStateToProps = (state: StoreState): StateProps => ({
+	orgList: Object.values(state.org.scratchOrgs),
+	projectMap: state.project.projectMap
+});
+
+const actions = {
+	addProject
+};
 
 // use Component so it re-renders everytime: `nodes` are not a primitive type
 // and therefore aren't included in shallow prop comparison
 class Sidebar extends React.Component<Props, State> {
 	constructor(props: Props) {
 		super(props);
-
-		this.handleNodeClick = this.handleNodeClick.bind(this);
-		this.handleNodeCollapse = this.handleNodeCollapse.bind(this);
-		this.handleNodeExpand = this.handleNodeExpand.bind(this);
 
 		this.state = {
 			expandedGroups: {}
@@ -52,6 +60,7 @@ class Sidebar extends React.Component<Props, State> {
 					onNodeCollapse={this.handleNodeCollapse}
 					onNodeExpand={this.handleNodeExpand}
 				/>
+				<Button className='float-right' icon='plus' onClick={this.handleAddProject}></Button>
 			</Card>
 		);
 	}
@@ -122,6 +131,16 @@ class Sidebar extends React.Component<Props, State> {
 		this.setExpansion(nodeData.id as string, true);
 	}
 
+	private handleAddProject = () => {
+		remote.dialog.showOpenDialog({
+			properties: ['openDirectory']
+		}, (dirs: string) => {
+			if (dirs.length > 0) {
+				this.props.addProject(dirs[0]);
+			}
+		});
+	}
+
 	private setExpansion(nodeId: string, expanded: boolean) {
 		const newExpandedGroups = { ...this.state.expandedGroups }; // shallow clone
 
@@ -138,4 +157,4 @@ class Sidebar extends React.Component<Props, State> {
 	}
 }
 
-export default connect(mapStateToProps)(Sidebar);
+export default connect(mapStateToProps, actions)(Sidebar);

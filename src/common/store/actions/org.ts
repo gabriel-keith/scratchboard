@@ -1,3 +1,4 @@
+import { Action } from 'redux';
 import { createAliasedAction } from 'electron-redux';
 import { listOrgs, listUsers } from 'common/api/sfdx';
 import { OrgList, OrgUser } from 'common/data/orgs';
@@ -8,12 +9,12 @@ export const OPEN_ORG_ACTION = 'OPEN_ORG_ACTION';
 
 export type OrgListActions = FetchOrgListAction | FetchOrgUsersAction;
 
-interface FetchOrgListAction {
+interface FetchOrgListAction extends Action {
 	type: typeof FETCH_ORG_LIST_ACTION;
 	payload: OrgList;
 }
 
-interface FetchOrgUsersAction {
+interface FetchOrgUsersAction extends Action {
 	type: typeof FETCH_ORG_USERS_ACTION;
 	payload: OrgUser[];
 }

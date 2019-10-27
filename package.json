@@ -1,5 +1,5 @@
 {
-  "name": "electron-webpack-quick-start",
+  "name": "scratchboard",
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
@@ -16,6 +16,7 @@
     "@types/react-redux": "^7.1.5",
     "@types/redux-promise": "^0.5.28",
     "electron-redux": "^1.4.0",
+    "electron-store": "^5.0.0",
     "node-pty": "^0.9.0",
     "react": "16.11.0",
     "react-dom": "16.11.0",
@@ -37,5 +38,8 @@
     "tslint": "^5.20.0",
     "typescript": "^3.6.4",
     "webpack": "^4.41.2"
+  },
+  "electronWebpack": {
+    "title": "ScratchBoard"
   }
 }

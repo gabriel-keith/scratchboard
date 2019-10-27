@@ -1,3 +1,4 @@
+import fs from 'fs';
 import { exec, ExecOptions } from 'child_process';
 
 export function executePromiseJson(command: string, path?: string): Promise<any> {
@@ -22,13 +23,35 @@ export function executePromiseJson(command: string, path?: string): Promise<any>
 	});
 }
 
-export function executePromise(command: string): Promise<string> {
+export function executePromise(command: string, path?: string): Promise<string> {
+	const options: ExecOptions = {};
+
+	if (path) {
+		options.cwd = path;
+	}
+
 	return new Promise((resolve, reject) => {
-		exec(command, (error, stdout) => {
+		exec(command, options, (error, stdout) => {
 			if (!error) {
 				resolve(stdout);
 			} else {
 				reject(error.message);
+			}
+		});
+	});
+}
+
+export function readJsonFile(filePath: string): Promise<any> {
+	return new Promise((resolve, reject) => {
+		fs.readFile(filePath, (err, data) => {
+			try {
+				if (err) {
+					reject(err);
+				} else {
+					resolve(JSON.parse(data.toString()));
+				}
+			} catch (exception) {
+				reject(exception);
 			}
 		});
 	});

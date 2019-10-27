@@ -1,7 +1,19 @@
 import React from 'react';
-import { Card, HTMLTable, Checkbox, Alignment, Button } from '@blueprintjs/core';
+import { Card, HTMLTable, Checkbox, Button } from '@blueprintjs/core';
 
-export class Dependencies extends React.Component {
+interface IDependency {
+	id: string;
+	current: string;
+	remote: string;
+	isChecked: boolean;
+}
+
+interface State {
+	dependencies: IDependency[];
+	isButtonDisabled: boolean;
+}
+
+export class Dependencies extends React.Component<{}, State> {
 	constructor(props: {}) {
 		super(props);
 		this.state = {
@@ -27,7 +39,7 @@ export class Dependencies extends React.Component {
 		};
 	}
 
-	public renderDependency(dependency) {
+	public renderDependency(dependency: IDependency) {
 		return (
 			<tr key={dependency.id}>
 				<td>{dependency.id}</td>
@@ -38,7 +50,7 @@ export class Dependencies extends React.Component {
 						<Checkbox
 							id={dependency.id}
 							checked={dependency.isChecked}
-							onChange={(event) => this.handleCheck(event.target.id)}
+							onChange={(event) => this.handleCheck(event.currentTarget.id)}
 							disabled={dependency.current === dependency.remote}/>
 					</div>
 				</td>
@@ -86,7 +98,7 @@ export class Dependencies extends React.Component {
 		return 0;
 	}
 
-	private handleCheck(id) {
+	private handleCheck(id: string) {
 		let disableState = true;
 		// tslint:disable-next-line:forin
 		for (let i in this.state.dependencies) {
