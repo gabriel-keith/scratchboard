@@ -9,6 +9,7 @@ import { Details } from './details/Details';
 import Sidebar from './sidebar/Sidebar';
 import { StoreState } from 'common/store/state';
 import { ProjectConfig } from 'common/data/projects';
+import { NonIdealState, Card } from '@blueprintjs/core';
 
 interface StateProps {
 	scratchOrgs: { [username: string]: ScratchOrg };
@@ -59,6 +60,11 @@ class App extends React.Component<Props, State> {
 				<Details scratchOrg={selectedOrg} />
 				<Actions orgUsername={username} orgProject={orgProject} />
 			</>;
+		} else {
+			contents = (
+				<Card className='mb-4 mx-4 p-2'>
+					<NonIdealState className='pb-4' icon='error' description='Select an org to view details' />
+				</Card>);
 		}
 
 		return (
