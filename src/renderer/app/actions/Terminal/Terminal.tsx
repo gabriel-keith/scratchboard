@@ -17,7 +17,7 @@ import '../../../../../node_modules/xterm/css/xterm.css';
 export class Term extends React.Component {
 	public render() {
 		return (
-			<div className="flex mx-auto px-5 py-5 w-full">
+			<div className="flex mx-auto w-full">
 				<div ref="xterm" className='w-full'></div>
 			</div>
 		);

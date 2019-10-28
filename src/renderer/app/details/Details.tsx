@@ -28,6 +28,15 @@ export class Details extends React.Component<Props> {
 							className='bp3-intent-primary my-2'
 						></ProgressBar>
 					</div>
+					<div className='p-1 w-1/2'>
+						<p>Expiration</p>
+						<ProgressBar
+							animate={false}
+							stripes={false}
+							value={this.calcExpirationValue()}
+							className='bp3-intent-primary my-2'
+						></ProgressBar>
+					</div>
 				</div>
 				<div className='flex flex-wrap justify-between ml-3 w-3/4 mb-4'>
 					<div className='p-1'>
@@ -35,12 +44,12 @@ export class Details extends React.Component<Props> {
 						<p className='ml-3'>{this.props.scratchOrg.username}</p>
 					</div>
 					<div className='p-1'>
-						<p>Password</p>
-						<p className='ml-3'>*********</p>
+						<p>Created</p>
+						<p className='ml-3'>{this.props.scratchOrg.createdDate}</p>
 					</div>
 					<div className='p-1'>
-						<p>Packages Installed</p>
-						<p className='ml-3'>Value</p>
+						<p>Expires</p>
+						<p className='ml-3'>{this.props.scratchOrg.expirationDate}</p>
 					</div>
 				</div>
 				<div className='flex flex-wrap justify-between ml-3 w-3/4 mb-4'>
@@ -59,5 +68,15 @@ export class Details extends React.Component<Props> {
 				</div>
 			</Card>
 		);
+	}
+
+	private calcExpirationValue() {
+		let created = new Date(this.props.scratchOrg.createdDate).getDate();
+		let expiration = new Date(this.props.scratchOrg.expirationDate).getDate();
+		console.log(created);
+		console.log(expiration);
+		let timeLeft = Number(created) - Number(expiration);
+		console.log(timeLeft);
+		return timeLeft;
 	}
 }
