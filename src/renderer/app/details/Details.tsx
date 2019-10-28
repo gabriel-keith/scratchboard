@@ -45,7 +45,7 @@ export class Details extends React.Component<Props> {
 					</div>
 					<div className='p-1'>
 						<p>Created</p>
-						<p className='ml-3'>{this.props.scratchOrg.createdDate}</p>
+						<p className='ml-3'>{new Date(this.props.scratchOrg.createdDate).toISOString().split('T')[0]}</p>
 					</div>
 					<div className='p-1'>
 						<p>Expires</p>
