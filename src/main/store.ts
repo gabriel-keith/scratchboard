@@ -6,21 +6,12 @@ import ElectronStore from 'electron-store';
 import { StoreState } from 'common/store/state';
 import { storeReducers } from 'common/store/reducers';
 import { ProjectConfig } from 'common/data/projects';
-import { createDefaultOrgsState } from 'common/store/state/org';
 import { createDefaultProjectState } from 'common/store/state/project';
 
 const electronStore = new ElectronStore();
 
-const PROJECT_CONFIG_KEY = 'projectConfigs';
-
-function loadInitState(): StoreState {
-	return {
-		org: createDefaultOrgsState(),
-		project: {
-			projectMap: electronStore.get(PROJECT_CONFIG_KEY, createDefaultProjectState())
-		}
-	};
-}
+const PROJECT_CONFIG_KEY = 'PROJECT_CONFIG';
+const NICKNAME_KEY = 'NICKNAME';
 
 const initState = loadInitState();
 console.log('Init State:', initState);
@@ -37,15 +28,38 @@ export const store: Store<StoreState> = createStore(
 
 replayActionMain(store);
 
-// watch projects
+// load data
+function loadInitState(): StoreState {
+	return {
+		org: {
+			scratchOrgs: {},
+			users: {},
+			nicknames: electronStore.get(NICKNAME_KEY, {})
+		},
+		project: {
+			projectMap: electronStore.get(PROJECT_CONFIG_KEY, createDefaultProjectState())
+		}
+	};
+}
+
+// save data
 let currentProjects: {[orgName: string]: ProjectConfig} | undefined;
+let currentNicknames: {[username: string]: string} | undefined;
 
 store.subscribe(() => {
 	const previousProjects = currentProjects;
-	currentProjects = store.getState().project.projectMap;
-	console.log('StateChange:', store.getState());
+	const previousNicknames = currentNicknames;
+
+	const state = store.getState();
+	console.log('StateChange:', state);
+
+	currentProjects = state.project.projectMap;
+	currentNicknames = state.org.nicknames;
 
 	if (currentProjects && currentProjects !== previousProjects) {
 		electronStore.set(PROJECT_CONFIG_KEY, currentProjects);
+	}
+	if (currentNicknames && currentNicknames !== previousNicknames) {
+		electronStore.set(NICKNAME_KEY, currentNicknames);
 	}
 });

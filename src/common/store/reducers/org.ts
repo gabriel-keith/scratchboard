@@ -1,5 +1,5 @@
 import { OrgState, createDefaultOrgsState } from '../state/org';
-import { OrgListActions, FETCH_ORG_LIST_ACTION, FETCH_ORG_USERS_ACTION } from '../actions/org';
+import { OrgListActions, FETCH_ORG_LIST_ACTION, FETCH_ORG_USERS_ACTION, SET_ORG_NICKNAME_ACTION } from '../actions/org';
 
 export function orgReducer(state: OrgState = createDefaultOrgsState(), action: OrgListActions): OrgState {
 	switch(action.type) {
@@ -15,6 +15,18 @@ export function orgReducer(state: OrgState = createDefaultOrgsState(), action: O
 					...state.users,
 					...groupByUsername(action.payload)
 				}
+			};
+		case SET_ORG_NICKNAME_ACTION:
+			const newNicknames = { ...state.nicknames };
+			if (action.payload.nickname) {
+				newNicknames[action.payload.username] = action.payload.nickname;
+			} else {
+				delete newNicknames[action.payload.nickname];
+			}
+
+			return {
+				...state,
+				nicknames: newNicknames
 			};
 		default:
 			return state;
