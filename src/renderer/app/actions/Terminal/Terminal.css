@@ -1,3 +1,10 @@
+.xterm .xterm-screen {
+    height: 25rem !important;
+    width: -webkit-fill-available !important;
+}
+
 .xterm .xterm-screen canvas {
     margin: 1rem;
+    height: initial !important;
+    width: inherit !important;
 }

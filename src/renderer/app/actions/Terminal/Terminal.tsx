@@ -39,14 +39,14 @@ export class Term extends React.Component<Props> {
 		const shell = process.env[os.platform() === 'win32' ? 'COMSPEC' : 'SHELL'];
 		const ptyProcess = pty.spawn(shell, [], {
 			name: 'xterm-color',
-			cols: 80,
-			rows: 30,
 			cwd: this.props.ProjectConfig ? this.props.ProjectConfig.projectDirectory : process.env.HOME,
 			env: process.env
 		});
 
 		const xterm = new Terminal({
 			cursorBlink: true,
+			cols: 120,
+			rows: 25,
 			theme: {
 				background: '#293742',
 				cursor: '#00ff00',
