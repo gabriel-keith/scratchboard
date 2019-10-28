@@ -13,10 +13,11 @@ interface Props {
 }
 
 export class Term extends React.Component<Props> {
+
 	public constructor(props: Props) {
 		super(props);
 		this.state = {
-			loadedBefore: false
+			loadedBefore: false,
 		};
 	}
 
@@ -28,7 +29,7 @@ export class Term extends React.Component<Props> {
 		);
 	}
 
-	componentDidUpdate(prevProps) {
+	componentDidUpdate() {
 		if (this.props.isTerm && !this.state.loadedBefore) {
 			this.loadTerm();
 		}
