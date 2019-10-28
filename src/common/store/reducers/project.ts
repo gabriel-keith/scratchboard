@@ -6,12 +6,12 @@ import { ProjectAction, ADD_PROJECT, REMOVE_PROJECT } from '../actions/project';
 export function projectReducer(state: ProjectState = createDefaultProjectState(), action: ProjectAction): ProjectState {
 	let projects: {[orgName: string]: ProjectConfig};
 
-	if (!action.payload) {
-		return state;
-	}
-
 	switch (action.type) {
 		case ADD_PROJECT:
+			if (!action.payload) {
+				return state;
+			}
+
 			projects = {
 				...state.projectMap,
 				[action.payload.orgName]: action.payload
