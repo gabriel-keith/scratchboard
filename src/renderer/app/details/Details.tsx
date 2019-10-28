@@ -19,7 +19,7 @@ export class Details extends React.Component<Props> {
 			>
 				<h3 className='py-2 mb-4 ml-3 text-lg'>Details</h3>
 				<div className='flex flex-wrap justify-between ml-3 w-3/4 mb-4'>
-					<div className='p-1 w-1/2 mx-1'>
+					<div className='p-1 w-full lg:mx-1 md:w-full lg:w-5/12'>
 						<p>Deployment Status</p>
 						<ProgressBar
 							animate={false}
@@ -28,7 +28,7 @@ export class Details extends React.Component<Props> {
 							className='bp3-intent-primary my-2'
 						></ProgressBar>
 					</div>
-					<div className='p-1 w-1/2 mx-1'>
+					<div className='p-1 w-full lg:mx-1 md:w-full lg:w-5/12'>
 						<p>Expiration</p>
 						<ProgressBar
 							animate={false}
@@ -54,12 +54,12 @@ export class Details extends React.Component<Props> {
 				</div>
 				<div className='flex flex-wrap justify-between ml-3 w-3/4 mb-4'>
 					<div className='p-1'>
-						<p>Frontdoor URL</p>
-						<p className='ml-3'>https://www.scratchboard.com/is/awesome.html</p>
+						<p>Connected Status</p>
+						<p className='ml-3'>{this.props.scratchOrg.connectedStatus}</p>
 					</div>
 					<div className='p-1'>
-						<p>Versions</p>
-						<p className='ml-3'>2.3456</p>
+						<p>Org Name</p>
+						<p className='ml-3'>{this.props.scratchOrg.orgName}</p>
 					</div>
 					<div className='p-1'>
 						<p>Users</p>
