@@ -43,7 +43,7 @@ export class Actions extends React.Component<ActionsProps, ActionsState> {
 						title='Dependencies'
 						panel={<Dependencies orgUsername={this.props.orgUsername} orgProject={this.props.orgProject} />}
 					/>
-					<Tab id='terminal' key='terminal' title='Terminal' panel={<Term isTerm={this.isTerm()}/>} />
+					<Tab id='terminal' key='terminal' title='Terminal' panel={<Term isTerm={this.isTerm()} orgProject={this.props.orgProject} />} />
 					<Tab id='scripts' key='scripts' title='Scripts' panel={<Scripts />} />
 				</Tabs>
 			</Card>
