@@ -38,7 +38,7 @@ export class Actions extends React.Component<ActionsProps, ActionsState> {
 						orgUsername={this.props.orgUsername}
 						orgProject={this.props.orgProject} />} />
 					<Tab id='dependencies' key='dependencies' title='Dependencies' panel={<Dependencies />} />
-					<Tab id='terminal' key='terminal' title='Terminal' panel={<Term />} />
+					<Tab id='terminal' key='terminal' title='Terminal' panel={<Term isTerm={this.isTerm()}/>} />
 					<Tab id='scripts' key='scripts' title='Scripts' panel={<Scripts />} />
 				</Tabs>
 			</Card>
@@ -47,5 +47,9 @@ export class Actions extends React.Component<ActionsProps, ActionsState> {
 
 	private setSelectedTab(selectedTabId: ReactText) {
 		this.setState({ selectedTabId });
+	}
+
+	private isTerm() {
+		return this.state.selectedTabId === 'terminal' ? true : false;
 	}
 }
