@@ -1,75 +1,53 @@
 import React from 'react';
-import { Card, HTMLTable, Checkbox, Button } from '@blueprintjs/core';
+import path from 'path';
+import { Card, HTMLTable, Checkbox, Button, Classes } from '@blueprintjs/core';
+import { listDependencies } from 'common/api/sfdx';
+import { OrgDependency } from 'common/data/orgs';
+import { ProjectConfig } from 'common/data/projects';
+import { readXmlFile, retrieveFilesFromFolder } from 'common/api/util';
 
-interface IDependency {
-	id: string;
-	current: string;
-	remote: string;
+interface IDependency extends OrgDependency {
+	// current: string;
 	isChecked: boolean;
+}
+
+interface Props {
+	orgUsername: string;
+	orgProject?: ProjectConfig;
 }
 
 interface State {
 	dependencies: IDependency[];
 	isButtonDisabled: boolean;
+	loading: boolean;
 }
 
-export class Dependencies extends React.Component<{}, State> {
-	constructor(props: {}) {
+export class Dependencies extends React.Component<Props, State> {
+	constructor(props: Props) {
 		super(props);
 		this.state = {
-			dependencies: [{
-				id: 'nFORCE',
-				current: '2.345',
-				remote: '2.543',
-				isChecked: false
-			},
-			{
-				id: 'LLC_BI',
-				current: '7.543',
-				remote: '7.987',
-				isChecked: false
-			},
-			{
-				id: 'nDESIGN',
-				current: '1.114',
-				remote: '1.114',
-				isChecked: false
-			}],
-			isButtonDisabled: true
+			dependencies: [],
+			isButtonDisabled: true,
+			loading: true
 		};
 	}
 
-	public renderDependency(dependency: IDependency) {
-		return (
-			<tr key={dependency.id}>
-				<td>{dependency.id}</td>
-				<td>{dependency.current}</td>
-				<td>{dependency.remote}</td>
-				<td>
-					<div className='flex justify-center'>
-						<Checkbox
-							id={dependency.id}
-							checked={dependency.isChecked}
-							onChange={(event) => this.handleCheck(event.currentTarget.id)}
-							disabled={dependency.current === dependency.remote}/>
-					</div>
-				</td>
-			</tr>
-		);
+	public componentWillMount() {
+		this.loadDependencies();
 	}
 
-	public renderDependencies() {
-		let rendered = [];
-		for (const dependency of this.state.dependencies) {
-			rendered.push(this.renderDependency(dependency));
+	public componentDidUpdate(prevProps: Props, prevState: {}, snapshot: {}) {
+		if (this.props.orgUsername !== prevProps.orgUsername ||
+			this.props.orgProject !== prevProps.orgProject) {
+				this.setState({ ...this.state, loading: true });
+				this.loadDependencies();
 		}
-		return rendered;
 	}
 
 	public render() {
 		return (
 			<Card id='dependencies' interactive={false} className='m-2'>
-				<HTMLTable bordered={false} interactive={true}>
+				<HTMLTable className={this.state.loading ? Classes.SKELETON : ''} bordered={false} interactive={true}>
 					<thead>
 						<tr>
 							<th>Package</th>
@@ -84,13 +62,55 @@ export class Dependencies extends React.Component<{}, State> {
 				</ HTMLTable>
 				<div className='flex justify-end'>
 					<Button
+						className={(this.state.loading ? Classes.SKELETON : '') + ' mt-2'}
 						type='submit'
-						text='Upgrade Selected'
+						text='Upgrade'
 						intent='primary'
 						disabled={this.state.isButtonDisabled}
 						onClick={() => this.upgrade()}/>
 				</div>
 			</Card>);
+	}
+
+	private loadDependencies() {
+		if (!this.props.orgProject) {
+			this.setState({ ...this.state, dependencies: [], loading: false });
+			return;
+		}
+
+		listDependencies(this.props.orgUsername, this.props.orgProject.projectDir)
+			.then((result: OrgDependency[]) => {
+				const dependencies = result.map((od) => {
+					const d = od as IDependency;
+					d.isChecked = false;
+					return d;
+				});
+				this.setState({ ...this.state, dependencies });
+			})
+			.finally(() => { this.setState({ ...this.state, loading: false }); });
+	}
+
+	private renderDependencies() {
+		return this.state.dependencies.map(this.renderDependency);
+	}
+
+	private renderDependency(dependency: IDependency): JSX.Element {
+		return (
+			<tr key={dependency.Id}>
+				<td>{dependency.SubscriberPackageNamespace}</td>
+				<td>{'1.0'}</td>
+				<td>{dependency.SubscriberPackageVersionName}</td>
+				<td>
+					<div className='flex justify-center'>
+						<Checkbox
+							id={dependency.Id}
+							checked={dependency.isChecked}
+							onChange={(event) => this.handleCheck(event.currentTarget.id)}
+							disabled={'1.0' === dependency.SubscriberPackageVersionName}/>
+					</div>
+				</td>
+			</tr>
+		);
 	}
 
 	private upgrade() {
@@ -100,16 +120,14 @@ export class Dependencies extends React.Component<{}, State> {
 
 	private handleCheck(id: string) {
 		let disableState = true;
-		// tslint:disable-next-line:forin
-		for (let i in this.state.dependencies) {
-			if (this.state.dependencies[i].id === id) {
-				this.state.dependencies[i].isChecked = !this.state.dependencies[i].isChecked;
-				this.forceUpdate();
+		for (const dependency of this.state.dependencies) {
+			if (dependency.Id === id) {
+				dependency.isChecked = !dependency.isChecked;
 			}
-			if (this.state.dependencies[i].isChecked) {
+			if (dependency.isChecked) {
 				disableState = false;
 			}
-			this.state.isButtonDisabled = disableState;
 		}
+		this.setState({ ...this.state, isButtonDisabled: disableState });
 	}
 }
