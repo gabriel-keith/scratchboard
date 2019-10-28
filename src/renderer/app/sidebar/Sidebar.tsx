@@ -4,13 +4,14 @@ import path from 'path';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { ITreeNode, Tree, Card, Button, Menu, MenuItem, ContextMenu } from '@blueprintjs/core';
+import { ITreeNode, Tree, Card, Button, Menu, MenuItem, ContextMenu, Dialog, } from '@blueprintjs/core';
+import { IOffset } from '@blueprintjs/core/lib/esm/components/context-menu/contextMenu';
 import { ScratchOrg } from 'common/data/orgs';
 import { StoreState } from 'common/store/state';
-import { addProject } from 'common/store/actions/project';
+import { addProject, removeProject } from 'common/store/actions/project';
 import { ProjectConfig } from 'common/data/projects';
 import { ExpirationNotice } from './ExpirationNotice';
-import { IOffset } from '@blueprintjs/core/lib/esm/components/context-menu/contextMenu';
+import { openOrg } from 'common/api/sfdx';
 
 // A good example
 // https://medium.com/knerd/typescript-tips-series-proper-typing-of-react-redux-connected-components-eda058b6727d
@@ -22,14 +23,20 @@ interface StateProps {
 interface OwnProps {
 	orgUsername?: string;
 	onOrgSelect: (selectedUsername: string) => void;
+	isDark: boolean;
 }
 
 interface DispatchProps {
 	addProject(projectDir: string): void;
+	removeProject(projectDir: string): void;
 }
 
 interface State {
 	expandedGroups: {[orgName: string]: boolean};
+
+	isRenameModelOpen: boolean;
+	renameUsername: string;
+	renameValue: string;
 }
 
 type Props = StateProps & DispatchProps & OwnProps;
@@ -40,11 +47,18 @@ const mapStateToProps = (state: StoreState): StateProps => ({
 });
 
 const actions = {
-	addProject
+	addProject,
+	removeProject
 };
 
+enum NodeTreeDataType {
+	ORG, PROJECT, UTILITY
+}
+
 interface NodeTreeData {
-	isOrg: boolean;
+	type: NodeTreeDataType;
+	projectDir?: string;
+	username?: string;
 }
 
 // use Component so it re-renders everytime: `nodes` are not a primitive type
@@ -53,13 +67,19 @@ class Sidebar extends React.PureComponent<Props, State> {
 	constructor(props: Props) {
 		super(props);
 
+		this.createOrgNode = this.createOrgNode.bind(this);
+
 		this.state = {
-			expandedGroups: {}
+			expandedGroups: {},
+			isRenameModelOpen: false,
+			renameUsername: '',
+			renameValue: ''
 		};
 	}
 
 	public render() {
-		return (
+		return <>
+			{this.renderRenameDialog()}
 			<Card id='sidebar' className='flex-auto ml-4 pt-4 mb-0 p-0 h-full'>
 				<Tree
 					contents={this.buildOrgTree()}
@@ -73,7 +93,18 @@ class Sidebar extends React.PureComponent<Props, State> {
 						className='m-5 mt-10' text='Add Project Folder' onClick={this.handleAddProject}></Button>
 				</div>
 			</Card>
-		);
+		</>;
+	}
+
+	private renderRenameDialog() {
+		let dialogStyles = '';
+		if (this.props.isDark) {
+			dialogStyles += 'bp3-dark';
+		}
+
+		return <Dialog className={dialogStyles} isOpen={this.state.isRenameModelOpen} >
+			<Button onClick={() => this.setState({...this.state, isRenameModelOpen:false})} >Close</Button>
+		</Dialog>;
 	}
 
 	private buildOrgTree(): Array<ITreeNode<NodeTreeData>> {
@@ -98,27 +129,44 @@ class Sidebar extends React.PureComponent<Props, State> {
 			}
 		}
 
-		const nodes = Object.entries(orgGroups).map(([orgName, { project, orgs }]) =>
-			this.createParentNode(
-				'project-' + orgName,
-				path.basename(project.projectDir),
-				orgs.map((org) => this.createChildNode(org.username, org.alias || org.username, org.expirationDate))
+		const nodes = Object.values(orgGroups).map(({ project, orgs }) =>
+			this.createProjectNode(
+				project,
+				orgs.map(this.createOrgNode)
 			)
 		);
 
 		if (ungrouped.length > 0) {
-			nodes.push(this.createParentNode('ungrouped', 'ungrouped', ungrouped.map((org) =>
-				this.createChildNode(org.username, org.alias || org.username, org.expirationDate)
-			)));
+			nodes.push(this.createUtilityNode('ungrouped', 'ungrouped', ungrouped.map(this.createOrgNode)));
 		}
 
 		return nodes;
 	}
 
-	private createParentNode(
+	private createProjectNode(
+		project: ProjectConfig,
+		childNodes: Array<ITreeNode<NodeTreeData>>
+	): ITreeNode<NodeTreeData> {
+		const id = `project-${project.orgName}`;
+
+		return {
+			id,
+			label: path.basename(project.projectDir),
+			childNodes,
+			isExpanded: Boolean(this.state.expandedGroups[id]),
+			icon: 'folder-close',
+			hasCaret: childNodes.length > 0,
+			nodeData: {
+				type: NodeTreeDataType.PROJECT,
+				projectDir: project.projectDir
+			}
+		};
+	}
+
+	private createUtilityNode(
 		id: string,
 		label: string,
-		childNodes: ITreeNode<NodeTreeData>[]
+		childNodes: Array<ITreeNode<NodeTreeData>>
 	): ITreeNode<NodeTreeData> {
 		return {
 			id,
@@ -128,40 +176,43 @@ class Sidebar extends React.PureComponent<Props, State> {
 			icon: 'folder-close',
 			hasCaret: childNodes.length > 0,
 			nodeData: {
-				isOrg: false
+				type: NodeTreeDataType.UTILITY
 			}
 		};
 	}
 
-	private createChildNode(id: string, label: string, expirationDate: Date): ITreeNode<NodeTreeData> {
+	private createOrgNode(org: ScratchOrg): ITreeNode<NodeTreeData> {
+		const id = `org-${org.username}`;
+
 		return {
 			id,
-			label,
-			secondaryLabel: this.willExpire(expirationDate) ?
-				<ExpirationNotice expirationDate={new Date(expirationDate)}></ExpirationNotice> :
-				undefined,
+			label: org.alias || org.username,
+			secondaryLabel: this.willExpire(org.expirationDate)
+				&& <ExpirationNotice expirationDate={new Date(org.expirationDate)}></ExpirationNotice>,
 			hasCaret: false,
 			isSelected: this.props.orgUsername === id,
 			icon: (
 				<span className='flip-h bp3-tree-node-icon bp3-icon-standard bp3-icon-key-enter'></span>
 			),
 			nodeData: {
-				isOrg: true
+				type: NodeTreeDataType.ORG,
+				username: org.username
 			}
 		};
 	}
 
 	private handleNodeClick = (
 		node: ITreeNode<NodeTreeData>,
-		_nodePath: number[],
+		_: number[],
 		e: React.MouseEvent<HTMLElement>
 	) => {
 		const nodeId = node.id as string;
 		const nodeData = node.nodeData;
 
-		if (nodeData && nodeData.isOrg) { // we will need a better solution
-			this.props.onOrgSelect(nodeId);
+		if (nodeData && nodeData.type === NodeTreeDataType.ORG && nodeData.username) {
+			this.props.onOrgSelect(nodeData.username);
 		}
+
 		if (node.hasCaret) {
 			this.setExpansion(nodeId, !this.state.expandedGroups[nodeId]);
 		}
@@ -179,7 +230,7 @@ class Sidebar extends React.PureComponent<Props, State> {
 		e.preventDefault();
 		const offset = { left: e.clientX, top: e.clientY };
 
-		if (node.nodeData && node.nodeData.isOrg) {
+		if (node.nodeData && node.nodeData.type === NodeTreeDataType.ORG) {
 			this.createOrgMenu(node, offset);
 		} else {
 			this.createProjectMenu(node, offset);
@@ -187,20 +238,23 @@ class Sidebar extends React.PureComponent<Props, State> {
 	}
 
 	private createOrgMenu(node: ITreeNode<NodeTreeData>, offset: IOffset) {
+		const username = node.nodeData && node.nodeData.username;
+
 		const menu = <Menu>
-			<MenuItem text='open' />
-			<MenuItem text='rename' />
+			{username && <MenuItem text='Open' onClick={() => openOrg(username)} />}
+			<MenuItem text='Rename' onClick={() => this.setState({...this.state, isRenameModelOpen: true})}/>
 		</Menu>;
 
-ContextMenu.show(menu, offset);
+		ContextMenu.show(menu, offset, undefined, this.props.isDark);
 	}
 
 	private createProjectMenu(node: ITreeNode<NodeTreeData>, offset: IOffset) {
+		const projectDir = node.id as string;
 		const menu = <Menu>
-			<MenuItem text='Remove Project' />
+			<MenuItem text='Remove Project' onClick={() => this.props.removeProject(projectDir)} />
 		</Menu>;
 
-		ContextMenu.show(menu, offset);
+		ContextMenu.show(menu, offset, undefined, this.props.isDark);
 	}
 
 	private handleAddProject = () => {

@@ -31,6 +31,8 @@ function mapStateToProps(state: StoreState): StateProps {
 	};
 }
 
+const isDark = true;
+
 class App extends React.Component<Props, State> {
 
 	constructor(props: Props) {
@@ -66,13 +68,17 @@ class App extends React.Component<Props, State> {
 					<NonIdealState className='pb-4' icon='error' description='Select an org to view details' />
 				</Card>);
 		}
+		let baseStyles = 'sb-app h-full';
+		if (isDark) {
+			baseStyles += ' bp3-dark';
+		}
 
 		return (
-			<div className='sb-app bp3-dark h-full'>
+			<div className={baseStyles}>
 				<div className='vh-90'>
 					<TitleBar />
 					<div id='scratchboard' className='flex'>
-						<Sidebar orgUsername={username} onOrgSelect={this.handleOrgSelection} />
+						<Sidebar isDark={true} orgUsername={username} onOrgSelect={this.handleOrgSelection} />
 						<div id='main' className='flex-auto'>
 							{contents}
 						</div>
