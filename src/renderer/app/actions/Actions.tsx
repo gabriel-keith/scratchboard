@@ -31,7 +31,12 @@ export class Actions extends React.Component<ActionsProps, ActionsState> {
 					onChange={(selectedTabId) => this.setSelectedTab(selectedTabId)}
 					selectedTabId={this.state.selectedTabId}
 				>
-					<Tab id='standardActions' key='standardActions' title='Standard Actions' panel={<StandardActions orgUsername={this.props.orgUsername} orgProject={this.props.orgProject} />} />
+					<Tab id='standardActions'
+						key='standardActions'
+						title='Standard Actions'
+						panel={<StandardActions
+						orgUsername={this.props.orgUsername}
+						orgProject={this.props.orgProject} />} />
 					<Tab id='dependencies' key='dependencies' title='Dependencies' panel={<Dependencies />} />
 					<Tab id='terminal' key='terminal' title='Terminal' panel={<Term />} />
 					<Tab id='scripts' key='scripts' title='Scripts' panel={<Scripts />} />
