@@ -6,8 +6,9 @@ import { OrgList, OrgUser } from 'common/data/orgs';
 export const FETCH_ORG_LIST_ACTION = 'FETCH_ORG_LIST';
 export const FETCH_ORG_USERS_ACTION = 'FETCH_ORG_USERS';
 export const OPEN_ORG_ACTION = 'OPEN_ORG_ACTION';
+export const SET_ORG_NICKNAME_ACTION = 'SET_ORG_NICKNAME';
 
-export type OrgListActions = FetchOrgListAction | FetchOrgUsersAction;
+export type OrgListActions = FetchOrgListAction | FetchOrgUsersAction | SetOrgNicknameAction;
 
 interface FetchOrgListAction extends Action {
 	type: typeof FETCH_ORG_LIST_ACTION;
@@ -17,6 +18,14 @@ interface FetchOrgListAction extends Action {
 interface FetchOrgUsersAction extends Action {
 	type: typeof FETCH_ORG_USERS_ACTION;
 	payload: OrgUser[];
+}
+
+interface SetOrgNicknameAction extends Action {
+	type: typeof SET_ORG_NICKNAME_ACTION;
+	payload: {
+		username: string,
+		nickname: string
+	};
 }
 
 export const fetchOrgList = createAliasedAction(
@@ -42,3 +51,10 @@ export const openOrg = createAliasedAction(
 		payload: openOrg(username)
 	})
 );
+
+export function setOrgNickname(username: string, nickname: string): SetOrgNicknameAction {
+	return {
+		type: SET_ORG_NICKNAME_ACTION,
+		payload: { username, nickname }
+	};
+}

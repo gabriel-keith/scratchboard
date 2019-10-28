@@ -54,14 +54,17 @@ class Sidebar extends React.Component<Props, State> {
 
 	public render() {
 		return (
-			<Card id='sidebar' className='flex-auto ml-4 mb-0 p-0 h-full'>
+			<Card id='sidebar' className='flex-auto ml-4 pt-4 mb-0 p-0 h-full'>
 				<Tree
 					contents={this.buildOrgTree()}
 					onNodeClick={this.handleNodeClick}
 					onNodeCollapse={this.handleNodeCollapse}
 					onNodeExpand={this.handleNodeExpand}
 				/>
-				<Button className='float-right' icon='plus' onClick={this.handleAddProject}></Button>
+				<div className='flex justify-center relative bottom-0'>
+					<Button 
+						className='m-5 mt-10' text='Add Project Folder' onClick={this.handleAddProject}></Button>
+				</div>
 			</Card>
 		);
 	}
