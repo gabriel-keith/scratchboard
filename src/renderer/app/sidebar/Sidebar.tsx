@@ -4,12 +4,13 @@ import path from 'path';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { ITreeNode, Tree, Card, Button, Callout } from '@blueprintjs/core';
+import { ITreeNode, Tree, Card, Button, Menu, MenuItem, ContextMenu } from '@blueprintjs/core';
 import { ScratchOrg } from 'common/data/orgs';
 import { StoreState } from 'common/store/state';
 import { addProject } from 'common/store/actions/project';
 import { ProjectConfig } from 'common/data/projects';
 import { ExpirationNotice } from './ExpirationNotice';
+import { IOffset } from '@blueprintjs/core/lib/esm/components/context-menu/contextMenu';
 
 // A good example
 // https://medium.com/knerd/typescript-tips-series-proper-typing-of-react-redux-connected-components-eda058b6727d
@@ -65,6 +66,7 @@ class Sidebar extends React.PureComponent<Props, State> {
 					onNodeClick={this.handleNodeClick}
 					onNodeCollapse={this.handleNodeCollapse}
 					onNodeExpand={this.handleNodeExpand}
+					onNodeContextMenu={this.handleContextMenu}
 				/>
 				<div className='flex justify-center relative bottom-0'>
 					<Button
@@ -104,9 +106,11 @@ class Sidebar extends React.PureComponent<Props, State> {
 			)
 		);
 
-		nodes.push(this.createParentNode('ungrouped', 'ungrouped', ungrouped.map((org) =>
-			this.createChildNode(org.username, org.alias || org.username, org.expirationDate)
-		)));
+		if (ungrouped.length > 0) {
+			nodes.push(this.createParentNode('ungrouped', 'ungrouped', ungrouped.map((org) =>
+				this.createChildNode(org.username, org.alias || org.username, org.expirationDate)
+			)));
+		}
 
 		return nodes;
 	}
@@ -169,6 +173,34 @@ class Sidebar extends React.PureComponent<Props, State> {
 
 	private handleNodeExpand = (nodeData: ITreeNode) => {
 		this.setExpansion(nodeData.id as string, true);
+	}
+
+	private handleContextMenu = (node: ITreeNode<NodeTreeData>, _: number[], e: React.MouseEvent<HTMLElement>) => {
+		e.preventDefault();
+		const offset = { left: e.clientX, top: e.clientY };
+
+		if (node.nodeData && node.nodeData.isOrg) {
+			this.createOrgMenu(node, offset);
+		} else {
+			this.createProjectMenu(node, offset);
+		}
+	}
+
+	private createOrgMenu(node: ITreeNode<NodeTreeData>, offset: IOffset) {
+		const menu = <Menu>
+			<MenuItem text='open' />
+			<MenuItem text='rename' />
+		</Menu>;
+
+ContextMenu.show(menu, offset);
+	}
+
+	private createProjectMenu(node: ITreeNode<NodeTreeData>, offset: IOffset) {
+		const menu = <Menu>
+			<MenuItem text='Remove Project' />
+		</Menu>;
+
+		ContextMenu.show(menu, offset);
 	}
 
 	private handleAddProject = () => {
