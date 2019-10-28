@@ -8,9 +8,9 @@ import { ProjectConfig } from 'common/data/projects';
 //TO DO:
 // 1) Margins
 // 2) Handle resizing
-// 3) figure out how to set starting working directly
+// 3) figure out how to set starting working directory
 // 4) close on change of org
-// 5) change bash-3.2 to working directory + username
+// 5) change bash-3.2 to working directory + username => exec bash vs exec bash --login / exec bash -l
 // 6) Maybe add a border?
 // 7) change background color and font color
 
@@ -33,7 +33,7 @@ export class Term extends React.Component<Props> {
 			name: 'xterm-color',
 			cols: 80,
 			rows: 30,
-			cwd: process.cwd(), // working directory!
+			cwd: this.props.ProjectConfig ? this.props.ProjectConfig.projectDirectory : process.env.HOME,
 			env: process.env
 		});
 
