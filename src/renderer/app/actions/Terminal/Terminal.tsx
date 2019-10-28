@@ -3,6 +3,7 @@ var os = require('os');
 var pty = require('node-pty');
 import { Terminal } from 'xterm';
 import '../../../../../node_modules/xterm/css/xterm.css';
+import { ProjectConfig } from 'common/data/projects';
 
 //TO DO:
 // 1) Margins
@@ -13,8 +14,11 @@ import '../../../../../node_modules/xterm/css/xterm.css';
 // 6) Maybe add a border?
 // 7) change background color and font color
 
+interface Props {
+	orgProject?: ProjectConfig;
+}
 
-export class Term extends React.Component {
+export class Term extends React.Component<Props> {
 	public render() {
 		return (
 			<div className="flex mx-auto px-5 py-5 w-full">
