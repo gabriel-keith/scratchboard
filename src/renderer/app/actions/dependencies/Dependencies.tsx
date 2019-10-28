@@ -1,13 +1,11 @@
 import React from 'react';
-import path from 'path';
 import { Card, HTMLTable, Checkbox, Button, Classes } from '@blueprintjs/core';
-import { listDependencies } from 'common/api/sfdx';
-import { OrgDependency } from 'common/data/orgs';
 import { ProjectConfig } from 'common/data/projects';
-import { readXmlFile, retrieveFilesFromFolder } from 'common/api/util';
+import { Packages, IPackage, fetchDependencies, updateToLatest } from 'common/api/sfupdate';
 
-interface IDependency extends OrgDependency {
-	// current: string;
+interface IDependency extends IPackage {
+	current: IPackage;
+	target: IPackage;
 	isChecked: boolean;
 }
 
@@ -17,6 +15,7 @@ interface Props {
 }
 
 interface State {
+	compareWithLatest: boolean;
 	dependencies: IDependency[];
 	isButtonDisabled: boolean;
 	loading: boolean;
@@ -26,6 +25,7 @@ export class Dependencies extends React.Component<Props, State> {
 	constructor(props: Props) {
 		super(props);
 		this.state = {
+			compareWithLatest: false,
 			dependencies: [],
 			isButtonDisabled: true,
 			loading: true
@@ -53,7 +53,7 @@ export class Dependencies extends React.Component<Props, State> {
 							<th>Package</th>
 							<th>Installed Version</th>
 							<th>Remote Version</th>
-							<th>Upgrade to remote</th>
+							<th><Checkbox></Checkbox></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -78,35 +78,49 @@ export class Dependencies extends React.Component<Props, State> {
 			return;
 		}
 
-		listDependencies(this.props.orgUsername, this.props.orgProject.projectDir)
-			.then((result: OrgDependency[]) => {
-				const dependencies = result.map((od) => {
-					const d = od as IDependency;
-					d.isChecked = false;
-					return d;
-				});
+		fetchDependencies(this.props.orgProject.projectDir, this.state.compareWithLatest, this.props.orgUsername)
+			.then((result: Packages) => {
+				const dependencyMap = new Map<string, IDependency>();
+				for (const target of result.target) {
+					if (!dependencyMap.has(target.packageName)) {
+						dependencyMap.set(target.packageName, { target, isChecked: false } as IDependency);
+					} else {
+						dependencyMap.get(target.packageName).target = target;
+					}
+				}
+				for (const current of result.current) {
+					if (!dependencyMap.has(current.packageName)) {
+						dependencyMap.set(current.packageName, { current, isChecked: false } as IDependency);
+					} else {
+						dependencyMap.get(current.packageName).current = current;
+					}
+				}
+
+				const dependencies = Array.from(dependencyMap.values());
 				this.setState({ ...this.state, dependencies });
 			})
 			.finally(() => { this.setState({ ...this.state, loading: false }); });
 	}
 
 	private renderDependencies() {
-		return this.state.dependencies.map(this.renderDependency);
+		return this.state.dependencies.map((d) => this.renderDependency(d));
 	}
 
 	private renderDependency(dependency: IDependency): JSX.Element {
+		const packageName = dependency.current ? dependency.current.packageName : dependency.target.packageName;
+		const isDisabled = !dependency.target || dependency.target.version === dependency.current.version;
 		return (
-			<tr key={dependency.Id}>
-				<td>{dependency.SubscriberPackageNamespace}</td>
-				<td>{'1.0'}</td>
-				<td>{dependency.SubscriberPackageVersionName}</td>
+			<tr key={packageName} onClick={() => { if (!isDisabled) { this.handleCheck(packageName); } }}>
+				<td>{packageName}</td>
+				<td>{dependency.target ? dependency.target.version : ''}</td>
+				<td>{dependency.current ? dependency.current.version : ''}</td>
 				<td>
 					<div className='flex justify-center'>
 						<Checkbox
-							id={dependency.Id}
+							id={packageName}
 							checked={dependency.isChecked}
-							onChange={(event) => this.handleCheck(event.currentTarget.id)}
-							disabled={'1.0' === dependency.SubscriberPackageVersionName}/>
+							onChange={() => {this.handleCheck(packageName); }}
+							disabled={isDisabled}/>
 					</div>
 				</td>
 			</tr>
@@ -114,14 +128,15 @@ export class Dependencies extends React.Component<Props, State> {
 	}
 
 	private upgrade() {
-		// Use services to upgrade here
-		return 0;
+		const packages = this.state.dependencies.filter((d) => d.isChecked).map((d) => d.target.packageName);
+		updateToLatest(this.props.orgProject.projectDir, packages, this.props.orgUsername)
+			.then((result) => { this.setState({ ...this.state, loading: true }); this.loadDependencies(); });
 	}
 
-	private handleCheck(id: string) {
+	private handleCheck = (id: string) => {
 		let disableState = true;
 		for (const dependency of this.state.dependencies) {
-			if (dependency.Id === id) {
+			if (dependency.target && dependency.target.packageName === id) {
 				dependency.isChecked = !dependency.isChecked;
 			}
 			if (dependency.isChecked) {
