@@ -1,4 +1,5 @@
 import { remote } from 'electron';
+import path from 'path';
 
 import React from 'react';
 import { connect } from 'react-redux';
@@ -14,7 +15,7 @@ import { ExpirationNotice } from './ExpirationNotice';
 // https://medium.com/knerd/typescript-tips-series-proper-typing-of-react-redux-connected-components-eda058b6727d
 interface StateProps {
 	orgList: ScratchOrg[];
-	projectMap: { [orgName: string]: ProjectConfig };
+	projectList: ProjectConfig[];
 }
 
 interface OwnProps {
@@ -34,7 +35,7 @@ type Props = StateProps & DispatchProps & OwnProps;
 
 const mapStateToProps = (state: StoreState): StateProps => ({
 	orgList: Object.values(state.org.scratchOrgs),
-	projectMap: state.project.projectMap
+	projectList: Object.values(state.project.projectMap)
 });
 
 const actions = {
@@ -62,7 +63,7 @@ class Sidebar extends React.Component<Props, State> {
 					onNodeExpand={this.handleNodeExpand}
 				/>
 				<div className='flex justify-center relative bottom-0'>
-					<Button 
+					<Button
 						className='m-5 mt-10' text='Add Project Folder' onClick={this.handleAddProject}></Button>
 				</div>
 			</Card>
@@ -70,18 +71,32 @@ class Sidebar extends React.Component<Props, State> {
 	}
 
 	private buildOrgTree(): ITreeNode[] {
-		const orgGroups: { [orgName: string]: ScratchOrg[] } = {};
+		const orgGroups: {
+			[orgName: string]: {
+				project: ProjectConfig,
+				orgs: ScratchOrg[]
+			}
+		} = {};
+		const ungrouped = [];
 
-		for (const org of this.props.orgList) {
-			const group = orgGroups[org.orgName] || (orgGroups[org.orgName] = []);
-			group.push(org);
+		for (const project of this.props.projectList) {
+			orgGroups[project.orgName] = { project, orgs: [] };
 		}
 
-		return Object.entries(orgGroups).map(([orgName, orgList]) =>
+		for (const org of this.props.orgList) {
+			const group = orgGroups[org.orgName];
+			if (group) {
+				group.orgs.push(org);
+			} else {
+				ungrouped.push(org);
+			}
+		}
+
+		return Object.entries(orgGroups).map(([orgName, { project, orgs }]) =>
 			this.createParentNode(
 				orgName,
-				orgName,
-				orgList.map((org) => this.createChildNode(org.username, org.alias, org.expirationDate))
+				path.basename(project.projectDir),
+				orgs.map((org) => this.createChildNode(org.username, org.alias, org.expirationDate))
 			)
 		);
 	}
@@ -97,7 +112,7 @@ class Sidebar extends React.Component<Props, State> {
 			childNodes,
 			isExpanded: Boolean(this.state.expandedGroups[id]),
 			icon: 'folder-close',
-			hasCaret: true
+			hasCaret: childNodes.length > 0
 		};
 	}
 
