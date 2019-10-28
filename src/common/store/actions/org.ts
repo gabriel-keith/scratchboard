@@ -12,12 +12,14 @@ export type OrgListActions = FetchOrgListAction | FetchOrgUsersAction | SetOrgNi
 
 interface FetchOrgListAction extends Action {
 	type: typeof FETCH_ORG_LIST_ACTION;
-	payload: OrgList;
+	payload?: OrgList;
+	error?: string;
 }
 
 interface FetchOrgUsersAction extends Action {
 	type: typeof FETCH_ORG_USERS_ACTION;
-	payload: OrgUser[];
+	payload?: OrgUser[];
+	error?: string;
 }
 
 interface SetOrgNicknameAction extends Action {

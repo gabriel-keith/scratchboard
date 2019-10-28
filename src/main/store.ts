@@ -37,7 +37,7 @@ function loadInitState(): StoreState {
 			nicknames: electronStore.get(NICKNAME_KEY, {})
 		},
 		project: {
-			projectMap: electronStore.get(PROJECT_CONFIG_KEY, createDefaultProjectState())
+			projectMap: electronStore.get(PROJECT_CONFIG_KEY, {})
 		}
 	};
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Alert, Button, ButtonGroup, Popover, Classes, Position, Menu, MenuItem, Intent } from '@blueprintjs/core';
+import { Alert, Button, ButtonGroup, Popover, Classes, Position, Menu, MenuItem, Intent, Overlay, Card } from '@blueprintjs/core';
 import { CHEVRON_DOWN, WARNING_SIGN } from '@blueprintjs/icons/lib/esm/generated/iconNames';
 import { listUsers, openOrg, setOrgAsDefault, deleteOrg } from 'common/api/sfdx';
 import { clipboard } from 'electron';
@@ -59,13 +59,14 @@ export class StandardActions extends React.Component<StandardActionsProps, Stand
 						</Menu>
 					</Popover>
 				</ButtonGroup>
-				<Button className='mr-2' intent={Intent.PRIMARY} onClick={() => this.handleNewUserClick()}>
+				<Button className='mr-2' intent={Intent.PRIMARY} onClick={() => this.handleNewUserClick() }>
 					New User
 				</Button>
 				<Button className='mr-2' intent={Intent.WARNING} onClick={() => { this.setAsDefault(); }}>
 					Set as Default
 				</Button>
-				<Button className='mr-2' intent={Intent.DANGER} onClick={() => { this.setState({ showDeleteOrgModal: true }); }}>
+				<Button className='mr-2'
+					intent={Intent.DANGER} onClick={() => { this.setState({ showDeleteOrgModal: true }); }}>
 					Delete
 				</Button>
 				<Alert
@@ -114,6 +115,7 @@ export class StandardActions extends React.Component<StandardActionsProps, Stand
 	}
 
 	private openOrg(user?: string): void {
+		this.setState({currentForm: this.renderOpenOrgConfirm()});
 		openOrg(user || this.props.orgUsername);
 	}
 
@@ -126,10 +128,46 @@ export class StandardActions extends React.Component<StandardActionsProps, Stand
 		const orgProject = this.props.orgProject;
 		if (orgProject) {
 			setOrgAsDefault(this.props.orgUsername, orgProject.projectDir);
+			this.setState({currentForm: this.renderDefaultOrgMessage(true)});
+		} else {
+			this.setState({currentForm: this.renderDefaultOrgMessage(false)});
 		}
+		this.forceUpdate();
 	}
 
 	private deleteOrg(): void {
 		deleteOrg(this.props.orgUsername);
+	}
+
+	private renderDefaultOrgMessage(success: boolean) {
+		if (success) {
+			return (
+				<Card id='defaultSet' interactive={false} className='m-2 mt-4'>
+					<div className='flex-col justify-center'>
+						<p className="mb-2">Default Org successfully set </p>
+						<p>Org Name: {this.props.orgProject.orgName}</p>
+						<p>Project Directory: {this.props.orgProject.projectDir}</p>
+					</div>
+				</Card>
+			);
+		} else {
+			return (
+				<Card id='defaultSet' interactive={false} className='m-2'>
+					<div className='flex justify-center'>
+						<p> Defualt Org unable to be set</p>
+					</div>
+				</Card>
+			);
+		}
+	}
+
+	private renderOpenOrgConfirm() {
+		return (
+			<Card id='defaultSet' interactive={false} className='m-2 mt-4'>
+				<div className='flex-col justify-center'>
+					<p>Org opening...</p>
+				</div>
+			</Card>
+		);
 	}
 }

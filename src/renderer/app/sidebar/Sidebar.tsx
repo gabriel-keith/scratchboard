@@ -1,4 +1,5 @@
 import { remote } from 'electron';
+import path from 'path';
 
 import React from 'react';
 import { connect } from 'react-redux';
@@ -14,7 +15,7 @@ import { ExpirationNotice } from './ExpirationNotice';
 // https://medium.com/knerd/typescript-tips-series-proper-typing-of-react-redux-connected-components-eda058b6727d
 interface StateProps {
 	orgList: ScratchOrg[];
-	projectMap: { [orgName: string]: ProjectConfig };
+	projectList: ProjectConfig[];
 }
 
 interface OwnProps {
@@ -34,16 +35,20 @@ type Props = StateProps & DispatchProps & OwnProps;
 
 const mapStateToProps = (state: StoreState): StateProps => ({
 	orgList: Object.values(state.org.scratchOrgs),
-	projectMap: state.project.projectMap
+	projectList: Object.values(state.project.projectMap)
 });
 
 const actions = {
 	addProject
 };
 
+interface NodeTreeData {
+	isOrg: boolean;
+}
+
 // use Component so it re-renders everytime: `nodes` are not a primitive type
 // and therefore aren't included in shallow prop comparison
-class Sidebar extends React.Component<Props, State> {
+class Sidebar extends React.PureComponent<Props, State> {
 	constructor(props: Props) {
 		super(props);
 
@@ -62,46 +67,69 @@ class Sidebar extends React.Component<Props, State> {
 					onNodeExpand={this.handleNodeExpand}
 				/>
 				<div className='flex justify-center relative bottom-0'>
-					<Button 
+					<Button
 						className='m-5 mt-10' text='Add Project Folder' onClick={this.handleAddProject}></Button>
 				</div>
 			</Card>
 		);
 	}
 
-	private buildOrgTree(): ITreeNode[] {
-		const orgGroups: { [orgName: string]: ScratchOrg[] } = {};
+	private buildOrgTree(): Array<ITreeNode<NodeTreeData>> {
+		const orgGroups: {
+			[orgName: string]: {
+				project: ProjectConfig,
+				orgs: ScratchOrg[]
+			}
+		} = {};
+		const ungrouped = [];
 
-		for (const org of this.props.orgList) {
-			const group = orgGroups[org.orgName] || (orgGroups[org.orgName] = []);
-			group.push(org);
+		for (const project of this.props.projectList) {
+			orgGroups[project.orgName] = { project, orgs: [] };
 		}
 
-		return Object.entries(orgGroups).map(([orgName, orgList]) =>
+		for (const org of this.props.orgList) {
+			const group = orgGroups[org.orgName];
+			if (group) {
+				group.orgs.push(org);
+			} else {
+				ungrouped.push(org);
+			}
+		}
+
+		const nodes = Object.entries(orgGroups).map(([orgName, { project, orgs }]) =>
 			this.createParentNode(
-				orgName,
-				orgName,
-				orgList.map((org) => this.createChildNode(org.username, org.alias, org.expirationDate))
+				'project-' + orgName,
+				path.basename(project.projectDir),
+				orgs.map((org) => this.createChildNode(org.username, org.alias || org.username, org.expirationDate))
 			)
 		);
+
+		nodes.push(this.createParentNode('ungrouped', 'ungrouped', ungrouped.map((org) =>
+			this.createChildNode(org.username, org.alias || org.username, org.expirationDate)
+		)));
+
+		return nodes;
 	}
 
 	private createParentNode(
 		id: string,
 		label: string,
-		childNodes: ITreeNode[]
-	): ITreeNode {
+		childNodes: ITreeNode<NodeTreeData>[]
+	): ITreeNode<NodeTreeData> {
 		return {
 			id,
 			label,
 			childNodes,
 			isExpanded: Boolean(this.state.expandedGroups[id]),
 			icon: 'folder-close',
-			hasCaret: true
+			hasCaret: childNodes.length > 0,
+			nodeData: {
+				isOrg: false
+			}
 		};
 	}
 
-	private createChildNode(id: string, label: string, expirationDate: Date): ITreeNode {
+	private createChildNode(id: string, label: string, expirationDate: Date): ITreeNode<NodeTreeData> {
 		return {
 			id,
 			label,
@@ -112,20 +140,25 @@ class Sidebar extends React.Component<Props, State> {
 			isSelected: this.props.orgUsername === id,
 			icon: (
 				<span className='flip-h bp3-tree-node-icon bp3-icon-standard bp3-icon-key-enter'></span>
-			)
+			),
+			nodeData: {
+				isOrg: true
+			}
 		};
 	}
 
 	private handleNodeClick = (
-		nodeData: ITreeNode,
+		node: ITreeNode<NodeTreeData>,
 		_nodePath: number[],
 		e: React.MouseEvent<HTMLElement>
 	) => {
-		const nodeId = nodeData.id as string;
+		const nodeId = node.id as string;
+		const nodeData = node.nodeData;
 
-		if (!nodeData.hasCaret) { // we will need a better solution
+		if (nodeData && nodeData.isOrg) { // we will need a better solution
 			this.props.onOrgSelect(nodeId);
-		} else {
+		}
+		if (node.hasCaret) {
 			this.setExpansion(nodeId, !this.state.expandedGroups[nodeId]);
 		}
 	}
