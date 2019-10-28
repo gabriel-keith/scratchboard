@@ -36,6 +36,7 @@ export class Details extends React.Component<Props> {
 							value={this.calcExpirationValue()}
 							className='bp3-intent-primary my-2'
 						></ProgressBar>
+						<p>{this.getDaysToExpiration()} Days Left</p>
 					</div>
 				</div>
 				<div className='flex flex-wrap justify-between ml-3 w-3/4 mb-4'>
@@ -62,12 +63,18 @@ export class Details extends React.Component<Props> {
 						<p className='ml-3'>{this.props.scratchOrg.orgName}</p>
 					</div>
 					<div className='p-1'>
-						<p>Users</p>
-						<p className='ml-3'>View List</p>
+						<p>Org Id</p>
+						<p className='ml-3'>{this.props.scratchOrg.devHubOrgId}</p>
 					</div>
 				</div>
 			</Card>
 		);
+	}
+
+	private getDaysToExpiration() {
+		const expiration = new Date(this.props.scratchOrg.expirationDate);
+		const timeLeft = Math.abs(new Date().getTime() - expiration.getTime());
+		return Math.ceil(timeLeft / (1000 * 3600 * 24));
 	}
 
 	private calcExpirationValue() {
@@ -75,8 +82,7 @@ export class Details extends React.Component<Props> {
 		const expiration = new Date(this.props.scratchOrg.expirationDate);
 		const difference = Math.abs(created.getTime() - expiration.getTime());
 		const totalTime = Math.ceil(difference / (1000 * 3600 * 24));
-		let timeLeft = Math.abs(new Date().getTime() - expiration.getTime());
-		timeLeft = Math.ceil(timeLeft / (1000 * 3600 * 24));
+		const timeLeft = this.getDaysToExpiration();
 
 		const remainingPercent = timeLeft/totalTime;
 		return remainingPercent;
