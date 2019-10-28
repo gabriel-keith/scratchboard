@@ -8,6 +8,10 @@ export function projectReducer(state: ProjectState = createDefaultProjectState()
 
 	switch (action.type) {
 		case ADD_PROJECT:
+			if (!action.payload) {
+				return state;
+			}
+
 			projects = {
 				...state.projectMap,
 				[action.payload.orgName]: action.payload

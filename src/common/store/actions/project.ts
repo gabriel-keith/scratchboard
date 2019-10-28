@@ -10,7 +10,8 @@ export type ProjectAction = AddProjectAction | RemoveProjectAction;
 
 export interface AddProjectAction extends Action {
 	type: typeof ADD_PROJECT;
-	payload: ProjectConfig;
+	payload?: ProjectConfig;
+	error?: string;
 }
 
 export interface RemoveProjectAction extends Action {

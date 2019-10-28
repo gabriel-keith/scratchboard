@@ -61,6 +61,5 @@ app.on('activate', () => {
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
 	mainWindow = createMainWindow();
-	console.log(app.getPath('userData'));
 	store.dispatch(fetchOrgList());
 });

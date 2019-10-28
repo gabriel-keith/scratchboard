@@ -4,11 +4,19 @@ import { OrgListActions, FETCH_ORG_LIST_ACTION, FETCH_ORG_USERS_ACTION, SET_ORG_
 export function orgReducer(state: OrgState = createDefaultOrgsState(), action: OrgListActions): OrgState {
 	switch(action.type) {
 		case FETCH_ORG_LIST_ACTION:
+			if (!action.payload) {
+				return state;
+			}
+
 			return {
 				...state,
 				scratchOrgs: groupByUsername(action.payload.scratchOrgs)
 			};
 		case FETCH_ORG_USERS_ACTION:
+			if (!action.payload) {
+				return state;
+			}
+
 			return {
 				...state,
 				users: {

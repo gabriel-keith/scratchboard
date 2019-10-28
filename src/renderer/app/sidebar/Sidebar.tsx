@@ -42,9 +42,13 @@ const actions = {
 	addProject
 };
 
+interface NodeTreeData {
+	isOrg: boolean;
+}
+
 // use Component so it re-renders everytime: `nodes` are not a primitive type
 // and therefore aren't included in shallow prop comparison
-class Sidebar extends React.Component<Props, State> {
+class Sidebar extends React.PureComponent<Props, State> {
 	constructor(props: Props) {
 		super(props);
 
@@ -70,7 +74,7 @@ class Sidebar extends React.Component<Props, State> {
 		);
 	}
 
-	private buildOrgTree(): ITreeNode[] {
+	private buildOrgTree(): Array<ITreeNode<NodeTreeData>> {
 		const orgGroups: {
 			[orgName: string]: {
 				project: ProjectConfig,
@@ -92,31 +96,40 @@ class Sidebar extends React.Component<Props, State> {
 			}
 		}
 
-		return Object.entries(orgGroups).map(([orgName, { project, orgs }]) =>
+		const nodes = Object.entries(orgGroups).map(([orgName, { project, orgs }]) =>
 			this.createParentNode(
-				orgName,
+				'project-' + orgName,
 				path.basename(project.projectDir),
-				orgs.map((org) => this.createChildNode(org.username, org.alias, org.expirationDate))
+				orgs.map((org) => this.createChildNode(org.username, org.alias || org.username, org.expirationDate))
 			)
 		);
+
+		nodes.push(this.createParentNode('ungrouped', 'ungrouped', ungrouped.map((org) =>
+			this.createChildNode(org.username, org.alias || org.username, org.expirationDate)
+		)));
+
+		return nodes;
 	}
 
 	private createParentNode(
 		id: string,
 		label: string,
-		childNodes: ITreeNode[]
-	): ITreeNode {
+		childNodes: ITreeNode<NodeTreeData>[]
+	): ITreeNode<NodeTreeData> {
 		return {
 			id,
 			label,
 			childNodes,
 			isExpanded: Boolean(this.state.expandedGroups[id]),
 			icon: 'folder-close',
-			hasCaret: childNodes.length > 0
+			hasCaret: childNodes.length > 0,
+			nodeData: {
+				isOrg: false
+			}
 		};
 	}
 
-	private createChildNode(id: string, label: string, expirationDate: Date): ITreeNode {
+	private createChildNode(id: string, label: string, expirationDate: Date): ITreeNode<NodeTreeData> {
 		return {
 			id,
 			label,
@@ -127,20 +140,25 @@ class Sidebar extends React.Component<Props, State> {
 			isSelected: this.props.orgUsername === id,
 			icon: (
 				<span className='flip-h bp3-tree-node-icon bp3-icon-standard bp3-icon-key-enter'></span>
-			)
+			),
+			nodeData: {
+				isOrg: true
+			}
 		};
 	}
 
 	private handleNodeClick = (
-		nodeData: ITreeNode,
+		node: ITreeNode<NodeTreeData>,
 		_nodePath: number[],
 		e: React.MouseEvent<HTMLElement>
 	) => {
-		const nodeId = nodeData.id as string;
+		const nodeId = node.id as string;
+		const nodeData = node.nodeData;
 
-		if (!nodeData.hasCaret) { // we will need a better solution
+		if (nodeData && nodeData.isOrg) { // we will need a better solution
 			this.props.onOrgSelect(nodeId);
-		} else {
+		}
+		if (node.hasCaret) {
 			this.setExpansion(nodeId, !this.state.expandedGroups[nodeId]);
 		}
 	}

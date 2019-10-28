@@ -39,10 +39,13 @@ export class Term extends React.Component<Props> {
 		const shell = process.env[os.platform() === 'win32' ? 'COMSPEC' : 'SHELL'];
 		const ptyProcess = pty.spawn(shell, [], {
 			name: 'xterm-color',
-			cwd: this.props.ProjectConfig ? this.props.ProjectConfig.projectDirectory : process.env.HOME,
+			cwd: this.props.orgProject ? this.props.orgProject.projectDir : process.env.HOME,
 			env: process.env
 		});
-
+		
+		// Update with colors as you find the need.
+		// iTerm Theme docs: https://xtermjs.org/docs/api/terminal/interfaces/itheme/
+		// Terminal colors for reference: https://jeffkreeftmeijer.com/vim-16-color/
 		const xterm = new Terminal({
 			cursorBlink: true,
 			cols: 120,
@@ -51,11 +54,14 @@ export class Term extends React.Component<Props> {
 				background: '#293742',
 				cursor: '#00ff00',
 				cursorAccent: '#293742',
-				red: '#FF605C'
+				red: '#ff443a',
+				selection: 'transparent'
 			}
 		});
 
+		xterm.writeln('Welcome to Scratchboard Terminal. Please use `exec bash -l` for the full bash experience.');
 		xterm.open(this.refs.xterm);
+		xterm.focus();
 
 		xterm.onData(data => ptyProcess.write(data));
 		ptyProcess.on('data', function (data) {
