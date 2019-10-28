@@ -1,11 +1,11 @@
 import { executePromise } from '../util';
 
-interface IPackage {
+export interface IPackage {
 	packageName: string;
 	version: string;
 }
 
-interface Packages {
+export interface Packages {
 	target: IPackage[];
 	current: IPackage[];
 }
@@ -16,10 +16,10 @@ export async function fetchDependencies(projectFolder: string, useLatest: boolea
 		params += ' -u';
 	}
 	if (username) {
-		params += ` -t ${username}`;
+		params += ` -a ${username}`;
 	}
 
-	const results: string = await executePromise(`sfupdate -dx${params}`, projectFolder);
+	const results: string = await executePromise(`sfupdate -dx -t${params}`, projectFolder);
 
 	const lines = results.split('\n');
 
@@ -31,6 +31,7 @@ export async function fetchDependencies(projectFolder: string, useLatest: boolea
 		target.push(parsePackage(lines[index]));
 		index++;
 	}
+	index += 2;
 
 	while (lines[index]) {
 		current.push(parsePackage(lines[index]));
@@ -57,7 +58,7 @@ export function updateToLatest(projectFolder: string, packages?: string[], usern
 
 function parsePackage(line: string): IPackage {
 	return {
-		packageName: line.split('\n', 1)[0],
+		packageName: line.split(' ', 1)[0],
 		version: line.split('\'')[3]
 	};
 }

@@ -39,18 +39,22 @@ export class Term extends React.Component<Props> {
 		const shell = process.env[os.platform() === 'win32' ? 'COMSPEC' : 'SHELL'];
 		const ptyProcess = pty.spawn(shell, [], {
 			name: 'xterm-color',
-			cols: 80,
-			rows: 30,
 			cwd: this.props.orgProject ? this.props.orgProject.projectDir : process.env.HOME,
 			env: process.env
 		});
-
+		
+		// Update with colors as you find the need.
+		// iTerm Theme docs: https://xtermjs.org/docs/api/terminal/interfaces/itheme/
+		// Terminal colors for reference: https://jeffkreeftmeijer.com/vim-16-color/
 		const xterm = new Terminal({
+			cursorBlink: true,
+			cols: 120,
+			rows: 25,
 			theme: {
 				background: '#293742',
 				cursor: '#00ff00',
 				cursorAccent: '#293742',
-				red: '#FF605C',
+				red: '#ff443a',
 				selection: 'transparent'
 			}
 		});
