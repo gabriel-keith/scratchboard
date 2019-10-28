@@ -41,21 +41,23 @@ export class Term extends React.Component<Props> {
 			name: 'xterm-color',
 			cols: 80,
 			rows: 30,
-			cwd: this.props.ProjectConfig ? this.props.ProjectConfig.projectDirectory : process.env.HOME,
+			cwd: this.props.orgProject ? this.props.orgProject.projectDir : process.env.HOME,
 			env: process.env
 		});
 
 		const xterm = new Terminal({
-			cursorBlink: true,
 			theme: {
 				background: '#293742',
 				cursor: '#00ff00',
 				cursorAccent: '#293742',
-				red: '#FF605C'
+				red: '#FF605C',
+				selection: 'transparent'
 			}
 		});
 
+		xterm.writeln('Welcome to Scratchboard Terminal. Please use `exec bash -l` for the full bash experience.');
 		xterm.open(this.refs.xterm);
+		xterm.focus();
 
 		xterm.onData(data => ptyProcess.write(data));
 		ptyProcess.on('data', function (data) {
