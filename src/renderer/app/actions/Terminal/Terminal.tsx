@@ -17,7 +17,9 @@ import '../../../../../node_modules/xterm/css/xterm.css';
 export class Term extends React.Component {
 	public render() {
 		return (
-			<div ref="xterm"></div>
+			<div className="flex mx-auto px-5 py-5 w-full">
+				<div ref="xterm" className='w-full'></div>
+			</div>
 		);
 	}
 
@@ -27,7 +29,7 @@ export class Term extends React.Component {
 			name: 'xterm-color',
 			cols: 80,
 			rows: 30,
-			cwd: process.cwd(), //working directory!
+			cwd: process.cwd(), // working directory!
 			env: process.env
 		});
 
