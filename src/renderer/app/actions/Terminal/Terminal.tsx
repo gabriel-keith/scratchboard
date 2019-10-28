@@ -13,9 +13,6 @@ interface Props {
 }
 
 export class Term extends React.Component<Props> {
-	private termStyle = {
-		background: '#293742'
-	};
 
 	public constructor(props: Props) {
 		super(props);
@@ -27,7 +24,7 @@ export class Term extends React.Component<Props> {
 	public render() {
 		return (
 			<div className="flex mx-auto w-full border-solid border border-teal-900 rounded overflow-hidden">
-				<div ref="xterm" className='w-full p-1' style={this.termStyle}></div>
+				<div ref="xterm" className='w-full'></div>
 			</div>
 		);
 	}
