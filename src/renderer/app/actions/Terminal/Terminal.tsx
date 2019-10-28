@@ -6,15 +6,6 @@ import '../../../../../node_modules/xterm/css/xterm.css';
 import { ProjectConfig } from 'common/data/projects';
 import { number } from 'prop-types';
 
-//TO DO:
-// 1) Margins
-// 2) Handle resizing (check?)
-// 3) figure out how to set starting working directory (check)
-// 4) close on change of org
-// 5) change bash-3.2 to working directory + username => exec bash vs exec bash --login / exec bash -l
-// 6) Maybe add a border?
-// 7) change background color and font color
-
 interface Props {
 	orgProject?: ProjectConfig;
 	isTerm: boolean;
@@ -30,7 +21,7 @@ export class Term extends React.Component<Props> {
 
 	public render() {
 		return (
-			<div className="flex mx-auto w-full">
+			<div className="flex mx-auto w-full border-solid border border-teal-900 rounded overflow-hidden">
 				<div ref="xterm" className='w-full'></div>
 			</div>
 		);
@@ -52,7 +43,7 @@ export class Term extends React.Component<Props> {
 			env: process.env
 		});
 
-		const xterm = new Terminal();
+		const xterm = new Terminal({cursorBlink: true, cursorStyle: 'block', theme: {background: '#293742', cursor: '#00ff00', cursorAccent: '#0000ff'}});
 
 		xterm.open(this.refs.xterm);
 
