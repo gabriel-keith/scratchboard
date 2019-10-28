@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, HTMLTable, Checkbox, Button, Classes } from '@blueprintjs/core';
+import { Card, HTMLTable, Checkbox, Button, Classes, Switch } from '@blueprintjs/core';
 import { ProjectConfig } from 'common/data/projects';
 import { Packages, IPackage, fetchDependencies, updateToLatest } from 'common/api/sfupdate';
 
@@ -36,9 +36,10 @@ export class Dependencies extends React.Component<Props, State> {
 		this.loadDependencies();
 	}
 
-	public componentDidUpdate(prevProps: Props, prevState: {}, snapshot: {}) {
+	public componentDidUpdate(prevProps: Props, prevState: State, snapshot: {}) {
 		if (this.props.orgUsername !== prevProps.orgUsername ||
-			this.props.orgProject !== prevProps.orgProject) {
+			this.props.orgProject !== prevProps.orgProject ||
+			this.state.compareWithLatest !== prevState.compareWithLatest) {
 				this.setState({ ...this.state, loading: true });
 				this.loadDependencies();
 		}
@@ -47,13 +48,19 @@ export class Dependencies extends React.Component<Props, State> {
 	public render() {
 		return (
 			<Card id='dependencies' interactive={false} className='m-2'>
+				<Switch
+					label='Compare with latest packages'
+					className={this.state.loading ? Classes.SKELETON : ''}
+					checked={this.state.compareWithLatest}
+					onChange={() => { this.setState({ ...this.state, compareWithLatest: !this.state.compareWithLatest }); }}
+				/>
 				<HTMLTable className={this.state.loading ? Classes.SKELETON : ''} bordered={false} interactive={true}>
 					<thead>
 						<tr>
 							<th>Package</th>
 							<th>Installed Version</th>
 							<th>Remote Version</th>
-							<th><Checkbox></Checkbox></th>
+							<th></th>
 						</tr>
 					</thead>
 					<tbody>
