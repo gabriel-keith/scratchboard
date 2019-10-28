@@ -7,8 +7,8 @@ import { ProjectConfig } from 'common/data/projects';
 
 //TO DO:
 // 1) Margins
-// 2) Handle resizing
-// 3) figure out how to set starting working directory
+// 2) Handle resizing (check?)
+// 3) figure out how to set starting working directory (check)
 // 4) close on change of org
 // 5) change bash-3.2 to working directory + username => exec bash vs exec bash --login / exec bash -l
 // 6) Maybe add a border?
@@ -39,7 +39,7 @@ export class Term extends React.Component<Props> {
 
 		const xterm = new Terminal();
 
-		window.setTimeout(() => xterm.open(this.refs.xterm), 2000);
+		window.setTimeout(() => xterm.open(this.refs.xterm), 3000);
 
 		xterm.onData(data => ptyProcess.write(data));
 		ptyProcess.on('data', function (data) {
