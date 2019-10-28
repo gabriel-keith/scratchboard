@@ -19,7 +19,7 @@ export class Details extends React.Component<Props> {
 			>
 				<h3 className='py-2 mb-4 ml-3 text-lg'>Details</h3>
 				<div className='flex flex-wrap justify-between ml-3 w-3/4 mb-4'>
-					<div className='p-1 w-1/2'>
+					<div className='p-1 w-1/2 mx-1'>
 						<p>Deployment Status</p>
 						<ProgressBar
 							animate={false}
@@ -28,7 +28,7 @@ export class Details extends React.Component<Props> {
 							className='bp3-intent-primary my-2'
 						></ProgressBar>
 					</div>
-					<div className='p-1 w-1/2'>
+					<div className='p-1 w-1/2 mx-1'>
 						<p>Expiration</p>
 						<ProgressBar
 							animate={false}
@@ -71,12 +71,14 @@ export class Details extends React.Component<Props> {
 	}
 
 	private calcExpirationValue() {
-		let created = new Date(this.props.scratchOrg.createdDate).getDate();
-		let expiration = new Date(this.props.scratchOrg.expirationDate).getDate();
-		console.log(created);
-		console.log(expiration);
-		let timeLeft = Number(created) - Number(expiration);
-		console.log(timeLeft);
-		return timeLeft;
+		const created = new Date(this.props.scratchOrg.createdDate);
+		const expiration = new Date(this.props.scratchOrg.expirationDate);
+		const difference = Math.abs(created.getTime() - expiration.getTime());
+		const totalTime = Math.ceil(difference / (1000 * 3600 * 24));
+		let timeLeft = Math.abs(new Date().getTime() - expiration.getTime());
+		timeLeft = Math.ceil(timeLeft / (1000 * 3600 * 24));
+
+		const remainingPercent = timeLeft/totalTime;
+		return remainingPercent;
 	}
 }
