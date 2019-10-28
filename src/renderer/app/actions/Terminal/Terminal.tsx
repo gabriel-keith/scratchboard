@@ -5,6 +5,7 @@ import { Terminal } from 'xterm';
 import '../../../../../node_modules/xterm/css/xterm.css';
 import { ProjectConfig } from 'common/data/projects';
 import { number } from 'prop-types';
+import './Terminal.css';
 
 interface Props {
 	orgProject?: ProjectConfig;
@@ -43,7 +44,15 @@ export class Term extends React.Component<Props> {
 			env: process.env
 		});
 
-		const xterm = new Terminal({cursorBlink: true, cursorStyle: 'block', theme: {background: '#293742', cursor: '#00ff00', cursorAccent: '#0000ff'}});
+		const xterm = new Terminal({
+			cursorBlink: true,
+			theme: {
+				background: '#293742',
+				cursor: '#00ff00',
+				cursorAccent: '#293742',
+				red: '#FF605C'
+			}
+		});
 
 		xterm.open(this.refs.xterm);
 
