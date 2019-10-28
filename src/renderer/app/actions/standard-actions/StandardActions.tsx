@@ -115,6 +115,7 @@ export class StandardActions extends React.Component<StandardActionsProps, Stand
 	}
 
 	private openOrg(user?: string): void {
+		this.setState({currentForm: this.renderOpenOrgConfirm()});
 		openOrg(user || this.props.orgUsername);
 	}
 
@@ -158,5 +159,15 @@ export class StandardActions extends React.Component<StandardActionsProps, Stand
 				</Card>
 			);
 		}
+	}
+
+	private renderOpenOrgConfirm() {
+		return (
+			<Card id='defaultSet' interactive={false} className='m-2 mt-4'>
+				<div className='flex-col justify-center'>
+					<p>Org opening...</p>
+				</div>
+			</Card>
+		);
 	}
 }
