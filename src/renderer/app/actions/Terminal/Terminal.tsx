@@ -12,22 +12,26 @@ interface Props {
 }
 
 export class Term extends React.Component<Props> {
+	private termStyle = {
+		background: '#293742'
+	};
+
 	public constructor(props: Props) {
 		super(props);
 		this.state = {
-			loadedBefore: false
+			loadedBefore: false,
 		};
 	}
 
 	public render() {
 		return (
 			<div className="flex mx-auto w-full border-solid border border-teal-900 rounded overflow-hidden">
-				<div ref="xterm" className='w-full'></div>
+				<div ref="xterm" className='w-full p-1' style={this.termStyle}></div>
 			</div>
 		);
 	}
 
-	componentDidUpdate(prevProps) {
+	componentDidUpdate() {
 		if (this.props.isTerm && !this.state.loadedBefore) {
 			this.loadTerm();
 		}
