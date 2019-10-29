@@ -41,7 +41,7 @@ export class Term extends React.Component<Props> {
 		const ptyProcess = pty.spawn(shell, [], {
 			name: 'xterm-color',
 			cols: 120,
-			rows: 33,
+			rows: 25,
 			cwd: process.env.HOME,
 			env: process.env
 		});
@@ -51,7 +51,7 @@ export class Term extends React.Component<Props> {
 		// Terminal colors for reference: https://jeffkreeftmeijer.com/vim-16-color/
 		const xterm = new Terminal({
 			cols: 120,
-			rows: 33,
+			rows: 25,
 			theme: {
 				background: '#202B33',
 				cursor: '#00ff00',
