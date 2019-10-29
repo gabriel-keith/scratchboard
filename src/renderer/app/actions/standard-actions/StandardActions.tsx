@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Alert, Button, ButtonGroup, Popover, Classes, Position, Menu, MenuItem, Intent, Overlay, Card } from '@blueprintjs/core';
+import { Alert, Button, ButtonGroup, Popover, Classes, Position, Menu, MenuItem, Intent, Overlay, Card, Toaster } from '@blueprintjs/core';
 import { CHEVRON_DOWN, WARNING_SIGN } from '@blueprintjs/icons/lib/esm/generated/iconNames';
 import { listUsers, openOrg, setOrgAsDefault, deleteOrg } from 'common/api/sfdx';
 import { clipboard } from 'electron';
@@ -19,9 +19,15 @@ export interface StandardActionsState {
 	userList: OrgUser[];
 	isSetDefaultLoading: boolean;
 	isOrgOpening: boolean;
+	isOrgCopying: boolean;
 }
 
 export class StandardActions extends React.Component<StandardActionsProps, StandardActionsState> {
+	private toaster: Toaster;
+	private refHandlers = {
+		toaster: (ref: Toaster) => (this.toaster = ref),
+	};
+
 	public constructor(props: StandardActionsProps) {
 		super(props);
 
@@ -31,6 +37,7 @@ export class StandardActions extends React.Component<StandardActionsProps, Stand
 			userList: [],
 			isSetDefaultLoading: false,
 			isOrgOpening: false,
+			isOrgCopying: false,
 		};
 	}
 
@@ -58,15 +65,20 @@ export class StandardActions extends React.Component<StandardActionsProps, Stand
 					</Popover>
 				</ButtonGroup>
 				<ButtonGroup className='mr-2 mb-2'>
-					<Button onClick={() => { this.copyOrgUrl(); }}>Copy Frontdoor</Button>
+					<Button
+						onClick={() => { this.copyOrgUrl(); }}
+						loading={this.state.isOrgCopying}>Copy Frontdoor</Button>
 					<Popover minimal={true} position={Position.BOTTOM_RIGHT}>
-						<Button rightIcon={CHEVRON_DOWN}></Button>
+						<Button
+							rightIcon={CHEVRON_DOWN}
+							disabled={this.state.isOrgCopying}></Button>
 						<Menu className={Classes.POPOVER_DISMISS}>
 							<h5 className='p-2'>Copy as...</h5>
 							{this.buildUserList(this.copyOrgUrl)}
 						</Menu>
 					</Popover>
 				</ButtonGroup>
+				<Toaster ref={this.refHandlers.toaster} />
 				<Button className='mr-2' intent={Intent.PRIMARY} onClick={() => this.handleNewUserClick() }>
 					New User
 				</Button>
@@ -137,8 +149,12 @@ export class StandardActions extends React.Component<StandardActionsProps, Stand
 	}
 
 	private async copyOrgUrl(user?: string): Promise<void> {
+		this.setState({isOrgCopying: true});
+		this.setState({currentForm: null});
 		const url = await openOrg(user || this.props.orgUsername, true);
 		clipboard.writeText(url);
+		this.setState({isOrgCopying: false});
+		this.toaster.show({ message: 'Copied to clipboard!' });
 	}
 
 	private setAsDefault(): void {
