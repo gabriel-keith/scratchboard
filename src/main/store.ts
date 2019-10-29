@@ -9,7 +9,7 @@ import { ProjectConfig } from 'common/data/projects';
 
 const electronStore = new ElectronStore();
 
-const PROJECT_CONFIG_KEY = 'PROJECT_CONFIG';
+const PROJECT_CONFIG_KEY = 'PROJECT_CONFIG_V2';
 const NICKNAME_KEY = 'NICKNAME';
 
 const initState = loadInitState();
