@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { Alert, Button, ButtonGroup, Popover, Classes, Position, Menu, MenuItem, Intent, Overlay, Card, Toaster } from '@blueprintjs/core';
 import { CHEVRON_DOWN, WARNING_SIGN } from '@blueprintjs/icons/lib/esm/generated/iconNames';
-import { listUsers, openOrg, setOrgAsDefault, deleteOrg } from 'common/api/sfdx';
+import { listUsers, openOrg, setOrgAsDefault, deleteOrg, pushToOrg } from 'common/api/sfdx';
 import { clipboard } from 'electron';
 import { OrgUser } from 'common/data/orgs';
 import { NewUser } from '../new-user/NewUser';
@@ -22,6 +22,7 @@ export interface StandardActionsState {
 	isSetDefaultLoading: boolean;
 	isOrgOpening: boolean;
 	isOrgCopying: boolean;
+	isPushing: boolean;
 }
 
 export interface DispatchProps {
@@ -50,6 +51,7 @@ class StandardActions extends React.Component<Props, StandardActionsState> {
 			isSetDefaultLoading: false,
 			isOrgOpening: false,
 			isOrgCopying: false,
+			isPushing: false,
 		};
 	}
 
@@ -91,6 +93,12 @@ class StandardActions extends React.Component<Props, StandardActionsState> {
 					</Popover>
 				</ButtonGroup>
 				<Toaster ref={this.refHandlers.toaster} />
+				<Button
+					className='mr-2'
+					onClick={() => { this.pushToOrg(); }}
+					loading={this.state.isPushing}>
+						Push
+					</Button>
 				<Button className='mr-2' intent={Intent.PRIMARY} onClick={() => this.handleNewUserClick() }>
 					New User
 				</Button>
@@ -157,6 +165,50 @@ class StandardActions extends React.Component<Props, StandardActionsState> {
 			this.setState({currentForm: null});
 			this.setState({isOrgOpening: false});
 		}
+		);
+	}
+
+	private pushToOrg(user?: string): void {
+		this.setState({isPushing: false});
+		if (this.props.orgProject) {
+			this.setState({currentForm: this.renderPushOrgConfirm()});
+			pushToOrg(user || this.props.orgUsername).then( () => {
+					this.setState({currentForm: this.renderPushOrgResult()});
+					this.setState({isPushing: false});
+				}
+			);
+		} else {
+			this.setState({currentForm: this.renderUnableToPush()});
+		}
+	}
+	private renderUnableToPush() {
+		return(
+			<Card id='orgPush' interactive={false} className='m-2 mt-4'>
+				<div className='flex-col justify-center'>
+					<p className='mb-2'>Unable to push to org.
+						Try associating the org with username: <b>{this.props.orgUsername}</b> to an existing project folder.</p>
+				</div>
+			</Card>
+		);
+	}
+
+	private renderPushOrgConfirm() {
+		return(
+			<Card id='orgPush' interactive={false} className='m-2 mt-4'>
+				<div className='flex-col justify-center'>
+					<p className='mb-2'>Initiated push to org with username {this.props.orgUsername} </p>
+				</div>
+			</Card>
+		);
+	}
+
+	private renderPushOrgResult() {
+		return(
+			<Card id='orgPushConfirm' interactive={false} className='m-2 mt-4'>
+				<div className='flex-col justify-center'>
+					<p className='mb-2'>Finished pushing to org</p>
+				</div>
+			</Card>
 		);
 	}
 
