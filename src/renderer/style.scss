@@ -23,8 +23,13 @@ html, body, #app {
 
 		#main {
 			width: 100%;
+
 			> * {
 				width: auto;
+			}
+
+			.fit-content {
+				width: fit-content;
 			}
 		}
 	}

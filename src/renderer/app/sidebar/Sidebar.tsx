@@ -118,7 +118,7 @@ class Sidebar extends React.PureComponent<Props, State> {
 					<div className='flex justify-center relative bottom-0'>
 						<Button
 							className='m-5 mt-10'
-							text='Add Project Folder'
+							text='Associate Project Folder'
 							onClick={this.handleAddProject}></Button>
 					</div>
 				</Card>
