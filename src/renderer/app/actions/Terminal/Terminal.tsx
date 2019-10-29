@@ -40,6 +40,8 @@ export class Term extends React.Component<Props> {
 		// To change into the orgProject folder: cwd: this.props.orgProject ? this.props.orgProject.projectDir : process.env.HOME
 		const ptyProcess = pty.spawn(shell, [], {
 			name: 'xterm-color',
+			cols: 120,
+			rows: 33,
 			cwd: process.env.HOME,
 			env: process.env
 		});
@@ -48,8 +50,8 @@ export class Term extends React.Component<Props> {
 		// iTerm Theme docs: https://xtermjs.org/docs/api/terminal/interfaces/itheme/
 		// Terminal colors for reference: https://jeffkreeftmeijer.com/vim-16-color/
 		const xterm = new Terminal({
-			cols: 100,
-			rows: 25,
+			cols: 120,
+			rows: 33,
 			theme: {
 				background: '#202B33',
 				cursor: '#00ff00',
