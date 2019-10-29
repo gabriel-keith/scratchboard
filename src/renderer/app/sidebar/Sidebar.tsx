@@ -4,7 +4,16 @@ import path from 'path';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { ITreeNode, Tree, Card, Button, Menu, MenuItem, ContextMenu, Dialog, } from '@blueprintjs/core';
+import {
+	ITreeNode,
+	Tree,
+	Card,
+	Button,
+	Menu,
+	MenuItem,
+	ContextMenu,
+	Dialog
+} from '@blueprintjs/core';
 import { IOffset } from '@blueprintjs/core/lib/esm/components/context-menu/contextMenu';
 import { ScratchOrg } from 'common/data/orgs';
 import { StoreState } from 'common/store/state';
@@ -32,7 +41,7 @@ interface DispatchProps {
 }
 
 interface State {
-	expandedGroups: {[orgName: string]: boolean};
+	expandedGroups: { [orgName: string]: boolean };
 
 	isRenameModelOpen: boolean;
 	renameUsername: string;
@@ -52,7 +61,9 @@ const actions = {
 };
 
 enum NodeTreeDataType {
-	ORG, PROJECT, UTILITY
+	ORG,
+	PROJECT,
+	UTILITY
 }
 
 interface NodeTreeData {
@@ -78,22 +89,26 @@ class Sidebar extends React.PureComponent<Props, State> {
 	}
 
 	public render() {
-		return <>
-			{this.renderRenameDialog()}
-			<Card id='sidebar' className='flex-auto ml-4 pt-4 mb-0 p-0 h-full'>
-				<Tree
-					contents={this.buildOrgTree()}
-					onNodeClick={this.handleNodeClick}
-					onNodeCollapse={this.handleNodeCollapse}
-					onNodeExpand={this.handleNodeExpand}
-					onNodeContextMenu={this.handleContextMenu}
-				/>
-				<div className='flex justify-center relative bottom-0'>
-					<Button
-						className='m-5 mt-10' text='Add Project Folder' onClick={this.handleAddProject}></Button>
-				</div>
-			</Card>
-		</>;
+		return (
+			<>
+				{this.renderRenameDialog()}
+				<Card id='sidebar' className='flex-auto ml-4 pt-4 mb-0 p-0 h-full'>
+					<Tree
+						contents={this.buildOrgTree()}
+						onNodeClick={this.handleNodeClick}
+						onNodeCollapse={this.handleNodeCollapse}
+						onNodeExpand={this.handleNodeExpand}
+						onNodeContextMenu={this.handleContextMenu}
+					/>
+					<div className='flex justify-center relative bottom-0'>
+						<Button
+							className='m-5 mt-10'
+							text='Add Project Folder'
+							onClick={this.handleAddProject}></Button>
+					</div>
+				</Card>
+			</>
+		);
 	}
 
 	private renderRenameDialog() {
@@ -102,9 +117,16 @@ class Sidebar extends React.PureComponent<Props, State> {
 			dialogStyles += 'bp3-dark';
 		}
 
-		return <Dialog className={dialogStyles} isOpen={this.state.isRenameModelOpen} >
-			<Button onClick={() => this.setState({...this.state, isRenameModelOpen:false})} >Close</Button>
-		</Dialog>;
+		return (
+			<Dialog className={dialogStyles} isOpen={this.state.isRenameModelOpen}>
+				<Button
+					onClick={() =>
+						this.setState({ ...this.state, isRenameModelOpen: false })
+					}>
+					Close
+				</Button>
+			</Dialog>
+		);
 	}
 
 	private buildOrgTree(): Array<ITreeNode<NodeTreeData>> {
@@ -119,7 +141,7 @@ class Sidebar extends React.PureComponent<Props, State> {
 
 		// for each project create lookups from the username to the project
 		for (const project of this.props.projectList) {
-			const group = { project, orgs: []};
+			const group = { project, orgs: [] };
 			orgGroups.push(group);
 			for (const username of project.orgUsernames) {
 				usernameMap.set(username, group);
@@ -137,14 +159,17 @@ class Sidebar extends React.PureComponent<Props, State> {
 		}
 
 		const nodes = orgGroups.map(({ project, orgs }) =>
-			this.createProjectNode(
-				project,
-				orgs.map(this.createOrgNode)
-			)
+			this.createProjectNode(project, orgs.map(this.createOrgNode))
 		);
 
 		if (ungrouped.length > 0) {
-			nodes.push(this.createUtilityNode('ungrouped', 'ungrouped', ungrouped.map(this.createOrgNode)));
+			nodes.push(
+				this.createUtilityNode(
+					'ungrouped',
+					'Ungrouped',
+					ungrouped.map(this.createOrgNode)
+				)
+			);
 		}
 
 		return nodes;
@@ -154,7 +179,7 @@ class Sidebar extends React.PureComponent<Props, State> {
 		project: ProjectConfig,
 		childNodes: Array<ITreeNode<NodeTreeData>>
 	): ITreeNode<NodeTreeData> {
-		const id = `project-${project.orgName}`;
+		const id = `project-${project.projectDir}`;
 
 		return {
 			id,
@@ -194,8 +219,10 @@ class Sidebar extends React.PureComponent<Props, State> {
 		return {
 			id,
 			label: org.alias || org.username,
-			secondaryLabel: this.willExpire(org.expirationDate)
-				&& <ExpirationNotice expirationDate={new Date(org.expirationDate)}></ExpirationNotice>,
+			secondaryLabel: this.willExpire(org.expirationDate) && (
+				<ExpirationNotice
+					expirationDate={new Date(org.expirationDate)}></ExpirationNotice>
+			),
 			hasCaret: false,
 			isSelected: this.props.orgUsername === id,
 			icon: (
@@ -216,7 +243,11 @@ class Sidebar extends React.PureComponent<Props, State> {
 		const nodeId = node.id as string;
 		const nodeData = node.nodeData;
 
-		if (nodeData && nodeData.type === NodeTreeDataType.ORG && nodeData.username) {
+		if (
+			nodeData &&
+			nodeData.type === NodeTreeDataType.ORG &&
+			nodeData.username
+		) {
 			this.props.onOrgSelect(nodeData.username);
 		}
 
@@ -233,45 +264,70 @@ class Sidebar extends React.PureComponent<Props, State> {
 		this.setExpansion(nodeData.id as string, true);
 	}
 
-	private handleContextMenu = (node: ITreeNode<NodeTreeData>, _: number[], e: React.MouseEvent<HTMLElement>) => {
+	private handleContextMenu = (
+		node: ITreeNode<NodeTreeData>,
+		_: number[],
+		e: React.MouseEvent<HTMLElement>
+	) => {
 		e.preventDefault();
 		const offset = { left: e.clientX, top: e.clientY };
 
-		if (node.nodeData && node.nodeData.type === NodeTreeDataType.ORG) {
-			this.createOrgMenu(node, offset);
-		} else {
-			this.createProjectMenu(node, offset);
+		const nodeData = node.nodeData;
+		if (nodeData) {
+			if (nodeData.type === NodeTreeDataType.ORG) {
+				this.createOrgMenu(nodeData, offset);
+			} else {
+				this.createProjectMenu(nodeData, offset);
+			}
 		}
 	}
 
-	private createOrgMenu(node: ITreeNode<NodeTreeData>, offset: IOffset) {
-		const username = node.nodeData && node.nodeData.username;
+	private createOrgMenu(nodeData: NodeTreeData, offset: IOffset) {
+		const username = nodeData.username;
 
-		const menu = <Menu>
-			{username && <MenuItem text='Open' onClick={() => openOrg(username)} />}
-			<MenuItem text='Rename' onClick={() => this.setState({...this.state, isRenameModelOpen: true})}/>
-		</Menu>;
+		const menu = (
+			<Menu>
+				{username && <MenuItem text='Open' onClick={() => openOrg(username)} />}
+				<MenuItem
+					text='Rename'
+					onClick={() =>
+						this.setState({ ...this.state, isRenameModelOpen: true })
+					}
+				/>
+			</Menu>
+		);
 
 		ContextMenu.show(menu, offset, undefined, this.props.isDark);
 	}
 
-	private createProjectMenu(node: ITreeNode<NodeTreeData>, offset: IOffset) {
-		const projectDir = node.id as string;
-		const menu = <Menu>
-			<MenuItem text='Remove Project' onClick={() => this.props.removeProject(projectDir)} />
-		</Menu>;
+	private createProjectMenu(nodeData: NodeTreeData, offset: IOffset) {
+		const projectDir = nodeData.projectDir;
+
+		const menu = (
+			<Menu>
+				{projectDir && (
+					<MenuItem
+						text='Remove Project'
+						onClick={() => this.props.removeProject(projectDir)}
+					/>
+				)}
+			</Menu>
+		);
 
 		ContextMenu.show(menu, offset, undefined, this.props.isDark);
 	}
 
 	private handleAddProject = () => {
-		remote.dialog.showOpenDialog({
-			properties: ['openDirectory']
-		}, (dirs: string) => {
-			if (dirs.length > 0) {
-				this.props.addProject(dirs[0]);
+		remote.dialog.showOpenDialog(
+			{
+				properties: ['openDirectory']
+			},
+			(dirs: string) => {
+				if (dirs.length > 0) {
+					this.props.addProject(dirs[0]);
+				}
 			}
-		});
+		);
 	}
 
 	private setExpansion(nodeId: string, expanded: boolean) {
@@ -291,8 +347,18 @@ class Sidebar extends React.PureComponent<Props, State> {
 
 	private willExpire(expirationDate: Date) {
 		const tolerance = 7;
-		return (new Date(expirationDate).valueOf() - new Date().valueOf()) / 1000 / 60 / 60 / 24 <= tolerance;
+		return (
+			(new Date(expirationDate).valueOf() - new Date().valueOf()) /
+				1000 /
+				60 /
+				60 /
+				24 <=
+			tolerance
+		);
 	}
 }
 
-export default connect(mapStateToProps, actions)(Sidebar);
+export default connect(
+	mapStateToProps,
+	actions
+)(Sidebar);
