@@ -31,7 +31,7 @@ function mapStateToProps(state: StoreState): StateProps {
 	};
 }
 
-const isDark = true;
+const isDark = false;
 
 class App extends React.Component<Props, State> {
 
@@ -72,8 +72,12 @@ class App extends React.Component<Props, State> {
 		}
 		let baseStyles = 'sb-app h-full';
 		if (isDark) {
+			
 			baseStyles += ' bp3-dark';
+
 		}
+
+		document.getElementsByTagName('body')[0].className = baseStyles;
 
 		return (
 			<div className={baseStyles}>
