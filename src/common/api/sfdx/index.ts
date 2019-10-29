@@ -23,8 +23,8 @@ export function deleteOrg(username: string): Promise<void> {
 	return executePromiseJson(`sfdx force:org:delete --json -p -u ${username}`);
 }
 
-export function pushToOrg(username: string): Promise<void> {
-	return executePromiseJson(`sfdx force:source:push --json -u ${username}`);
+export function pushToOrg(username: string, path: string): Promise<void> {
+	return executePromiseJson(`sfdx force:source:push --json -u ${username}`, path);
 }
 
 export function setOrgAsDefault(username: string, path: string): Promise<void> {
