@@ -170,11 +170,25 @@ class StandardActions extends React.Component<Props, StandardActionsState> {
 
 	private pushToOrg(user?: string): void {
 		this.setState({isPushing: false});
-		this.setState({currentForm: this.renderPushOrgConfirm()});
-		pushToOrg(user || this.props.orgUsername).then( () => {
-			this.setState({currentForm: this.renderPushOrgResult()});
-			this.setState({isPushing: false});
+		if (this.props.orgProject) {
+			this.setState({currentForm: this.renderPushOrgConfirm()});
+			pushToOrg(user || this.props.orgUsername).then( () => {
+					this.setState({currentForm: this.renderPushOrgResult()});
+					this.setState({isPushing: false});
+				}
+			);
+		} else {
+			this.setState({currentForm: this.renderUnableToPush()});
 		}
+	}
+	private renderUnableToPush() {
+		return(
+			<Card id='orgPush' interactive={false} className='m-2 mt-4'>
+				<div className='flex-col justify-center'>
+					<p className='mb-2'>Unable to push to org.
+						Try associating the org with username: <b>{this.props.orgUsername}</b> to an existing project folder.</p>
+				</div>
+			</Card>
 		);
 	}
 
