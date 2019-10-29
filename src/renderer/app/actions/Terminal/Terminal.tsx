@@ -37,9 +37,10 @@ export class Term extends React.Component<Props> {
 
 	loadTerm() {
 		const shell = process.env[os.platform() === 'win32' ? 'COMSPEC' : 'SHELL'];
+		// To change into the orgProject folder: cwd: this.props.orgProject ? this.props.orgProject.projectDir : process.env.HOME
 		const ptyProcess = pty.spawn(shell, [], {
 			name: 'xterm-color',
-			cwd: this.props.orgProject ? this.props.orgProject.projectDir : process.env.HOME,
+			cwd: process.env.HOME,
 			env: process.env
 		});
 
