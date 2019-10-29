@@ -23,7 +23,7 @@ export class Term extends React.Component<Props> {
 
 	public render() {
 		return (
-			<div className="flex mx-auto pb-5 w-full border-solid border border-teal-900 rounded overflow-hidden bg-term">
+			<div className="flex mx-auto pb-5 w-full border-solid border shadow border-blue-900 rounded overflow-hidden bg-term">
 				<div ref="xterm" className='w-full'></div>
 			</div>
 		);
@@ -51,7 +51,7 @@ export class Term extends React.Component<Props> {
 			cols: 100,
 			rows: 25,
 			theme: {
-				background: '#293742',
+				background: '#202B33',
 				cursor: '#00ff00',
 				cursorAccent: '#293742',
 				red: '#ff443a',
@@ -59,7 +59,7 @@ export class Term extends React.Component<Props> {
 			}
 		});
 
-		xterm.writeln('Welcome to Scratchboard Terminal. Please use `exec bash -l` for the full bash experience.');
+		xterm.writeln('Welcome to Scratchboard Terminal. If using bash, you may want to use `exec bash -l`.');
 		xterm.open(this.refs.xterm);
 		xterm.focus();
 
