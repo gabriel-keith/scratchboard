@@ -12,12 +12,18 @@ import {
 	Menu,
 	MenuItem,
 	ContextMenu,
-	Dialog
+	Dialog,
+	InputGroup,
+	FormGroup,
+	Classes,
+	Intent,
+	AnchorButton
 } from '@blueprintjs/core';
 import { IOffset } from '@blueprintjs/core/lib/esm/components/context-menu/contextMenu';
 import { ScratchOrg } from 'common/data/orgs';
 import { StoreState } from 'common/store/state';
 import { addProject, removeProject } from 'common/store/actions/project';
+import { setOrgNickname } from 'common/store/actions/org';
 import { ProjectConfig } from 'common/data/projects';
 import { ExpirationNotice } from './ExpirationNotice';
 import { openOrg } from 'common/api/sfdx';
@@ -27,6 +33,7 @@ import { openOrg } from 'common/api/sfdx';
 interface StateProps {
 	orgList: ScratchOrg[];
 	projectList: ProjectConfig[];
+	nicknames: { [username: string]: string };
 }
 
 interface OwnProps {
@@ -38,6 +45,8 @@ interface OwnProps {
 interface DispatchProps {
 	addProject(projectDir: string): void;
 	removeProject(projectDir: string): void;
+	setOrgNickname(username: string, nickname: string): void;
+
 }
 
 interface State {
@@ -52,12 +61,14 @@ type Props = StateProps & DispatchProps & OwnProps;
 
 const mapStateToProps = (state: StoreState): StateProps => ({
 	orgList: Object.values(state.org.scratchOrgs),
-	projectList: Object.values(state.project.projectMap)
+	projectList: Object.values(state.project.projectMap),
+	nicknames: state.org.nicknames
 });
 
 const actions = {
 	addProject,
-	removeProject
+	removeProject,
+	setOrgNickname
 };
 
 enum NodeTreeDataType {
@@ -79,6 +90,10 @@ class Sidebar extends React.PureComponent<Props, State> {
 		super(props);
 
 		this.createOrgNode = this.createOrgNode.bind(this);
+		this.handleRenameValueUpdate = this.handleRenameValueUpdate.bind(this);
+		this.handleRenameClose = this.handleRenameClose.bind(this);
+		this.handleRenameOpen = this.handleRenameOpen.bind(this);
+		this.handleRenameSave = this.handleRenameSave.bind(this);
 
 		this.state = {
 			expandedGroups: {},
@@ -103,7 +118,7 @@ class Sidebar extends React.PureComponent<Props, State> {
 					<div className='flex justify-center relative bottom-0'>
 						<Button
 							className='m-5 mt-10'
-							text='Add Project Folder'
+							text='Associate Project Folder'
 							onClick={this.handleAddProject}></Button>
 					</div>
 				</Card>
@@ -119,14 +134,54 @@ class Sidebar extends React.PureComponent<Props, State> {
 
 		return (
 			<Dialog className={dialogStyles} isOpen={this.state.isRenameModelOpen}>
-				<Button
-					onClick={() =>
-						this.setState({ ...this.state, isRenameModelOpen: false })
-					}>
-					Close
-				</Button>
+				<div className={Classes.DIALOG_BODY}>
+					<FormGroup label='Set Nickname'>
+						<InputGroup value={this.state.renameValue} onChange={this.handleRenameValueUpdate} />
+					</FormGroup>
+				</div>
+				<div className={Classes.DIALOG_FOOTER}>
+					<div className={Classes.DIALOG_FOOTER_ACTIONS}>
+						<Button onClick={this.handleRenameClose} >
+								Close
+						</Button>
+						<AnchorButton onClick={this.handleRenameSave} intent={Intent.PRIMARY}>
+							Set Name
+						</AnchorButton>
+					</div>
+				</div>
 			</Dialog>
 		);
+	}
+
+	private handleRenameOpen(username: string) {
+		this.setState({
+			...this.state,
+			isRenameModelOpen: true,
+			renameUsername: username,
+			renameValue: this.props.nicknames[username] || ''
+		});
+	}
+
+	private handleRenameClose() {
+		this.setState({...this.state, isRenameModelOpen: false});
+	}
+
+	private handleRenameSave() {
+		this.setState({
+			...this.state,
+			isRenameModelOpen: false
+		});
+		this.props.setOrgNickname(
+			this.state.renameUsername,
+			this.state.renameValue
+		);
+	}
+
+	private handleRenameValueUpdate(event: React.ChangeEvent<HTMLInputElement>) {
+		this.setState({
+			...this.state,
+			renameValue: event.target.value
+		});
 	}
 
 	private buildOrgTree(): Array<ITreeNode<NodeTreeData>> {
@@ -218,7 +273,7 @@ class Sidebar extends React.PureComponent<Props, State> {
 
 		return {
 			id,
-			label: org.alias || org.username,
+			label: this.props.nicknames[org.username] || org.alias || org.username,
 			secondaryLabel: this.willExpire(org.expirationDate) && (
 				<ExpirationNotice
 					expirationDate={new Date(org.expirationDate)}></ExpirationNotice>
@@ -274,10 +329,13 @@ class Sidebar extends React.PureComponent<Props, State> {
 
 		const nodeData = node.nodeData;
 		if (nodeData) {
-			if (nodeData.type === NodeTreeDataType.ORG) {
-				this.createOrgMenu(nodeData, offset);
-			} else {
-				this.createProjectMenu(nodeData, offset);
+			switch (nodeData.type) {
+				case NodeTreeDataType.ORG:
+					this.createOrgMenu(nodeData, offset);
+					break;
+				case NodeTreeDataType.PROJECT:
+					this.createProjectMenu(nodeData, offset);
+					break;
 			}
 		}
 	}
@@ -285,19 +343,19 @@ class Sidebar extends React.PureComponent<Props, State> {
 	private createOrgMenu(nodeData: NodeTreeData, offset: IOffset) {
 		const username = nodeData.username;
 
-		const menu = (
-			<Menu>
-				{username && <MenuItem text='Open' onClick={() => openOrg(username)} />}
-				<MenuItem
-					text='Rename'
-					onClick={() =>
-						this.setState({ ...this.state, isRenameModelOpen: true })
-					}
-				/>
-			</Menu>
-		);
+		if (username) {
+			const menu = (
+				<Menu>
+					<MenuItem text='Open' onClick={() => openOrg(username)} />
+					<MenuItem
+						text='Rename'
+						onClick={() => this.handleRenameOpen(username)}
+					/>
+				</Menu>
+			);
 
-		ContextMenu.show(menu, offset, undefined, this.props.isDark);
+			ContextMenu.show(menu, offset, undefined, this.props.isDark);
+		}
 	}
 
 	private createProjectMenu(nodeData: NodeTreeData, offset: IOffset) {

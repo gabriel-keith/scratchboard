@@ -61,7 +61,7 @@ class App extends React.Component<Props, State> {
 			));
 
 			contents = <>
-				<Details scratchOrg={selectedOrg} />
+				<Details scratchOrg={selectedOrg} orgProject={orgProject}/>
 				<Actions orgUsername={username} orgProject={orgProject} />
 			</>;
 		} else {
