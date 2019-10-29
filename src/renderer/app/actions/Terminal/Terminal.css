@@ -1,11 +1,8 @@
-.xterm .xterm-screen {
-}
-
 .xterm .xterm-screen canvas {
-    margin: .75rem;
+	margin: .75rem;
 }
 
 
 .bg-term {
-	background-color: #293742;
+	background-color: #202B33;
 }

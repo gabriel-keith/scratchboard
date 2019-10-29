@@ -57,11 +57,11 @@ class App extends React.Component<Props, State> {
 		if (username) {
 			const selectedOrg = this.props.scratchOrgs[username];
 			const orgProject = Object.values(this.props.projects).find((project) => (
-				selectedOrg.username in project.orgUsernames
+				project.orgUsernames.includes(selectedOrg.username)
 			));
 
 			contents = <>
-				<Details scratchOrg={selectedOrg} />
+				<Details scratchOrg={selectedOrg} orgProject={orgProject}/>
 				<Actions orgUsername={username} orgProject={orgProject} />
 			</>;
 		} else {

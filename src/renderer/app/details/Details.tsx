@@ -1,9 +1,11 @@
 import React from 'react';
 import { Card, Elevation, ProgressBar } from '@blueprintjs/core';
 import { ScratchOrg } from 'common/data/orgs';
+import { ProjectConfig } from 'common/data/projects';
 
 interface OwnProps {
 	scratchOrg: ScratchOrg;
+	orgProject?: ProjectConfig;
 }
 
 type Props = OwnProps;
@@ -17,9 +19,9 @@ export class Details extends React.Component<Props> {
 				elevation={Elevation.ONE}
 				className='mb-4 mx-4 p-2'
 			>
-				<h3 className='py-2 mb-4 ml-3 text-lg'>Details</h3>
+				<h3 className='py-2 mb-4 ml-3 text-lg font-bold'>Details</h3>
 				<div className='flex flex-wrap justify-between ml-3 w-3/4 mb-4'>
-					<div className='p-1 w-full lg:mx-1 md:w-full lg:w-5/12'>
+					{/* <div className='p-1 w-full lg:mx-1 md:w-full lg:w-5/12'>
 						<p>Deployment Status</p>
 						<ProgressBar
 							animate={false}
@@ -27,9 +29,9 @@ export class Details extends React.Component<Props> {
 							value={0.5}
 							className='bp3-intent-primary my-2'
 						></ProgressBar>
-					</div>
-					<div className='p-1 w-full lg:mx-1 md:w-full lg:w-5/12'>
-						<p>Expiration</p>
+					</div> */}
+					<div className='p-1 w-full'>
+						<p className='font-bold'>Expiration</p>
 						<ProgressBar
 							animate={false}
 							stripes={false}
@@ -39,32 +41,44 @@ export class Details extends React.Component<Props> {
 						<p>{this.getDaysToExpiration()} Days Left</p>
 					</div>
 				</div>
-				<div className='flex flex-wrap justify-between ml-3 w-3/4 mb-4'>
-					<div className='p-1'>
-						<p>Username</p>
-						<p className='ml-3'>{this.props.scratchOrg.username}</p>
+				<div className='flex flex-wrap justify-between ml-3 w-full mb-4'>
+					<div className='p-1 w-1/3'>
+						<p className='font-bold pb-1'>Username</p>
+						<p>{this.props.scratchOrg.username}</p>
 					</div>
-					<div className='p-1'>
-						<p>Created</p>
-						<p className='ml-3'>{new Date(this.props.scratchOrg.createdDate).toISOString().split('T')[0]}</p>
+					<div className='p-1 w-1/3'>
+						<p className='font-bold pb-1'>Created</p>
+						<p>{new Date(this.props.scratchOrg.createdDate).toISOString().split('T')[0]}</p>
 					</div>
-					<div className='p-1'>
-						<p>Expires</p>
-						<p className='ml-3'>{this.props.scratchOrg.expirationDate}</p>
+					<div className='p-1 w-1/3'>
+						<p className='font-bold pb-1'>Expires</p>
+						<p>{this.props.scratchOrg.expirationDate}</p>
 					</div>
 				</div>
-				<div className='flex flex-wrap justify-between ml-3 w-3/4 mb-4'>
-					<div className='p-1'>
-						<p>Connected Status</p>
-						<p className='ml-3'>{this.props.scratchOrg.connectedStatus}</p>
+				<div className='flex flex-wrap justify-between ml-3 w-full mb-4'>
+					<div className='p-1 w-1/3'>
+						<p className='font-bold pb-1'>Connected Status</p>
+						<p>{this.props.scratchOrg.connectedStatus}</p>
 					</div>
-					<div className='p-1'>
-						<p>Org Name</p>
-						<p className='ml-3'>{this.props.scratchOrg.orgName}</p>
+					<div className='p-1 w-1/3'>
+						<p className='font-bold pb-1'>Org Name</p>
+						<p>{this.props.scratchOrg.orgName}</p>
 					</div>
-					<div className='p-1'>
-						<p>Org Id</p>
-						<p className='ml-3'>{this.props.scratchOrg.devHubOrgId}</p>
+					<div className='p-1 w-1/3'>
+						<p className='font-bold pb-1'>Org Id</p>
+						<p>{this.props.scratchOrg.devHubOrgId}</p>
+					</div>
+				</div>
+				<div className='flex flex-wrap justify-between ml-3 w-full mb-4'>
+					<div className='p-1 w-1/3'>
+						<p className='font-bold pb-1'>Project Directory</p>
+						<p>{this.props.orgProject ? this.props.orgProject.projectDir : 'No Project Associated'}</p>
+					</div>
+					<div className='p-1 w-1/3'>
+						<p></p>
+					</div>
+					<div className='p-1 w-1/3'>
+						<p></p>
 					</div>
 				</div>
 			</Card>
@@ -84,7 +98,7 @@ export class Details extends React.Component<Props> {
 		const totalTime = Math.ceil(difference / (1000 * 3600 * 24));
 		const timeLeft = this.getDaysToExpiration();
 
-		const remainingPercent = timeLeft/totalTime;
+		const remainingPercent = 1-(timeLeft/totalTime);
 		return remainingPercent;
 	}
 }

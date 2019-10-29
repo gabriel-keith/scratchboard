@@ -50,7 +50,7 @@ export class Dependencies extends React.Component<Props, State> {
 			<Card id='dependencies' interactive={false} className='m-2'>
 				<Switch
 					label='Compare with latest packages'
-					className={this.state.loading ? Classes.SKELETON : ''}
+					className={(this.state.loading ? Classes.SKELETON : '') + ' fit-content'}
 					checked={this.state.compareWithLatest}
 					onChange={() => { this.setState({ ...this.state, compareWithLatest: !this.state.compareWithLatest }); }}
 				/>
@@ -141,9 +141,11 @@ export class Dependencies extends React.Component<Props, State> {
 			return;
 		}
 
+		this.setState({ ...this.state, loading: true });
 		const packages = this.state.dependencies.filter((d) => d.isChecked).map((d) => d.target.packageName);
-		updateToLatest(this.props.orgProject.projectDir, packages, this.props.orgUsername)
-			.then((result) => { this.setState({ ...this.state, loading: true }); this.loadDependencies(); });
+		updateToLatest(this.props.orgProject.projectDir, this.state.compareWithLatest, packages, this.props.orgUsername)
+			.then((result) => { this.loadDependencies(); })
+			.catch(() => { this.setState({ ...this.state, loading: false }); });
 	}
 
 	private handleCheck = (id: string) => {
