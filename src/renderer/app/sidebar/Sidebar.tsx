@@ -34,19 +34,18 @@ interface StateProps {
 	orgList: ScratchOrg[];
 	projectList: ProjectConfig[];
 	nicknames: { [username: string]: string };
+	isDark: boolean;
 }
 
 interface OwnProps {
 	orgUsername?: string;
 	onOrgSelect: (selectedUsername: string) => void;
-	isDark: boolean;
 }
 
 interface DispatchProps {
 	addProject(projectDir: string): void;
 	removeProject(projectDir: string): void;
 	setOrgNickname(username: string, nickname: string): void;
-
 }
 
 interface State {
@@ -62,7 +61,8 @@ type Props = StateProps & DispatchProps & OwnProps;
 const mapStateToProps = (state: StoreState): StateProps => ({
 	orgList: Object.values(state.org.scratchOrgs),
 	projectList: Object.values(state.project.projectMap),
-	nicknames: state.org.nicknames
+	nicknames: state.org.nicknames,
+	isDark: state.settings.theme === 'dark'
 });
 
 const actions = {

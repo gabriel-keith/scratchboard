@@ -289,4 +289,4 @@ class StandardActions extends React.Component<Props, StandardActionsState> {
 	}
 }
 
-export default connect(undefined, actions)(StandardActions);
+export default connect<{}, DispatchProps, StandardActionsProps>(undefined, actions)(StandardActions);
