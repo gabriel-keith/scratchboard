@@ -56,8 +56,7 @@ export class Term extends React.Component<Props> {
 				background: '#202B33',
 				cursor: '#00ff00',
 				cursorAccent: '#202B33',
-				red: '#ff443a',
-				selection: 'transparent'
+				red: '#ff443a'
 			}
 		});
 
