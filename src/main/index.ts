@@ -1,8 +1,10 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, Menu } from 'electron';
 import * as path from 'path';
 import { format as formatUrl } from 'url';
 import { store } from './store';
+
 import { fetchOrgList } from 'common/store/actions/org';
+import { setTheme } from 'common/store/actions/settings';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -43,6 +45,63 @@ function createMainWindow() {
 	return window;
 }
 
+function createAppMenu(): Menu {
+	return Menu.buildFromTemplate([
+		{
+			label: app.getName(),
+			submenu: [
+				{ role: 'about' },
+				{ type: 'separator' },
+				{ role: 'services' },
+				{ type: 'separator' },
+				{ role: 'hide' },
+				{ role: 'hideOthers' },
+				{ role: 'unHide' },
+				{ type: 'separator' },
+				{ role: 'quit' }
+			] as any[]
+		},
+		{
+			label: 'View',
+			submenu: [
+				{ role: 'reload' },
+				{ role: 'forcereload' },
+				{ role: 'toggledevtools' },
+				{ type: 'separator' },
+				{ role: 'resetzoom' },
+				{ role: 'zoomin' },
+				{ role: 'zoomout' },
+				{ type: 'separator' },
+				{ role: 'togglefullscreen' }
+			]
+		},
+		{
+			label: 'Window',
+			submenu: [
+				{ role: 'minimize' },
+				{ role: 'zoom' },
+				{ type: 'separator' },
+				{ role: 'front' },
+				{ type: 'separator' }
+			]
+		},
+		{
+			label: 'Theme',
+			submenu: [
+				{
+					label: 'Toggle Theme',
+					click: () => {
+						const state = store.getState();
+						store.dispatch(setTheme(
+							state.settings.theme === 'dark' ? 'light' : 'dark'
+						));
+					}
+				}
+			]
+		}
+	]);
+}
+
 // quit application when all windows are closed
 app.on('window-all-closed', () => {
 	// on macOS it is common for applications to stay open until the user explicitly quits
@@ -61,5 +120,7 @@ app.on('activate', () => {
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
 	mainWindow = createMainWindow();
+	Menu.setApplicationMenu(createAppMenu());
+
 	store.dispatch(fetchOrgList());
 });

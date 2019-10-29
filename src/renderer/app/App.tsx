@@ -15,6 +15,7 @@ interface StateProps {
 	scratchOrgs: { [username: string]: ScratchOrg };
 	users: { [username: string]: OrgUser };
 	projects: { [projectDir: string]: ProjectConfig };
+	isDark: boolean;
 }
 
 type Props = StateProps;
@@ -27,11 +28,10 @@ function mapStateToProps(state: StoreState): StateProps {
 	return {
 		scratchOrgs: state.org.scratchOrgs,
 		users: state.org.users,
-		projects: state.project.projectMap
+		projects: state.project.projectMap,
+		isDark: state.settings.theme === 'dark'
 	};
 }
-
-const isDark = true;
 
 class App extends React.Component<Props, State> {
 
@@ -71,8 +71,8 @@ class App extends React.Component<Props, State> {
 				</Card>);
 		}
 		let baseStyles = 'sb-app h-full';
-		if (isDark) {
-			
+		if (this.props.isDark) {
+
 			baseStyles += ' bp3-dark';
 
 		}
@@ -84,7 +84,7 @@ class App extends React.Component<Props, State> {
 				<div className='vh-90'>
 					<TitleBar />
 					<div id='scratchboard' className='flex'>
-						<Sidebar isDark={true} orgUsername={username} onOrgSelect={this.handleOrgSelection} />
+						<Sidebar orgUsername={username} onOrgSelect={this.handleOrgSelection} />
 						<div id='main' className='flex-auto'>
 							{contents}
 						</div>
