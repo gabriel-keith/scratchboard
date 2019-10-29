@@ -44,7 +44,7 @@ export async function fetchDependencies(projectFolder: string, useLatest: boolea
 	};
 }
 
-export function updateToLatest(projectFolder: string, packages?: string[], username?: string): Promise<string> {
+export function updateToLatest(projectFolder: string, useLatest: boolean, packages?: string[], username?: string): Promise<string> {
 	let params = '';
 	if (username) {
 		params += ` -a ${username}`;

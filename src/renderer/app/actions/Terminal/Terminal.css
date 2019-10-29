@@ -1,8 +1,5 @@
-.xterm .xterm-screen {
-}
-
 .xterm .xterm-screen canvas {
-    margin: .75rem;
+	margin: .75rem;
 }
 
 
