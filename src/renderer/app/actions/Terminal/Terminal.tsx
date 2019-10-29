@@ -23,7 +23,7 @@ export class Term extends React.Component<Props> {
 
 	public render() {
 		return (
-			<div className="flex mx-auto w-full border-solid border border-teal-900 rounded overflow-hidden">
+			<div className="flex mx-auto pb-5 w-full border-solid border border-teal-900 rounded overflow-hidden bg-term">
 				<div ref="xterm" className='w-full'></div>
 			</div>
 		);
@@ -48,7 +48,7 @@ export class Term extends React.Component<Props> {
 		// Terminal colors for reference: https://jeffkreeftmeijer.com/vim-16-color/
 		const xterm = new Terminal({
 			cursorBlink: true,
-			cols: 120,
+			cols: 100,
 			rows: 25,
 			theme: {
 				background: '#293742',
