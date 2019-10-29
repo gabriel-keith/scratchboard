@@ -224,7 +224,7 @@ class Sidebar extends React.PureComponent<Props, State> {
 					expirationDate={new Date(org.expirationDate)}></ExpirationNotice>
 			),
 			hasCaret: false,
-			isSelected: this.props.orgUsername === id,
+			isSelected: this.props.orgUsername === org.username,
 			icon: (
 				<span className='flip-h bp3-tree-node-icon bp3-icon-standard bp3-icon-key-enter'></span>
 			),
