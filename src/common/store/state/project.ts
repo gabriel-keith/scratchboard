@@ -1,7 +1,7 @@
 import { ProjectConfig } from 'common/data/projects';
 
 export interface ProjectState {
-	projectMap: {[orgName: string]: ProjectConfig};
+	projectMap: {[projectDir: string]: ProjectConfig};
 }
 
 export function createDefaultProjectState(): ProjectState {

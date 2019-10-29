@@ -108,20 +108,27 @@ class Sidebar extends React.PureComponent<Props, State> {
 	}
 
 	private buildOrgTree(): Array<ITreeNode<NodeTreeData>> {
-		const orgGroups: {
-			[orgName: string]: {
-				project: ProjectConfig,
-				orgs: ScratchOrg[]
-			}
-		} = {};
-		const ungrouped = [];
-
-		for (const project of this.props.projectList) {
-			orgGroups[project.orgName] = { project, orgs: [] };
+		interface Group {
+			project: ProjectConfig;
+			orgs: ScratchOrg[];
 		}
 
+		const orgGroups = new Array<Group>();
+		const usernameMap = new Map<string, Group>();
+		const ungrouped = new Array<ScratchOrg>();
+
+		// for each project create lookups from the username to the project
+		for (const project of this.props.projectList) {
+			const group = { project, orgs: []};
+			orgGroups.push(group);
+			for (const username of project.orgUsernames) {
+				usernameMap.set(username, group);
+			}
+		}
+
+		// add each username to a project
 		for (const org of this.props.orgList) {
-			const group = orgGroups[org.orgName];
+			const group = usernameMap.get(org.username);
 			if (group) {
 				group.orgs.push(org);
 			} else {
@@ -129,7 +136,7 @@ class Sidebar extends React.PureComponent<Props, State> {
 			}
 		}
 
-		const nodes = Object.values(orgGroups).map(({ project, orgs }) =>
+		const nodes = orgGroups.map(({ project, orgs }) =>
 			this.createProjectNode(
 				project,
 				orgs.map(this.createOrgNode)

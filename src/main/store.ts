@@ -6,7 +6,6 @@ import ElectronStore from 'electron-store';
 import { StoreState } from 'common/store/state';
 import { storeReducers } from 'common/store/reducers';
 import { ProjectConfig } from 'common/data/projects';
-import { createDefaultProjectState } from 'common/store/state/project';
 
 const electronStore = new ElectronStore();
 

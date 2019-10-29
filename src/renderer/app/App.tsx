@@ -14,7 +14,7 @@ import { NonIdealState, Card } from '@blueprintjs/core';
 interface StateProps {
 	scratchOrgs: { [username: string]: ScratchOrg };
 	users: { [username: string]: OrgUser };
-	projects: { [orgName: string]: ProjectConfig };
+	projects: { [projectDir: string]: ProjectConfig };
 }
 
 type Props = StateProps;
@@ -56,7 +56,9 @@ class App extends React.Component<Props, State> {
 
 		if (username) {
 			const selectedOrg = this.props.scratchOrgs[username];
-			const orgProject = this.props.projects[selectedOrg.orgName];
+			const orgProject = Object.values(this.props.projects).find((project) => (
+				selectedOrg.username in project.orgUsernames
+			));
 
 			contents = <>
 				<Details scratchOrg={selectedOrg} />

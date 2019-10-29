@@ -56,3 +56,15 @@ export function readJsonFile(filePath: string): Promise<any> {
 		});
 	});
 }
+
+export function fetchDirNameList(dirPath: string): Promise<string[]> {
+	return new Promise((resolve, reject) => {
+		fs.readdir(dirPath, { withFileTypes: true}, (err, files) => {
+			if (err) {
+				reject(err);
+			} else {
+				resolve(files.filter((file) => file.isDirectory()).map((dir) => dir.name));
+			}
+		});
+	});
+}

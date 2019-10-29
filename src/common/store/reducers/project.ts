@@ -4,7 +4,7 @@ import { ProjectState, createDefaultProjectState } from '../state/project';
 import { ProjectAction, ADD_PROJECT, REMOVE_PROJECT } from '../actions/project';
 
 export function projectReducer(state: ProjectState = createDefaultProjectState(), action: ProjectAction): ProjectState {
-	let projects: {[orgName: string]: ProjectConfig};
+	let projects: {[projectDir: string]: ProjectConfig};
 
 	switch (action.type) {
 		case ADD_PROJECT:
@@ -14,7 +14,7 @@ export function projectReducer(state: ProjectState = createDefaultProjectState()
 
 			projects = {
 				...state.projectMap,
-				[action.payload.orgName]: action.payload
+				[action.payload.projectDir]: action.payload
 			};
 
 			return {
@@ -23,7 +23,7 @@ export function projectReducer(state: ProjectState = createDefaultProjectState()
 			};
 		case REMOVE_PROJECT:
 			projects = { ...state.projectMap };
-			delete projects[action.payload.orgName];
+			delete projects[action.payload.projectDir];
 
 			return {
 				...state,

@@ -17,7 +17,7 @@ export interface AddProjectAction extends Action {
 export interface RemoveProjectAction extends Action {
 	type: typeof REMOVE_PROJECT;
 	payload: {
-		orgName: string
+		projectDir: string
 	};
 }
 
@@ -29,9 +29,9 @@ export const addProject = createAliasedAction(
 	})
 );
 
-export function removeProject(orgName: string): RemoveProjectAction {
+export function removeProject(projectDir: string): RemoveProjectAction {
 	return {
 		type: REMOVE_PROJECT,
-		payload: { orgName }
+		payload: { projectDir }
 	};
 }
