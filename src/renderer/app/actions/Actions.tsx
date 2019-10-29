@@ -24,6 +24,7 @@ export class Actions extends React.Component<ActionsProps, ActionsState> {
 	}
 
 	public render() {
+		//To be added: <Tab id='scripts' key='scripts' title='Scripts' panel={<Scripts />} />
 		return (
 			<Card id='actions' className='m-4'>
 				<Tabs
@@ -44,7 +45,6 @@ export class Actions extends React.Component<ActionsProps, ActionsState> {
 						panel={<Dependencies orgUsername={this.props.orgUsername} orgProject={this.props.orgProject} />}
 					/>
 					<Tab id='terminal' key='terminal' title='Terminal' panel={<Term isTerm={this.isTerm()} orgProject={this.props.orgProject} />} />
-					<Tab id='scripts' key='scripts' title='Scripts' panel={<Scripts />} />
 				</Tabs>
 			</Card>
 		);
