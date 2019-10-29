@@ -29,7 +29,7 @@ export function orgReducer(state: OrgState = createDefaultOrgsState(), action: O
 			if (action.payload.nickname) {
 				newNicknames[action.payload.username] = action.payload.nickname;
 			} else {
-				delete newNicknames[action.payload.nickname];
+				delete newNicknames[action.payload.username];
 			}
 
 			return {
