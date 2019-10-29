@@ -71,8 +71,8 @@ export class Details extends React.Component<Props> {
 				</div>
 				<div className='flex flex-wrap justify-between ml-3 w-full mb-4'>
 					<div className='p-1 w-1/3'>
-						<p>Project Directory</p>
-						<p className='ml-3'>{this.props.orgProject ? this.props.orgProject.projectDir : 'No Project Associated'}</p>
+						<p className='font-bold pb-1'>Project Directory</p>
+						<p>{this.props.orgProject ? this.props.orgProject.projectDir : 'No Project Associated'}</p>
 					</div>
 					<div className='p-1 w-1/3'>
 						<p></p>
