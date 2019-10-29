@@ -31,7 +31,7 @@ function mapStateToProps(state: StoreState): StateProps {
 	};
 }
 
-const isDark = false;
+const isDark = true;
 
 class App extends React.Component<Props, State> {
 
