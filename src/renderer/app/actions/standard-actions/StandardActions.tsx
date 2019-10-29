@@ -9,6 +9,7 @@ import { OrgUser } from 'common/data/orgs';
 import { NewUser } from '../new-user/NewUser';
 import { ProjectConfig } from 'common/data/projects';
 import { fetchOrgList } from 'common/store/actions/org';
+import { LAYOUT_SORTED_CLUSTERS } from '@blueprintjs/icons/lib/esm/generated/iconContents';
 
 export interface StandardActionsProps {
 	orgUsername: string;
@@ -23,6 +24,7 @@ export interface StandardActionsState {
 	isOrgOpening: boolean;
 	isOrgCopying: boolean;
 	isPushing: boolean;
+	isLoadingUsers: boolean;
 }
 
 export interface DispatchProps {
@@ -33,7 +35,7 @@ const actions = {
 	fetchOrgList
 };
 
-type Props = StandardActionsProps | DispatchProps;
+type Props = StandardActionsProps & DispatchProps;
 
 class StandardActions extends React.Component<Props, StandardActionsState> {
 	private toaster: Toaster;
@@ -52,13 +54,12 @@ class StandardActions extends React.Component<Props, StandardActionsState> {
 			isOrgOpening: false,
 			isOrgCopying: false,
 			isPushing: false,
+			isLoadingUsers: true
 		};
 	}
 
 	public componentWillMount() {
-		listUsers(this.props.orgUsername)
-			.then((users) => { this.setState({ ...this.state, userList: users }); })
-			.catch((error) => { console.error(error); });
+		this.loadUsers();
 	}
 
 	public render() {
@@ -74,7 +75,7 @@ class StandardActions extends React.Component<Props, StandardActionsState> {
 						<Button rightIcon={CHEVRON_DOWN} disabled={this.state.isOrgOpening}></Button>
 						<Menu className={Classes.POPOVER_DISMISS}>
 							<h5 className='p-2'>Open as...</h5>
-							{this.buildUserList(this.openOrg)}
+							{this.buildUserList(this.openOrg.bind(this))}
 						</Menu>
 					</Popover>
 				</ButtonGroup>
@@ -88,7 +89,7 @@ class StandardActions extends React.Component<Props, StandardActionsState> {
 							disabled={this.state.isOrgCopying}></Button>
 						<Menu className={Classes.POPOVER_DISMISS}>
 							<h5 className='p-2'>Copy as...</h5>
-							{this.buildUserList(this.copyOrgUrl)}
+							{this.buildUserList(this.copyOrgUrl.bind(this))}
 						</Menu>
 					</Popover>
 				</ButtonGroup>
@@ -135,6 +136,20 @@ class StandardActions extends React.Component<Props, StandardActionsState> {
 				</div>
 			</div>
 		);
+	}
+
+	public componentDidUpdate(prevProps: Props, prevState: StandardActionsState, snapshot: {}) {
+		if (this.props.orgUsername !== prevProps.orgUsername ||
+			this.props.orgProject !== prevProps.orgProject) {
+				this.loadUsers();
+		}
+	}
+
+	private loadUsers() {
+		this.setState({ ...this.state, userList: [], isLoadingUsers: true });
+		listUsers(this.props.orgUsername)
+			.then((users) => { this.setState({ ...this.state, userList: users, isLoadingUsers: false }); })
+			.catch((error) => { console.error(error); this.setState({ ...this.state, isLoadingUsers: false }); });
 	}
 
 	private handleNewUserClick(): any {
