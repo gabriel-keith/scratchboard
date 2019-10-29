@@ -154,9 +154,13 @@ class StandardActions extends React.Component<Props, StandardActionsState> {
 
 	private handleNewUserClick(): any {
 		if (this.state.currentForm == null) {
-			this.setState({currentForm: < NewUser />});
+			this.setState({
+				...this.state,
+				currentForm: < NewUser />});
 		} else {
-			this.setState({currentForm: null});
+			this.setState({
+				...this.state,
+				currentForm: null});
 		}
 		this.forceUpdate();
 	}
@@ -174,11 +178,16 @@ class StandardActions extends React.Component<Props, StandardActionsState> {
 	}
 
 	private openOrg(user?: string): void {
-		this.setState({isOrgOpening: true});
-		this.setState({currentForm: this.renderOpenOrgConfirm()});
+		this.setState({
+			...this.state,
+			isOrgOpening: true,
+			currentForm: this.renderOpenOrgConfirm()
+		});
 		openOrg(user || this.props.orgUsername).then( () => {
-			this.setState({currentForm: null});
-			this.setState({isOrgOpening: false});
+			this.setState({
+				...this.state,
+				currentForm: null,
+				isOrgOpening: false});
 		}
 		);
 	}
@@ -187,13 +196,18 @@ class StandardActions extends React.Component<Props, StandardActionsState> {
 		this.setState({isPushing: false});
 		if (this.props.orgProject) {
 			this.setState({currentForm: this.renderPushOrgConfirm()});
-			pushToOrg(user || this.props.orgUsername).then( () => {
-					this.setState({currentForm: this.renderPushOrgResult()});
-					this.setState({isPushing: false});
+			pushToOrg(user || this.props.orgUsername, this.props.orgProject.projectDir).then( () => {
+					this.setState({
+						...this.state,
+						currentForm: this.renderPushOrgResult(),
+						isPushing: false
+					});
 				}
 			);
 		} else {
-			this.setState({currentForm: this.renderUnableToPush()});
+			this.setState({
+				...this.state,
+				currentForm: this.renderUnableToPush()});
 		}
 	}
 	private renderUnableToPush() {
@@ -283,6 +297,10 @@ class StandardActions extends React.Component<Props, StandardActionsState> {
 				</div>
 			</Card>
 		);
+	}
+
+	private setFormToNull() {
+		this.setState({currentForm: null});
 	}
 }
 
