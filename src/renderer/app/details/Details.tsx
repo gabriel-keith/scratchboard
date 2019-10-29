@@ -1,9 +1,11 @@
 import React from 'react';
 import { Card, Elevation, ProgressBar } from '@blueprintjs/core';
 import { ScratchOrg } from 'common/data/orgs';
+import { ProjectConfig } from 'common/data/projects';
 
 interface OwnProps {
 	scratchOrg: ScratchOrg;
+	orgProject?: ProjectConfig;
 }
 
 type Props = OwnProps;
@@ -65,6 +67,18 @@ export class Details extends React.Component<Props> {
 					<div className='p-1 w-1/3'>
 						<p>Org Id</p>
 						<p className='ml-3'>{this.props.scratchOrg.devHubOrgId}</p>
+					</div>
+				</div>
+				<div className='flex flex-wrap justify-between ml-3 w-full mb-4'>
+					<div className='p-1 w-1/3'>
+						<p>Project Directory</p>
+						<p className='ml-3'>{this.props.orgProject ? this.props.orgProject.projectDir : 'No Project Associated'}</p>
+					</div>
+					<div className='p-1 w-1/3'>
+						<p></p>
+					</div>
+					<div className='p-1 w-1/3'>
+						<p></p>
 					</div>
 				</div>
 			</Card>
