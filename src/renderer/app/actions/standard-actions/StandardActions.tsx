@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import { Alert, Button, ButtonGroup, Popover, Classes, Position, Menu, MenuItem, Intent, Overlay, Card } from '@blueprintjs/core';
 import { CHEVRON_DOWN, WARNING_SIGN } from '@blueprintjs/icons/lib/esm/generated/iconNames';
@@ -7,6 +8,7 @@ import { clipboard } from 'electron';
 import { OrgUser } from 'common/data/orgs';
 import { NewUser } from '../new-user/NewUser';
 import { ProjectConfig } from 'common/data/projects';
+import { fetchOrgList } from 'common/store/actions/org';
 
 export interface StandardActionsProps {
 	orgUsername: string;
@@ -19,8 +21,18 @@ export interface StandardActionsState {
 	userList: OrgUser[];
 }
 
-export class StandardActions extends React.Component<StandardActionsProps, StandardActionsState> {
-	public constructor(props: StandardActionsProps) {
+export interface DispatchProps {
+	fetchOrgList(): void;
+}
+
+const actions = {
+	fetchOrgList
+};
+
+type Props = StandardActionsProps | DispatchProps;
+
+class StandardActions extends React.Component<Props, StandardActionsState> {
+	public constructor(props: Props) {
 		super(props);
 
 		this.state = {
@@ -171,3 +183,5 @@ export class StandardActions extends React.Component<StandardActionsProps, Stand
 		);
 	}
 }
+
+export default connect(undefined, actions)(StandardActions);
