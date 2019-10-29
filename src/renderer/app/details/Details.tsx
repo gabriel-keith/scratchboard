@@ -17,7 +17,7 @@ export class Details extends React.Component<Props> {
 				elevation={Elevation.ONE}
 				className='mb-4 mx-4 p-2'
 			>
-				<h3 className='py-2 mb-4 ml-3 text-lg'>Details</h3>
+				<h3 className='py-2 mb-4 ml-3 text-lg font-bold'>Details</h3>
 				<div className='flex flex-wrap justify-between ml-3 w-3/4 mb-4'>
 					{/* <div className='p-1 w-full lg:mx-1 md:w-full lg:w-5/12'>
 						<p>Deployment Status</p>
@@ -29,7 +29,7 @@ export class Details extends React.Component<Props> {
 						></ProgressBar>
 					</div> */}
 					<div className='p-1 w-full'>
-						<p>Expiration</p>
+						<p className='font-bold'>Expiration</p>
 						<ProgressBar
 							animate={false}
 							stripes={false}
@@ -41,30 +41,30 @@ export class Details extends React.Component<Props> {
 				</div>
 				<div className='flex flex-wrap justify-between ml-3 w-full mb-4'>
 					<div className='p-1 w-1/3'>
-						<p>Username</p>
-						<p className='ml-3'>{this.props.scratchOrg.username}</p>
+						<p className='font-bold pb-1'>Username</p>
+						<p>{this.props.scratchOrg.username}</p>
 					</div>
 					<div className='p-1 w-1/3'>
-						<p>Created</p>
-						<p className='ml-3'>{new Date(this.props.scratchOrg.createdDate).toISOString().split('T')[0]}</p>
+						<p className='font-bold pb-1'>Created</p>
+						<p>{new Date(this.props.scratchOrg.createdDate).toISOString().split('T')[0]}</p>
 					</div>
 					<div className='p-1 w-1/3'>
-						<p>Expires</p>
-						<p className='ml-3'>{this.props.scratchOrg.expirationDate}</p>
+						<p className='font-bold pb-1'>Expires</p>
+						<p>{this.props.scratchOrg.expirationDate}</p>
 					</div>
 				</div>
 				<div className='flex flex-wrap justify-between ml-3 w-full mb-4'>
 					<div className='p-1 w-1/3'>
-						<p>Connected Status</p>
-						<p className='ml-3'>{this.props.scratchOrg.connectedStatus}</p>
+						<p className='font-bold pb-1'>Connected Status</p>
+						<p>{this.props.scratchOrg.connectedStatus}</p>
 					</div>
 					<div className='p-1 w-1/3'>
-						<p>Org Name</p>
-						<p className='ml-3'>{this.props.scratchOrg.orgName}</p>
+						<p className='font-bold pb-1'>Org Name</p>
+						<p>{this.props.scratchOrg.orgName}</p>
 					</div>
 					<div className='p-1 w-1/3'>
-						<p>Org Id</p>
-						<p className='ml-3'>{this.props.scratchOrg.devHubOrgId}</p>
+						<p className='font-bold pb-1'>Org Id</p>
+						<p>{this.props.scratchOrg.devHubOrgId}</p>
 					</div>
 				</div>
 			</Card>
