@@ -1,6 +1,6 @@
 import React from 'react';
-var os = require('os');
-var pty = require('node-pty');
+let os = require('os');
+let pty = require('node-pty');
 import { Terminal } from 'xterm';
 import '../../../../../node_modules/xterm/css/xterm.css';
 import { ProjectConfig } from 'common/data/projects';
