@@ -1,17 +1,18 @@
 import React from 'react';
 import { Button, FormGroup, InputGroup } from '@blueprintjs/core';
 
-export class NewUser extends React.Component {
-	
-	constructor(props) {
-		super(props);
-		
-		this.state = {
-			canSubmit: false,
-			password: null,
-			username: null
-		};
-	}
+interface State {
+	canSubmit: boolean;
+	password: string;
+	username: string;
+}
+
+export class NewUser extends React.Component<{}, State> {
+	public readonly state = {
+		canSubmit: false,
+		password: '',
+		username: ''
+	};
 
 	public render() {
 		return (
@@ -32,10 +33,9 @@ export class NewUser extends React.Component {
 						type='submit'
 						text='Create User'
 						intent='primary'
-						disabled={!this.state.canSubmit}
-						onClick={() => this.upgrade()}>
+						disabled={!this.state.canSubmit}>
 				</Button>
 			</div>
-        );
-    }
+		);
+	}
 }

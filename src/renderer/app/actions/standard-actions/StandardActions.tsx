@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { Alert, Button, ButtonGroup, Popover, Classes, Position, Menu, MenuItem, Intent, Overlay, Card, Toaster } from '@blueprintjs/core';
+import { Alert, Button, ButtonGroup, Popover, Classes, Position, Menu, MenuItem, Intent, Card, Toaster } from '@blueprintjs/core';
 import { CHEVRON_DOWN, WARNING_SIGN } from '@blueprintjs/icons/lib/esm/generated/iconNames';
 import { listUsers, openOrg, setOrgAsDefault, deleteOrg, pushToOrg } from 'common/api/sfdx';
 import { clipboard } from 'electron';
@@ -10,12 +10,12 @@ import { NewUser } from '../new-user/NewUser';
 import { ProjectConfig } from 'common/data/projects';
 import { fetchOrgList } from 'common/store/actions/org';
 
-export interface StandardActionsProps {
+export interface OwnProps {
 	orgUsername: string;
 	orgProject?: ProjectConfig;
 }
 
-export interface StandardActionsState {
+export interface State {
 	currentForm: JSX.Element | null;
 	showDeleteOrgModal: boolean;
 	userList: OrgUser[];
@@ -33,10 +33,10 @@ const actions = {
 	fetchOrgList
 };
 
-type Props = StandardActionsProps | DispatchProps;
+type Props = OwnProps & DispatchProps;
 
-class StandardActions extends React.Component<Props, StandardActionsState> {
-	private toaster: Toaster;
+class StandardActions extends React.Component<Props, State> {
+	private toaster?: Toaster;
 	private refHandlers = {
 		toaster: (ref: Toaster) => (this.toaster = ref),
 	};
@@ -218,7 +218,10 @@ class StandardActions extends React.Component<Props, StandardActionsState> {
 		const url = await openOrg(user || this.props.orgUsername, true);
 		clipboard.writeText(url);
 		this.setState({isOrgCopying: false});
-		this.toaster.show({ message: 'Copied to clipboard!' });
+
+		if (this.toaster) {
+			this.toaster.show({ message: 'Copied to clipboard!' });
+		}
 	}
 
 	private setAsDefault(): void {
@@ -239,13 +242,14 @@ class StandardActions extends React.Component<Props, StandardActionsState> {
 	}
 
 	private renderDefaultOrgMessage(success: boolean) {
-		if (success) {
+		const orgProject = this.props.orgProject;
+		if (success && orgProject) {
 			return (
 				<Card id='defaultSet' interactive={false} className='m-2 mt-4'>
 					<div className='flex-col justify-center'>
 						<p className="mb-2">Default Org successfully set </p>
-						<p>Org Name: {this.props.orgProject.orgName}</p>
-						<p>Project Directory: {this.props.orgProject.projectDir}</p>
+						<p>Org Name: {orgProject.orgName}</p>
+						<p>Project Directory: {orgProject.projectDir}</p>
 					</div>
 				</Card>
 			);
@@ -271,4 +275,4 @@ class StandardActions extends React.Component<Props, StandardActionsState> {
 	}
 }
 
-export default connect<{}, DispatchProps, StandardActionsProps>(undefined, actions)(StandardActions);
+export default connect<{}, DispatchProps, OwnProps>(undefined, actions)(StandardActions);
