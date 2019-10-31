@@ -301,10 +301,6 @@ class StandardActions extends React.Component<Props, State> {
 			</Card>
 		);
 	}
-
-	// private setFormToNull() {
-	// 	this.setState({currentForm: null});
-	// }
 }
 
 export default connect<{}, DispatchProps, OwnProps>(undefined, actions)(StandardActions);
