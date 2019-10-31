@@ -8,6 +8,8 @@ import App from './app/App';
 import './style.scss';
 import './tailwind.scss';
 
+require('devtron').install();
+
 ReactDom.render(
 	<Provider store={store}>
 		<App />

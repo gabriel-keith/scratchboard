@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, FormGroup, InputGroup } from '@blueprintjs/core';
+import { Button, FormGroup, InputGroup, Card } from '@blueprintjs/core';
 
 interface State {
 	canSubmit: boolean;
@@ -16,26 +16,34 @@ export class NewUser extends React.Component<{}, State> {
 
 	public render() {
 		return (
-			<div id='new-users' className='m-4'>
+			<Card id='new-users' interactive={false} className='m-4'>
 				<FormGroup
+					className='w-1/2'
 					label="Username"
 					labelFor="username"
 				>
 					<InputGroup id="username" />
 				</FormGroup>
 				<FormGroup
+					className='w-1/2'
 					label="Password"
 					labelFor="password"
 				>
 					<InputGroup id="password" />
 				</FormGroup>
 				<Button
+						className='mr-2'
+						type='submit'
+						text='Cancel'
+						intent='warning'>
+				</Button>
+				<Button
 						type='submit'
 						text='Create User'
 						intent='primary'
 						disabled={!this.state.canSubmit}>
 				</Button>
-			</div>
+			</Card>
 		);
 	}
 }

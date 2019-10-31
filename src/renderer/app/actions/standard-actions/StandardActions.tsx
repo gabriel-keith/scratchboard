@@ -23,6 +23,7 @@ export interface State {
 	isOrgOpening: boolean;
 	isOrgCopying: boolean;
 	isPushing: boolean;
+	isLoadingUsers: boolean;
 }
 
 export interface DispatchProps {
@@ -52,13 +53,12 @@ class StandardActions extends React.Component<Props, State> {
 			isOrgOpening: false,
 			isOrgCopying: false,
 			isPushing: false,
+			isLoadingUsers: true
 		};
 	}
 
 	public componentWillMount() {
-		listUsers(this.props.orgUsername)
-			.then((users) => { this.setState({ ...this.state, userList: users }); })
-			.catch((error) => { console.error(error); });
+		this.loadUsers();
 	}
 
 	public render() {
@@ -74,7 +74,7 @@ class StandardActions extends React.Component<Props, State> {
 						<Button rightIcon={CHEVRON_DOWN} disabled={this.state.isOrgOpening}></Button>
 						<Menu className={Classes.POPOVER_DISMISS}>
 							<h5 className='p-2'>Open as...</h5>
-							{this.buildUserList(this.openOrg)}
+							{this.buildUserList(this.openOrg.bind(this))}
 						</Menu>
 					</Popover>
 				</ButtonGroup>
@@ -88,7 +88,7 @@ class StandardActions extends React.Component<Props, State> {
 							disabled={this.state.isOrgCopying}></Button>
 						<Menu className={Classes.POPOVER_DISMISS}>
 							<h5 className='p-2'>Copy as...</h5>
-							{this.buildUserList(this.copyOrgUrl)}
+							{this.buildUserList(this.copyOrgUrl.bind(this))}
 						</Menu>
 					</Popover>
 				</ButtonGroup>
@@ -137,11 +137,29 @@ class StandardActions extends React.Component<Props, State> {
 		);
 	}
 
+	public componentDidUpdate(prevProps: Props, prevState: State, snapshot: {}) {
+		if (this.props.orgUsername !== prevProps.orgUsername ||
+			this.props.orgProject !== prevProps.orgProject) {
+				this.loadUsers();
+		}
+	}
+
+	private loadUsers() {
+		this.setState({ ...this.state, userList: [], isLoadingUsers: true });
+		listUsers(this.props.orgUsername)
+			.then((users) => { this.setState({ ...this.state, userList: users, isLoadingUsers: false }); })
+			.catch((error) => { console.error(error); this.setState({ ...this.state, isLoadingUsers: false }); });
+	}
+
 	private handleNewUserClick(): any {
 		if (this.state.currentForm == null) {
-			this.setState({currentForm: < NewUser />});
+			this.setState({
+				...this.state,
+				currentForm: < NewUser />});
 		} else {
-			this.setState({currentForm: null});
+			this.setState({
+				...this.state,
+				currentForm: null});
 		}
 		this.forceUpdate();
 	}
@@ -159,11 +177,16 @@ class StandardActions extends React.Component<Props, State> {
 	}
 
 	private openOrg(user?: string): void {
-		this.setState({isOrgOpening: true});
-		this.setState({currentForm: this.renderOpenOrgConfirm()});
+		this.setState({
+			...this.state,
+			isOrgOpening: true,
+			currentForm: this.renderOpenOrgConfirm()
+		});
 		openOrg(user || this.props.orgUsername).then( () => {
-			this.setState({currentForm: null});
-			this.setState({isOrgOpening: false});
+			this.setState({
+				...this.state,
+				currentForm: null,
+				isOrgOpening: false});
 		}
 		);
 	}
@@ -172,13 +195,18 @@ class StandardActions extends React.Component<Props, State> {
 		this.setState({isPushing: false});
 		if (this.props.orgProject) {
 			this.setState({currentForm: this.renderPushOrgConfirm()});
-			pushToOrg(user || this.props.orgUsername).then( () => {
-					this.setState({currentForm: this.renderPushOrgResult()});
-					this.setState({isPushing: false});
+			pushToOrg(user || this.props.orgUsername, this.props.orgProject.projectDir).then( () => {
+					this.setState({
+						...this.state,
+						currentForm: this.renderPushOrgResult(),
+						isPushing: false
+					});
 				}
 			);
 		} else {
-			this.setState({currentForm: this.renderUnableToPush()});
+			this.setState({
+				...this.state,
+				currentForm: this.renderUnableToPush()});
 		}
 	}
 	private renderUnableToPush() {
@@ -273,6 +301,10 @@ class StandardActions extends React.Component<Props, State> {
 			</Card>
 		);
 	}
+
+	// private setFormToNull() {
+	// 	this.setState({currentForm: null});
+	// }
 }
 
 export default connect<{}, DispatchProps, OwnProps>(undefined, actions)(StandardActions);
