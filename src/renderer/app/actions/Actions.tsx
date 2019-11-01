@@ -1,7 +1,6 @@
 import { Card, Tab, Tabs } from '@blueprintjs/core';
 import React, { ReactText } from 'react';
 import { Dependencies } from './dependencies/Dependencies';
-import { Scripts } from './scripts/Scripts';
 import StandardActions from './standard-actions/StandardActions';
 import { Term } from './Terminal/Terminal';
 import { ProjectConfig } from 'common/data/projects';

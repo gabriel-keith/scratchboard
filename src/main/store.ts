@@ -7,7 +7,6 @@ import { StoreState } from 'common/store/state';
 import { storeReducers } from 'common/store/reducers';
 import { ProjectConfig } from 'common/data/projects';
 import { createDefaultErrorState } from 'common/store/state/error';
-import { createDefaultProjectState } from 'common/store/state/project';
 import { SettingsState, createDefaultSettings } from 'common/store/state/settings';
 
 const electronStore = new ElectronStore();
@@ -17,7 +16,6 @@ const NICKNAME_KEY = 'NICKNAME';
 const SETTINGS_KEY = 'SETTINGS';
 
 const initState = loadInitState();
-console.log('Init State:', initState);
 
 export const store: Store<StoreState> = createStore(
 	storeReducers,
@@ -58,7 +56,6 @@ store.subscribe(() => {
 	const previousSettings = currentSettings;
 
 	const state = store.getState();
-	console.log('StateChange:', state);
 
 	currentProjects = state.project.projectMap;
 	currentNicknames = state.org.nicknames;

@@ -1,17 +1,18 @@
 import React from 'react';
 import { Button, FormGroup, InputGroup, Card } from '@blueprintjs/core';
 
-export class NewUser extends React.Component {
-	
-	constructor(props) {
-		super(props);
-		
-		this.state = {
-			canSubmit: false,
-			password: null,
-			username: null
-		};
-	}
+interface State {
+	canSubmit: boolean;
+	password: string;
+	username: string;
+}
+
+export class NewUser extends React.Component<{}, State> {
+	public readonly state = {
+		canSubmit: false,
+		password: '',
+		username: ''
+	};
 
 	public render() {
 		return (
@@ -34,17 +35,15 @@ export class NewUser extends React.Component {
 						className='mr-2'
 						type='submit'
 						text='Cancel'
-						intent='warning'
-						onClick={() => this.setFormToNull()}>
+						intent='warning'>
 				</Button>
 				<Button
 						type='submit'
 						text='Create User'
 						intent='primary'
-						disabled={!this.state.canSubmit}
-						onClick={() => this.upgrade()}>
+						disabled={!this.state.canSubmit}>
 				</Button>
 			</Card>
-        );
-    }
+		);
+	}
 }
