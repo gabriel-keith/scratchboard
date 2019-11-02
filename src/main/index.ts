@@ -5,6 +5,7 @@ import { store } from './store';
 
 import { fetchOrgList } from 'common/store/actions/org';
 import { setTheme } from 'common/store/actions/settings';
+import { fixPath } from 'common/fixpath';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -122,5 +123,6 @@ app.on('ready', () => {
 	mainWindow = createMainWindow();
 	Menu.setApplicationMenu(createAppMenu());
 
+	fixPath();
 	store.dispatch(fetchOrgList());
 });
