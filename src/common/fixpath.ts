@@ -1,4 +1,4 @@
-const pathsToAdd = ['/usr/local/bin', '/Library/Python/2.7/lib/python/site-packages'];
+const pathsToAdd = ['/usr/local/bin'];
 
 export function fixPath() {
 	if (process.platform === 'darwin') {
