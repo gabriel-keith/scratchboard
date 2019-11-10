@@ -1,9 +1,9 @@
 import { OrgUser, ScratchOrg } from 'common/data/orgs';
 
 export interface OrgState {
-	scratchOrgs: {[username: string]: ScratchOrg};
-	users: {[username: string]: OrgUser};
-	nicknames: {[username: string]: string};
+	scratchOrgs: Record<string, ScratchOrg>;
+	users: Record<string, OrgUser>;
+	nicknames: Record<string, string>;
 }
 
 export function createDefaultOrgsState(): OrgState {

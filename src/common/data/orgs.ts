@@ -1,5 +1,4 @@
-
-//sfdx force:org:list
+// sfdx force:org:list
 export interface OrgList {
 	nonScratchOrgs: SalesforceOrg[];
 	scratchOrgs: ScratchOrg[];

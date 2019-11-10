@@ -1,10 +1,10 @@
 import { Store, createStore, applyMiddleware } from 'redux';
 import { forwardToRenderer, triggerAlias, replayActionMain } from 'electron-redux';
-import promise from 'redux-promise';
+import promise from 'redux-promise-middleware';
 import ElectronStore from 'electron-store';
 
 import { StoreState } from 'common/store/state';
-import { storeReducers } from 'common/store/reducers';
+import storeReducers from 'common/store/reducers';
 import { ProjectConfig } from 'common/data/projects';
 import { createDefaultErrorState } from 'common/store/state/error';
 import { SettingsState, createDefaultSettings } from 'common/store/state/settings';
@@ -15,39 +15,34 @@ const PROJECT_CONFIG_KEY = 'PROJECT_CONFIG_V2';
 const NICKNAME_KEY = 'NICKNAME';
 const SETTINGS_KEY = 'SETTINGS';
 
-const initState = loadInitState();
-
-export const store: Store<StoreState> = createStore(
-	storeReducers,
-	initState,
-	applyMiddleware(
-		triggerAlias,
-		promise,
-		forwardToRenderer
-	)
-);
-
-replayActionMain(store);
-
 // load data
 function loadInitState(): StoreState {
 	return {
 		org: {
 			scratchOrgs: {},
 			users: {},
-			nicknames: electronStore.get(NICKNAME_KEY, {})
+			nicknames: electronStore.get(NICKNAME_KEY, {}),
 		},
 		project: {
-			projectMap: electronStore.get(PROJECT_CONFIG_KEY, {})
+			projectMap: electronStore.get(PROJECT_CONFIG_KEY, {}),
 		},
 		error: createDefaultErrorState(),
-		settings: electronStore.get(SETTINGS_KEY, createDefaultSettings())
+		settings: electronStore.get(SETTINGS_KEY, createDefaultSettings()),
 	};
 }
 
+const initState = loadInitState();
+
+const store: Store<StoreState> = createStore(
+	storeReducers,
+	initState,
+	applyMiddleware(triggerAlias, promise, forwardToRenderer),
+);
+replayActionMain(store);
+
 // save data
-let currentProjects: {[orgName: string]: ProjectConfig} | undefined;
-let currentNicknames: {[username: string]: string} | undefined;
+let currentProjects: Record<string, ProjectConfig> | undefined;
+let currentNicknames: Record<string, string> | undefined;
 let currentSettings: SettingsState | undefined;
 
 store.subscribe(() => {
@@ -71,3 +66,5 @@ store.subscribe(() => {
 		electronStore.set(SETTINGS_KEY, currentSettings);
 	}
 });
+
+export default store;

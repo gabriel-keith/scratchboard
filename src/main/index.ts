@@ -1,23 +1,22 @@
-import { app, BrowserWindow, Menu } from 'electron';
+import { app, BrowserWindow } from 'electron';
 import * as path from 'path';
 import { format as formatUrl } from 'url';
-import { store } from './store';
-
 import { fetchOrgList } from 'common/store/actions/org';
-import { setTheme } from 'common/store/actions/settings';
 import { fixPath } from 'common/fixpath';
+
+import store from './store';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
-let mainWindow: BrowserWindow | null = null;
+let mainWindow: BrowserWindow | undefined;
 
-function createMainWindow() {
+function createMainWindow(): BrowserWindow {
 	const window = new BrowserWindow({
 		webPreferences: { nodeIntegration: true },
 		titleBarStyle: 'hiddenInset',
 		width: 800,
-		height: 800
+		height: 800,
 	});
 
 	if (isDevelopment) {
@@ -27,13 +26,13 @@ function createMainWindow() {
 			formatUrl({
 				pathname: path.join(__dirname, 'index.html'),
 				protocol: 'file',
-				slashes: true
-			})
+				slashes: true,
+			}),
 		);
 	}
 
 	window.on('closed', () => {
-		mainWindow = null;
+		mainWindow = undefined;
 	});
 
 	window.webContents.on('devtools-opened', () => {
@@ -44,63 +43,6 @@ function createMainWindow() {
 	});
 
 	return window;
-}
-
-function createAppMenu(): Menu {
-	return Menu.buildFromTemplate([
-		{
-			label: app.getName(),
-			submenu: [
-				{ role: 'about' },
-				{ type: 'separator' },
-				{ role: 'services' },
-				{ type: 'separator' },
-				{ role: 'hide' },
-				{ role: 'hideOthers' },
-				{ role: 'unHide' },
-				{ type: 'separator' },
-				{ role: 'quit' }
-			] as any[]
-		},
-		{
-			label: 'View',
-			submenu: [
-				{ role: 'reload' },
-				{ role: 'forcereload' },
-				{ role: 'toggledevtools' },
-				{ type: 'separator' },
-				{ role: 'resetzoom' },
-				{ role: 'zoomin' },
-				{ role: 'zoomout' },
-				{ type: 'separator' },
-				{ role: 'togglefullscreen' }
-			]
-		},
-		{
-			label: 'Window',
-			submenu: [
-				{ role: 'minimize' },
-				{ role: 'zoom' },
-				{ type: 'separator' },
-				{ role: 'front' },
-				{ type: 'separator' }
-			]
-		},
-		{
-			label: 'Theme',
-			submenu: [
-				{
-					label: 'Toggle Theme',
-					click: () => {
-						const state = store.getState();
-						store.dispatch(setTheme(
-							state.settings.theme === 'dark' ? 'light' : 'dark'
-						));
-					}
-				}
-			]
-		}
-	]);
 }
 
 // quit application when all windows are closed
@@ -121,7 +63,6 @@ app.on('activate', () => {
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
 	mainWindow = createMainWindow();
-	Menu.setApplicationMenu(createAppMenu());
 
 	fixPath();
 	store.dispatch(fetchOrgList());

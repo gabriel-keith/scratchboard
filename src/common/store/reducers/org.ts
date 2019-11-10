@@ -1,18 +1,40 @@
 import { OrgState, createDefaultOrgsState } from '../state/org';
-import { OrgListActions, FETCH_ORG_LIST_ACTION, FETCH_ORG_USERS_ACTION, SET_ORG_NICKNAME_ACTION } from '../actions/org';
+import {
+	OrgListActions,
+	FETCH_ORG_LIST_FULFILLED,
+	FETCH_ORG_USERS_FULFILLED,
+	SET_ORG_NICKNAME_ACTION,
+} from '../actions/org';
 
-export function orgReducer(state: OrgState = createDefaultOrgsState(), action: OrgListActions): OrgState {
-	switch(action.type) {
-		case FETCH_ORG_LIST_ACTION:
+function groupByUsername<T extends { username: string }>(data: T[]): Record<string, T> {
+	return data.reduce((acc: Record<string, T>, a) => {
+		acc[a.username] = a;
+		return acc;
+	}, {});
+}
+
+function removeValue<T>(
+	value: string,
+	{ [value]: _, ...values }: Record<string, T>,
+): Record<string, T> {
+	return values;
+}
+
+export default function orgReducer(
+	state: OrgState = createDefaultOrgsState(),
+	action: OrgListActions,
+): OrgState {
+	switch (action.type) {
+		case FETCH_ORG_LIST_FULFILLED:
 			if (!action.payload) {
 				return state;
 			}
 
 			return {
 				...state,
-				scratchOrgs: groupByUsername(action.payload.scratchOrgs)
+				scratchOrgs: groupByUsername(action.payload.scratchOrgs),
 			};
-		case FETCH_ORG_USERS_ACTION:
+		case FETCH_ORG_USERS_FULFILLED:
 			if (!action.payload) {
 				return state;
 			}
@@ -21,30 +43,25 @@ export function orgReducer(state: OrgState = createDefaultOrgsState(), action: O
 				...state,
 				users: {
 					...state.users,
-					...groupByUsername(action.payload)
-				}
+					...groupByUsername(action.payload),
+				},
 			};
 		case SET_ORG_NICKNAME_ACTION:
-			const newNicknames = { ...state.nicknames };
 			if (action.payload.nickname) {
-				newNicknames[action.payload.username] = action.payload.nickname;
-			} else {
-				delete newNicknames[action.payload.username];
+				return {
+					...state,
+					nicknames: {
+						...state.nicknames,
+						[action.payload.username]: action.payload.nickname,
+					},
+				};
 			}
 
 			return {
 				...state,
-				nicknames: newNicknames
+				nicknames: removeValue(action.payload.username, state.nicknames),
 			};
 		default:
 			return state;
 	}
-}
-
-function groupByUsername<T extends {username: string}>(data: T[]): {[username: string]: T} {
-	const output: {[username: string]: T} = {};
-	for (const x of data) {
-		output[x.username] = x;
-	}
-	return output;
 }

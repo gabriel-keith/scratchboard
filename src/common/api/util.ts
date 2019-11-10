@@ -13,7 +13,7 @@ export function executePromiseJson(command: string, path?: string): Promise<any>
 			if (!error) {
 				try {
 					resolve(JSON.parse(stdout).result);
-				} catch(exception) {
+				} catch (exception) {
 					reject(exception);
 				}
 			} else {
@@ -59,7 +59,7 @@ export function readJsonFile(filePath: string): Promise<any> {
 
 export function fetchDirNameList(dirPath: string): Promise<string[]> {
 	return new Promise((resolve, reject) => {
-		fs.readdir(dirPath, { withFileTypes: true}, (err, files) => {
+		fs.readdir(dirPath, { withFileTypes: true }, (err, files) => {
 			if (err) {
 				reject(err);
 			} else {

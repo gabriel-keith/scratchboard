@@ -1,16 +1,27 @@
 import { executePromise } from '../util';
 
-export interface IPackage {
+export interface Package {
 	packageName: string;
 	version: string;
 }
 
 export interface Packages {
-	target: IPackage[];
-	current: IPackage[];
+	target: Package[];
+	current: Package[];
 }
 
-export async function fetchDependencies(projectFolder: string, useLatest: boolean, username?: string): Promise<Packages> {
+function parsePackage(line: string): Package {
+	return {
+		packageName: line.split(' ', 1)[0],
+		version: line.split("'")[3],
+	};
+}
+
+export async function fetchDependencies(
+	projectFolder: string,
+	useLatest: boolean,
+	username?: string,
+): Promise<Packages> {
 	let params = '';
 	if (useLatest) {
 		params += ' -u';
@@ -23,28 +34,33 @@ export async function fetchDependencies(projectFolder: string, useLatest: boolea
 
 	const lines = results.split('\n');
 
-	const target: IPackage[] = [];
-	const current: IPackage[] = [];
+	const target: Package[] = [];
+	const current: Package[] = [];
 
 	let index = 2;
 	while (lines[index]) {
 		target.push(parsePackage(lines[index]));
-		index++;
+		index += 1;
 	}
 	index += 2;
 
 	while (lines[index]) {
 		current.push(parsePackage(lines[index]));
-		index++;
+		index += 1;
 	}
 
 	return {
 		target,
-		current
+		current,
 	};
 }
 
-export function updateToLatest(projectFolder: string, useLatest: boolean, packages?: string[], username?: string): Promise<string> {
+export function updateToLatest(
+	projectFolder: string,
+	useLatest: boolean,
+	packages?: string[],
+	username?: string,
+): Promise<string> {
 	let params = '';
 	if (username) {
 		params += ` -a ${username}`;
@@ -54,11 +70,4 @@ export function updateToLatest(projectFolder: string, useLatest: boolean, packag
 	}
 
 	return executePromise(`sfupdate -dx${params}`, projectFolder);
-}
-
-function parsePackage(line: string): IPackage {
-	return {
-		packageName: line.split(' ', 1)[0],
-		version: line.split('\'')[3]
-	};
 }

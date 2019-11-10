@@ -1,7 +1,7 @@
 import { ProjectConfig } from 'common/data/projects';
 
 export interface ProjectState {
-	projectMap: {[projectDir: string]: ProjectConfig};
+	projectMap: Record<string, ProjectConfig>;
 }
 
 export function createDefaultProjectState(): ProjectState {

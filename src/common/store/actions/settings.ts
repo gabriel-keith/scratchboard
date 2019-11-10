@@ -13,6 +13,6 @@ interface ChangeThemeAction extends Action {
 export function setTheme(theme: Theme): ChangeThemeAction {
 	return {
 		type: CHANGE_THEME_ACTION,
-		payload: theme
+		payload: theme,
 	};
 }

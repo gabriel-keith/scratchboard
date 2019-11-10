@@ -1,33 +1,33 @@
 import { ProjectConfig } from '../../data/projects';
 
 import { ProjectState, createDefaultProjectState } from '../state/project';
-import { ProjectAction, ADD_PROJECT, REMOVE_PROJECT } from '../actions/project';
+import { ProjectAction, ADD_PROJECT_FULFILLED, REMOVE_PROJECT_ACTION } from '../actions/project';
 
-export function projectReducer(state: ProjectState = createDefaultProjectState(), action: ProjectAction): ProjectState {
-	let projects: {[projectDir: string]: ProjectConfig};
+export default function projectReducer(
+	state: ProjectState = createDefaultProjectState(),
+	action: ProjectAction,
+): ProjectState {
+	let projects: Record<string, ProjectConfig>;
 
 	switch (action.type) {
-		case ADD_PROJECT:
-			if (!action.payload) {
-				return state;
-			}
-
+		case ADD_PROJECT_FULFILLED:
 			projects = {
 				...state.projectMap,
-				[action.payload.projectDir]: action.payload
+				[action.payload.projectDir]: action.payload,
 			};
+			console.log(action.payload);
 
 			return {
 				...state,
-				projectMap: projects
+				projectMap: projects,
 			};
-		case REMOVE_PROJECT:
+		case REMOVE_PROJECT_ACTION:
 			projects = { ...state.projectMap };
 			delete projects[action.payload.projectDir];
 
 			return {
 				...state,
-				projectMap: projects
+				projectMap: projects,
 			};
 		default:
 			return state;

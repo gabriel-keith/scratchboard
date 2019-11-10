@@ -3,60 +3,57 @@ import { createAliasedAction } from 'electron-redux';
 import { listOrgs, listUsers } from 'common/api/sfdx';
 import { OrgList, OrgUser } from 'common/data/orgs';
 
-export const FETCH_ORG_LIST_ACTION = 'FETCH_ORG_LIST';
-export const FETCH_ORG_USERS_ACTION = 'FETCH_ORG_USERS';
-export const OPEN_ORG_ACTION = 'OPEN_ORG_ACTION';
+export const FETCH_ORG_LIST_REQUEST = 'FETCH_ORG_LIST';
+export const FETCH_ORG_USERS_REQUEST = 'FETCH_ORG_USERS';
+export const OPEN_ORG_ACTION_REQUEST = 'OPEN_ORG_ACTION';
+
+export const FETCH_ORG_LIST_FULFILLED = 'FETCH_ORG_LIST_FULFILLED';
+export const FETCH_ORG_USERS_FULFILLED = 'FETCH_ORG_USERS_FULFILLED';
+export const OPEN_ORG_ACTION_FULFILLED = 'OPEN_ORG_ACTION_FULFILLED';
+
 export const SET_ORG_NICKNAME_ACTION = 'SET_ORG_NICKNAME';
 
-export type OrgListActions = FetchOrgListAction | FetchOrgUsersAction | SetOrgNicknameAction;
+export type OrgListActions = FetchOrgUsersFulfilled | FetchOrgListFulfilled | SetOrgNicknameAction;
 
-interface FetchOrgListAction extends Action {
-	type: typeof FETCH_ORG_LIST_ACTION;
-	payload?: OrgList;
-	error?: string;
+interface FetchOrgListFulfilled extends Action {
+	type: typeof FETCH_ORG_LIST_FULFILLED;
+	payload: OrgList;
 }
 
-interface FetchOrgUsersAction extends Action {
-	type: typeof FETCH_ORG_USERS_ACTION;
-	payload?: OrgUser[];
-	error?: string;
+interface FetchOrgUsersFulfilled extends Action {
+	type: typeof FETCH_ORG_USERS_FULFILLED;
+	payload: OrgUser[];
 }
 
 interface SetOrgNicknameAction extends Action {
 	type: typeof SET_ORG_NICKNAME_ACTION;
 	payload: {
-		username: string,
-		nickname: string
+		username: string;
+		nickname: string;
 	};
 }
 
-export const fetchOrgList = createAliasedAction(
-	FETCH_ORG_LIST_ACTION,
-	() => ({
-		type: FETCH_ORG_LIST_ACTION,
-		payload: listOrgs()
-	})
-);
+export const fetchOrgList = createAliasedAction(FETCH_ORG_LIST_REQUEST, () => ({
+	type: FETCH_ORG_LIST_REQUEST,
+	payload: listOrgs(),
+}));
 
 export const fetchOrgUsers = createAliasedAction(
-	FETCH_ORG_USERS_ACTION,
+	FETCH_ORG_USERS_REQUEST,
 	(usernames: string[]) => ({
-		type: FETCH_ORG_USERS_ACTION,
-		payload: Promise.all(usernames.map(listUsers))
-	})
+		type: FETCH_ORG_USERS_REQUEST,
+		payload: Promise.all(usernames.map(listUsers)),
+	}),
 );
 
-export const openOrg = createAliasedAction(
-	OPEN_ORG_ACTION,
-	(username: string) => ({
-		type: OPEN_ORG_ACTION,
-		payload: openOrg(username)
-	})
-);
+export const openOrg = createAliasedAction(OPEN_ORG_ACTION_REQUEST, (username: string) => ({
+	type: OPEN_ORG_ACTION_REQUEST,
+	payload: openOrg(username),
+}));
 
 export function setOrgNickname(username: string, nickname: string): SetOrgNicknameAction {
 	return {
 		type: SET_ORG_NICKNAME_ACTION,
-		payload: { username, nickname }
+		payload: { username, nickname },
 	};
 }

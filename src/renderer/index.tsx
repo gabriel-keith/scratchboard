@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDom from 'react-dom';
-import { store } from './store';
 import { Provider } from 'react-redux';
 import { fixPath } from 'common/fixpath';
+import { store } from './store';
 
 import App from './app/App';
 
@@ -16,5 +16,5 @@ ReactDom.render(
 	<Provider store={store}>
 		<App />
 	</Provider>,
-	document.getElementById('app')
+	document.getElementById('app'),
 );

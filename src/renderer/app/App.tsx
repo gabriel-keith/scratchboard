@@ -3,18 +3,18 @@ import { connect } from 'react-redux';
 
 import { ScratchOrg, OrgUser } from 'common/data/orgs';
 
-import { TitleBar } from './Titlebar';
-import { Actions } from './actions/Actions';
-import { Details } from './details/Details';
-import Sidebar from './sidebar/Sidebar';
 import { StoreState } from 'common/store/state';
 import { ProjectConfig } from 'common/data/projects';
 import { NonIdealState, Card } from '@blueprintjs/core';
+import TitleBar from './Titlebar';
+import { Actions } from './actions/Actions';
+import { Details } from './details/Details';
+import Sidebar from './sidebar/Sidebar';
 
 interface StateProps {
-	scratchOrgs: { [username: string]: ScratchOrg };
-	users: { [username: string]: OrgUser };
-	projects: { [projectDir: string]: ProjectConfig };
+	scratchOrgs: Record<string, ScratchOrg>;
+	users: Record<string, OrgUser>;
+	projects: Record<string, ProjectConfig>;
 	isDark: boolean;
 }
 
@@ -29,12 +29,11 @@ function mapStateToProps(state: StoreState): StateProps {
 		scratchOrgs: state.org.scratchOrgs,
 		users: state.org.users,
 		projects: state.project.projectMap,
-		isDark: state.settings.theme === 'dark'
+		isDark: state.settings.theme === 'dark',
 	};
 }
 
 class App extends React.Component<Props, State> {
-
 	constructor(props: Props) {
 		super(props);
 
@@ -43,49 +42,50 @@ class App extends React.Component<Props, State> {
 	}
 
 	public handleOrgSelection(selectedUsername: string) {
-		this.setState({
-			...this.state,
-			selectedUsername
-		});
+		this.setState({ selectedUsername });
 	}
 
 	public render() {
-		const username = this.state.selectedUsername;
+		const { projects, scratchOrgs, isDark } = this.props;
+		const { selectedUsername: username } = this.state;
 
-		let contents: any;
+		let contents: JSX.Element;
 
 		if (username) {
-			const selectedOrg = this.props.scratchOrgs[username];
-			const orgProject = Object.values(this.props.projects).find((project) => (
-				project.orgUsernames.includes(selectedOrg.username)
-			));
+			const selectedOrg = scratchOrgs[username];
+			const orgProject = Object.values(projects).find((project) =>
+				project.orgUsernames.includes(selectedOrg.username),
+			);
 
-			contents = <>
-				<Details scratchOrg={selectedOrg} orgProject={orgProject}/>
-				<Actions orgUsername={username} orgProject={orgProject} />
-			</>;
+			contents = (
+				<>
+					<Details scratchOrg={selectedOrg} orgProject={orgProject} />
+					<Actions orgUsername={username} orgProject={orgProject} />
+				</>
+			);
 		} else {
 			contents = (
-				<Card className='mb-4 mx-4 p-2'>
-					<NonIdealState className='pb-4' icon='error' description='Select an org to view details' />
-				</Card>);
+				<Card className="mb-4 mx-4 p-2">
+					<NonIdealState
+						className="pb-4"
+						icon="error"
+						description="Select an org to view details"
+					/>
+				</Card>
+			);
 		}
 		let baseStyles = 'sb-app h-full';
-		if (this.props.isDark) {
-
+		if (isDark) {
 			baseStyles += ' bp3-dark';
-
 		}
-
-		document.getElementsByTagName('body')[0].className = baseStyles;
 
 		return (
 			<div className={baseStyles}>
-				<div className='vh-90'>
+				<div className="vh-90">
 					<TitleBar />
-					<div id='scratchboard' className='flex'>
+					<div id="scratchboard" className="flex">
 						<Sidebar orgUsername={username} onOrgSelect={this.handleOrgSelection} />
-						<div id='main' className='flex-auto'>
+						<div id="main" className="flex-auto">
 							{contents}
 						</div>
 					</div>

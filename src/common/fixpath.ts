@@ -2,15 +2,11 @@ const pathsToAdd = ['/usr/local/bin'];
 
 export function fixPath() {
 	if (process.platform === 'darwin') {
-		let newPath = process.env.PATH || '';
-		const pathSet: Set<string> = new Set(newPath.split(':'));
+		const currentPath = process.env.PATH || '';
+		const pathSet = new Set(currentPath.split(':'));
 
-		for (const p of pathsToAdd) {
-			if (!pathSet.has(p)) {
-				newPath = `${p}:${newPath}`;
-			}
-		}
-
-		process.env.PATH = newPath;
+		process.env.PATH = pathsToAdd
+			.filter((path) => !pathSet.has(path))
+			.reduce((acc, path) => `${path}:${acc}`, currentPath);
 	}
 }

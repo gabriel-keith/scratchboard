@@ -13,8 +13,10 @@ export function listDependencies(username: string, path: string): Promise<OrgDep
 	return executePromiseJson(`sfdx force:package:installed:list -u ${username} --json`, path);
 }
 
-export function openOrg(username: string, urlOnly: boolean = false): Promise<string> {
-	return executePromiseJson(`sfdx force:org:open -u ${username} ${urlOnly ? '-r' : ''} --json`).then((data) => {
+export function openOrg(username: string, urlOnly = false): Promise<string> {
+	return executePromiseJson(
+		`sfdx force:org:open -u ${username} ${urlOnly ? '-r' : ''} --json`,
+	).then((data) => {
 		return data.url;
 	});
 }

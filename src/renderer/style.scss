@@ -1,11 +1,12 @@
-@import "~@blueprintjs/core/lib/scss/variables";
+@import '~@blueprintjs/core/lib/scss/variables';
 
-@import "~@blueprintjs/core/lib/css/blueprint.css";
-@import "~@blueprintjs/icons/lib/css/blueprint-icons.css";
+@import '~@blueprintjs/core/lib/css/blueprint.css';
+@import '~@blueprintjs/icons/lib/css/blueprint-icons.css';
 
-html, body, #app {
+html,
+body,
+#app {
 	height: 100%;
-
 
 	#scratchboard {
 		align-items: flex-start;
@@ -14,11 +15,6 @@ html, body, #app {
 		#sidebar {
 			width: 33%;
 			height: 100%;
-
-			.expiration-notice .bp3-heading {
-				font-size: 0.75rem;
-				font-weight: normal;
-			}
 		}
 
 		#main {
@@ -49,19 +45,15 @@ html, body, #app {
 	background-color: $pt-dark-app-background-color;
 }
 
-//for the example component
-.sb-counter {
-	position: absolute;
-	left: calc(50% - 60px); // this isn't a good way to center
-	top: 10%;
-}
-
 //for flipping icon?
-.flip-h{ transform: scale(-1, 1); }
+.flip-h {
+	transform: scale(-1, 1);
+}
 
 .vh-90 {
 	height: 90vh;
 }
+
 button:focus {
 	outline: none !important;
 }

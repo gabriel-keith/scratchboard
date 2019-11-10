@@ -1,21 +1,11 @@
 import { remote } from 'electron';
 import React from 'react';
 
-export class TitleBar extends React.Component {
-	constructor(props: {}) {
-		super(props);
-
-		this.handleDoubleClick = this.handleDoubleClick.bind(this);
-	}
-
-	public render() {
-		return <div className='sb-title-bar' onDoubleClick={this.handleDoubleClick} ></div>;
-	}
-
-	private handleDoubleClick() {
+export default class TitleBar extends React.Component {
+	private static handleDoubleClick() {
 		const doubleClickAction = remote.systemPreferences.getUserDefault(
 			'AppleActionOnDoubleClick',
-			'string'
+			'string',
 		);
 		const win = remote.getCurrentWindow();
 		if (doubleClickAction === 'Minimize') {
@@ -27,5 +17,9 @@ export class TitleBar extends React.Component {
 				win.unmaximize();
 			}
 		}
+	}
+
+	public render() {
+		return <div className="sb-title-bar" onDoubleClick={TitleBar.handleDoubleClick} />;
 	}
 }
