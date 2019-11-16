@@ -6,6 +6,6 @@ export interface ProjectState {
 
 export function createDefaultProjectState(): ProjectState {
 	return {
-		projectMap: {}
+		projectMap: {},
 	};
 }

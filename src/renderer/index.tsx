@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDom from 'react-dom';
 import { Provider } from 'react-redux';
-import { fixPath } from 'common/fixpath';
+import fixPath from 'common/fixpath';
 import { store } from './store';
 
 import App from './app/App';

@@ -1,6 +1,6 @@
 const pathsToAdd = ['/usr/local/bin'];
 
-export function fixPath() {
+export default function fixPath() {
 	if (process.platform === 'darwin') {
 		const currentPath = process.env.PATH || '';
 		const pathSet = new Set(currentPath.split(':'));

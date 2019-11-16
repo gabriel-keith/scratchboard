@@ -10,6 +10,6 @@ export function createDefaultOrgsState(): OrgState {
 	return {
 		scratchOrgs: {},
 		users: {},
-		nicknames: {}
+		nicknames: {},
 	};
 }

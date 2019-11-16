@@ -2,7 +2,7 @@ import { app, BrowserWindow } from 'electron';
 import * as path from 'path';
 import { format as formatUrl } from 'url';
 import { fetchOrgList } from 'common/store/actions/org';
-import { fixPath } from 'common/fixpath';
+import fixPath from 'common/fixpath';
 
 import store from './store';
 
@@ -55,7 +55,7 @@ app.on('window-all-closed', () => {
 
 app.on('activate', () => {
 	// on macOS it is common to re-create a window even after all windows have been closed
-	if (mainWindow === null) {
+	if (typeof mainWindow === 'undefined') {
 		mainWindow = createMainWindow();
 	}
 });
